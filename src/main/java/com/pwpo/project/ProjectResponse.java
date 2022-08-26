@@ -8,6 +8,6 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class ProjectResponse {
-    private List<Project> projects;
+    private List<Project> items;
     private int totalCount;
 }
