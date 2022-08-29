@@ -1,5 +1,6 @@
 package com.pwpo.project;
 
+import com.pwpo.APIResponse;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -9,34 +10,37 @@ import java.util.List;
 @Service
 public class ProjectManager {
 
-    public ProjectResponse getProjects() {
-        return getMockProjects();
+    public APIResponse getProjects() {
+        return getMockProjectsDTO();
     }
 
-    private ProjectResponse getMockProjects() {
-        List<Project> mockProjects = new ArrayList<>();
+    private APIResponse getMockProjectsDTO() {
+        List<ProjectDTO> mockProjects = new ArrayList<>();
         int amount = 40;
         for (int i = 0; i < amount; i++) {
-            mockProjects.add(getProjectMock(i));
+            mockProjects.add(getProjectDTOMock(i));
         }
 
-
-        return new ProjectResponse(mockProjects, amount);
+        return new APIResponse(mockProjects, amount);
     }
 
-    private static Project getProjectMock(int i) {
-        Project project = new Project();
-        project.setName("Test Name" + i);
-        project.setDescription("Test Description" + i);
-        project.setDeleted(false);
-        project.setCreated(LocalDateTime.now());
-        project.setModified(LocalDateTime.now());
-        project.setCreatedBy("Test Created By" + i);
-        project.setStatus("Test Status" + i);
-        project.setOwner("Test Owner" + i);
-        project.setSummary("Test Summary" + i);
-        project.setShortForm("Test Short Form" + i);
+    private ProjectDTO getProjectDTOMock(int i) {
+        return ProjectDTO
+                .builder()
+                .id((long) i)
+                .name("Test Name" + i)
+                .description("Test Description" + i)
+                .created(LocalDateTime.now())
+                .modified(LocalDateTime.now())
+                .createdBy("Test Created By" + i)
+                .status("Test Status" + i)
+                .owner("Test Owner" + i)
+                .summary("Test Summary" + i)
+                .shortForm("Test Short Form" + i)
+                .build();
+    }
 
-        return project;
+    public ProjectDTO getProjectById(String id) {
+        return getProjectDTOMock(Integer.parseInt(id));
     }
 }
