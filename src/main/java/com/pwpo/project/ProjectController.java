@@ -1,6 +1,8 @@
 package com.pwpo.project;
 
-import com.pwpo.APIResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.pwpo.APICollectionResponse;
+import com.pwpo.ItemDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,12 +16,17 @@ public class ProjectController {
     private final ProjectManager projectManager;
 
     @GetMapping
-    public ResponseEntity<APIResponse> getProjects() {
-        return new ResponseEntity<>(projectManager.getProjects(), HttpStatus.OK);
+    public ResponseEntity<APICollectionResponse> getProjectsPrimary() {
+        return new ResponseEntity<>(projectManager.getProjects(ProjectPrimaryDTO.class), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/project/{id}")
-    public ResponseEntity<ProjectDTO> getProject(@PathVariable String id) {
-        return new ResponseEntity<>(projectManager.getProjectById(id), HttpStatus.OK);
+    @GetMapping(path = "/project/{id}/primary-attributes")
+    public ResponseEntity<? extends ItemDTO> getProjectPrimary(@PathVariable String id) throws JsonProcessingException {
+        return new ResponseEntity<>(projectManager.getProjectById(id, ProjectPrimaryDTO.class), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/project/{id}/secondary-attributes")
+    public ResponseEntity<? extends ItemDTO> getProjectSecondary(@PathVariable String id) throws JsonProcessingException {
+        return new ResponseEntity<>(projectManager.getProjectById(id, ProjectSecondaryDTO.class), HttpStatus.OK);
     }
 }

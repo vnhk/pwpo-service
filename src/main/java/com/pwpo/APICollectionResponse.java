@@ -7,7 +7,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Getter
-public class APIResponse {
+public class APICollectionResponse {
     protected List<? extends ItemDTO> items;
     protected int totalCount;
 }
