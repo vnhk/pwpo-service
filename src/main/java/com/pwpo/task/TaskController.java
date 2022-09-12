@@ -1,5 +1,6 @@
 package com.pwpo.task;
 
+import com.pwpo.APICollectionResponse;
 import com.pwpo.ItemDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,5 +23,11 @@ public class TaskController {
     @GetMapping(path = "/task/{id}/secondary-attributes")
     public ResponseEntity<? extends ItemDTO> getTaskSecondaryById(@PathVariable String id) {
         return new ResponseEntity<>(taskManager.getTaskById(id, TaskSecondaryDTO.class), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/search")
+    public ResponseEntity<APICollectionResponse> getTasks(@RequestParam(required = false) String assignee,
+                                                          @RequestParam(required = false) String createdBy) {
+        return new ResponseEntity<>(taskManager.getTasks(assignee, TaskPrimaryDTO.class), HttpStatus.OK);
     }
 }
