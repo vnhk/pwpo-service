@@ -2,6 +2,7 @@ package com.pwpo.task;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.pwpo.common.Constants;
 import com.pwpo.common.enums.Priority;
 import com.pwpo.common.enums.Status;
 import com.pwpo.common.model.Itemable;
@@ -12,6 +13,7 @@ import com.pwpo.user.UserDetails;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -25,14 +27,18 @@ public class Task implements Itemable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String number;
+    @Enumerated(EnumType.STRING)
     private TaskType type;
     @ManyToOne
     @JsonSerialize(using = ToFullNameSerializer.class)
     private UserDetails assignee;
+    @Enumerated(EnumType.STRING)
     private Status status;
-    private LocalDateTime dueDate;
+    private LocalDate dueDate;
+    @Enumerated(EnumType.STRING)
     private Priority priority;
     private String summary;
+    @Column(length = Constants.DESCRIPTION_MAX)
     private String description;
     private LocalDateTime created;
     private LocalDateTime modified;

@@ -7,6 +7,7 @@ import com.pwpo.task.enums.TaskType;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Builder
@@ -18,6 +19,6 @@ public class TaskPrimaryDTO implements ItemDTO {
     private final String summary;
     private final Status status;
     private final String assignee;
-    private final LocalDateTime dueDate;
+    private final LocalDate dueDate;
     private final Priority priority;
 }

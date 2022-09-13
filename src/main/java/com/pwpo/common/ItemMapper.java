@@ -14,10 +14,10 @@ import org.springframework.stereotype.Service;
 public class ItemMapper {
     private final ObjectMapper mapper;
 
-    public ItemDTO mapToDTO(Itemable task, Class<? extends ItemDTO> dtoClass) {
+    public ItemDTO mapToDTO(Itemable item, Class<? extends ItemDTO> dtoClass) {
         try {
-            String projectAsString = mapper.writeValueAsString(task);
-            return mapper.readValue(projectAsString, dtoClass);
+            String itemAsString = mapper.writeValueAsString(item);
+            return mapper.readValue(itemAsString, dtoClass);
         } catch (JsonProcessingException e) {
             log.error("Could not map item!", e);
             throw new RuntimeException("Could not map item!");
