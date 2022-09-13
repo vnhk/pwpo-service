@@ -1,9 +1,12 @@
 package com.pwpo.project;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pwpo.APICollectionResponse;
-import com.pwpo.ItemDTO;
 import com.pwpo.TestUtils;
+import com.pwpo.common.ItemMapper;
+import com.pwpo.common.model.APICollectionResponse;
+import com.pwpo.common.model.ItemDTO;
+import com.pwpo.project.dto.ProjectPrimaryDTO;
+import com.pwpo.project.dto.ProjectSecondaryDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,12 +26,12 @@ class ProjectManagerTest {
     private ProjectManager projectManager;
     @Mock
     private ProjectRepository projectRepository;
-    private ObjectMapper objectMapper;
+    private ItemMapper mapper;
 
     @BeforeEach
     void setUp() {
-        objectMapper = TestUtils.getObjectMapper();
-        projectManager = new ProjectManager(objectMapper, projectRepository);
+        mapper = new ItemMapper(TestUtils.getObjectMapper());
+        projectManager = new ProjectManager(mapper, projectRepository);
     }
 
     @Test
@@ -102,8 +105,8 @@ class ProjectManagerTest {
 
     @Test
     void getProjectWhenCouldNotMapProject() {
-        objectMapper = new ObjectMapper();
-        projectManager = new ProjectManager(objectMapper, projectRepository);
+        mapper = new ItemMapper(new ObjectMapper());
+        projectManager = new ProjectManager(mapper, projectRepository);
 
         Project project1 = Project.builder().id(1L).name("name1").build();
 
@@ -111,7 +114,7 @@ class ProjectManagerTest {
 
         assertThatExceptionOfType(RuntimeException.class)
                 .isThrownBy(() -> projectManager.getProjectById("1", ProjectPrimaryDTO.class))
-                .withMessage("Could not map project!");
+                .withMessage("Could not map item!");
     }
 
     @Test

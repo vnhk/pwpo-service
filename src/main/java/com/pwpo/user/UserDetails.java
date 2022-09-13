@@ -29,4 +29,6 @@ public class UserDetails {
     private List<Task> ownedTasks;
     @OneToMany(mappedBy = "createdBy")
     private List<Task> createdTasks;
+    @OneToMany(mappedBy = "assignee")
+    private List<Task> assignedTasks;
 }

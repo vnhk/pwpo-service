@@ -1,4 +1,4 @@
-package com.pwpo;
+package com.pwpo.common;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

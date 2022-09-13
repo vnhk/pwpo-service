@@ -1,6 +1,6 @@
-package com.pwpo.task;
+package com.pwpo.task.dto;
 
-import com.pwpo.ItemDTO;
+import com.pwpo.common.model.ItemDTO;
 import lombok.Builder;
 import lombok.Getter;
 

@@ -1,8 +1,10 @@
 package com.pwpo.project;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.pwpo.APICollectionResponse;
-import com.pwpo.ItemDTO;
+import com.pwpo.common.model.APICollectionResponse;
+import com.pwpo.common.model.ItemDTO;
+import com.pwpo.project.dto.ProjectPrimaryDTO;
+import com.pwpo.project.dto.ProjectSecondaryDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

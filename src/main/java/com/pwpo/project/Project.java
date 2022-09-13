@@ -2,7 +2,9 @@ package com.pwpo.project;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.pwpo.Constants;
+import com.pwpo.common.Constants;
+import com.pwpo.common.model.Itemable;
+import com.pwpo.common.serializer.ToFullNameSerializer;
 import com.pwpo.task.Task;
 import com.pwpo.user.UserDetails;
 import lombok.*;
@@ -17,7 +19,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Project {
+public class Project implements Itemable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

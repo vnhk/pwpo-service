@@ -4,8 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.pwpo.common.enums.Priority;
 import com.pwpo.common.enums.Status;
+import com.pwpo.common.model.Itemable;
+import com.pwpo.common.serializer.ToFullNameSerializer;
 import com.pwpo.project.Project;
-import com.pwpo.project.ToFullNameSerializer;
 import com.pwpo.task.enums.TaskType;
 import com.pwpo.user.UserDetails;
 import lombok.*;
@@ -19,13 +20,15 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Task {
+public class Task implements Itemable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String number;
     private TaskType type;
-    private String assignee;
+    @ManyToOne
+    @JsonSerialize(using = ToFullNameSerializer.class)
+    private UserDetails assignee;
     private Status status;
     private LocalDateTime dueDate;
     private Priority priority;
@@ -42,7 +45,7 @@ public class Task {
     private String estimation;
     private boolean isDeleted;
     @ManyToOne
-    @JoinColumn(name = "task_id", nullable = false)
+    @JoinColumn(name = "project_id", nullable = false)
     @JsonIgnore
     private Project project;
 }

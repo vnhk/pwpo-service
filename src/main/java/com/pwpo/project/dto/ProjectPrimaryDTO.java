@@ -1,6 +1,6 @@
-package com.pwpo.project;
+package com.pwpo.project.dto;
 
-import com.pwpo.ItemDTO;
+import com.pwpo.common.model.ItemDTO;
 import lombok.Builder;
 import lombok.Data;
 
