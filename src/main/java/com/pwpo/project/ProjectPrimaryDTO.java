@@ -2,12 +2,10 @@ package com.pwpo.project;
 
 import com.pwpo.ItemDTO;
 import lombok.Builder;
-import lombok.Getter;
-
-import java.time.LocalDateTime;
+import lombok.Data;
 
 @Builder
-@Getter
+@Data
 public class ProjectPrimaryDTO implements ItemDTO {
     private final Long id;
     private final String name;
