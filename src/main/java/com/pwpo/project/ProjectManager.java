@@ -32,7 +32,6 @@ public class ProjectManager {
     public ItemDTO getProjectById(String id, Class<? extends ItemDTO> dtoClass) {
         Optional<Project> project = projectRepository.findById(Long.parseLong(id));
         if (project.isPresent()) {
-            project.get().setDescription("newDesc" + new Date());
             return mapper.mapToDTO(project.get(), dtoClass);
         } else {
             throw new RuntimeException("Could not find project!");
