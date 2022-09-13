@@ -3,6 +3,7 @@ package com.pwpo.task;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.pwpo.common.Constants;
+import com.pwpo.common.serializer.ToEnumDisplayNameSerializer;
 import com.pwpo.common.enums.Priority;
 import com.pwpo.common.enums.Status;
 import com.pwpo.common.model.Itemable;
@@ -28,14 +29,17 @@ public class Task implements Itemable {
     private Long id;
     private String number;
     @Enumerated(EnumType.STRING)
+    @JsonSerialize(using = ToEnumDisplayNameSerializer.class)
     private TaskType type;
     @ManyToOne
     @JsonSerialize(using = ToFullNameSerializer.class)
     private UserDetails assignee;
     @Enumerated(EnumType.STRING)
+    @JsonSerialize(using = ToEnumDisplayNameSerializer.class)
     private Status status;
     private LocalDate dueDate;
     @Enumerated(EnumType.STRING)
+    @JsonSerialize(using = ToEnumDisplayNameSerializer.class)
     private Priority priority;
     private String summary;
     @Column(length = Constants.DESCRIPTION_MAX)

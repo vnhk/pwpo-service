@@ -2,7 +2,7 @@ package com.pwpo.project;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pwpo.TestUtils;
-import com.pwpo.common.ItemMapper;
+import com.pwpo.common.service.ItemMapper;
 import com.pwpo.common.model.APICollectionResponse;
 import com.pwpo.common.model.ItemDTO;
 import com.pwpo.project.dto.ProjectPrimaryDTO;

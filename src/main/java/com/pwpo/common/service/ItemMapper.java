@@ -1,4 +1,4 @@
-package com.pwpo.common;
+package com.pwpo.common.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

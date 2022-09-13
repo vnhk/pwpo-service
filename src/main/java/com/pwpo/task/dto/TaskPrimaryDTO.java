@@ -14,11 +14,11 @@ import java.time.LocalDateTime;
 @Getter
 public class TaskPrimaryDTO implements ItemDTO {
     private final Long id;
-    private final TaskType type;
+    private final String type;
     private final String number;
     private final String summary;
-    private final Status status;
+    private final String status;
     private final String assignee;
     private final LocalDate dueDate;
-    private final Priority priority;
+    private final String priority;
 }

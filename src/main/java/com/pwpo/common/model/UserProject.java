@@ -1,5 +1,7 @@
 package com.pwpo.common.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.pwpo.common.serializer.ToEnumDisplayNameSerializer;
 import com.pwpo.project.Project;
 import com.pwpo.user.ProjectRole;
 import com.pwpo.user.UserDetails;
@@ -22,5 +24,6 @@ public class UserProject {
     @ManyToOne
     private Project project;
     @Enumerated(EnumType.STRING)
+    @JsonSerialize(using = ToEnumDisplayNameSerializer.class)
     private ProjectRole role;
 }

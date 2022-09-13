@@ -6,6 +6,7 @@ import com.pwpo.common.Constants;
 import com.pwpo.common.enums.Status;
 import com.pwpo.common.model.Itemable;
 import com.pwpo.common.model.UserProject;
+import com.pwpo.common.serializer.ToEnumDisplayNameSerializer;
 import com.pwpo.common.serializer.ToFullNameSerializer;
 import com.pwpo.task.Task;
 import com.pwpo.user.UserDetails;
@@ -28,6 +29,7 @@ public class Project implements Itemable {
     private String name;
     private String summary;
     @Enumerated(EnumType.STRING)
+    @JsonSerialize(using = ToEnumDisplayNameSerializer.class)
     private Status status;
     @Column(length = Constants.DESCRIPTION_MAX)
     private String description;

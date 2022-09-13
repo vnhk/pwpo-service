@@ -1,13 +1,15 @@
 package com.pwpo.task;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.pwpo.common.ItemMapper;
+import com.pwpo.common.EnumDTO;
+import com.pwpo.common.service.ItemMapper;
 import com.pwpo.common.model.APICollectionResponse;
 import com.pwpo.common.model.ItemDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
