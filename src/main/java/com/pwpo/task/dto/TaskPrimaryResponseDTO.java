@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 @Builder
 @Getter
-public class TaskPrimaryDTO implements ItemDTO {
+public class TaskPrimaryResponseDTO implements ItemDTO {
     private final Long id;
     private final String type;
     private final String number;

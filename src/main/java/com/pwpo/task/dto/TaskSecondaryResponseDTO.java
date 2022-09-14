@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Builder
 @Getter
-public class TaskSecondaryDTO implements ItemDTO {
+public class TaskSecondaryResponseDTO implements ItemDTO {
     private final Long id;
     private final String description;
     private final String estimation;

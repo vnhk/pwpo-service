@@ -23,4 +23,14 @@ public class ItemMapper {
             throw new RuntimeException("Could not map item!");
         }
     }
+
+    public <T> T mapToObj(ItemDTO dto, Class<T> objClass) {
+        try {
+            String itemAsString = mapper.writeValueAsString(dto);
+            return mapper.readValue(itemAsString, objClass);
+        } catch (JsonProcessingException e) {
+            log.error("Could not map item!", e);
+            throw new RuntimeException("Could not map item!");
+        }
+    }
 }

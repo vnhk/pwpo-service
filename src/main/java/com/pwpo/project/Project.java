@@ -33,6 +33,7 @@ public class Project implements Itemable {
     private Status status;
     @Column(length = Constants.DESCRIPTION_MAX)
     private String description;
+    @Column(unique = true)
     private String shortForm;
     @ManyToOne
     @JsonSerialize(using = ToFullNameSerializer.class)

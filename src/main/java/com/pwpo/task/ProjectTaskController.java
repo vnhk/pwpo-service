@@ -2,8 +2,8 @@ package com.pwpo.task;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.pwpo.common.model.APICollectionResponse;
-import com.pwpo.task.dto.TaskPrimaryDTO;
-import com.pwpo.task.dto.TaskSecondaryDTO;
+import com.pwpo.task.dto.TaskPrimaryResponseDTO;
+import com.pwpo.task.dto.TaskSecondaryResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +19,11 @@ public class ProjectTaskController {
 
     @GetMapping(path = "/primary-attributes")
     public ResponseEntity<APICollectionResponse> getTasksPrimaryByProjectId(@PathVariable String id) throws JsonProcessingException {
-        return new ResponseEntity<>(taskManager.getTasksByProjectId(id, TaskPrimaryDTO.class), HttpStatus.OK);
+        return new ResponseEntity<>(taskManager.getTasksByProjectId(id, TaskPrimaryResponseDTO.class), HttpStatus.OK);
     }
 
     @GetMapping(path = "/secondary-attributes")
     public ResponseEntity<APICollectionResponse> getTasksSecondaryByProjectId(@PathVariable String id) throws JsonProcessingException {
-        return new ResponseEntity<>(taskManager.getTasksByProjectId(id, TaskSecondaryDTO.class), HttpStatus.OK);
+        return new ResponseEntity<>(taskManager.getTasksByProjectId(id, TaskSecondaryResponseDTO.class), HttpStatus.OK);
     }
 }
