@@ -1,7 +1,6 @@
 package com.pwpo.common.search.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.pwpo.common.model.Itemable;
+import com.pwpo.user.model.Itemable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

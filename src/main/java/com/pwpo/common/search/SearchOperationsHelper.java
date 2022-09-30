@@ -1,6 +1,6 @@
 package com.pwpo.common.search;
 
-import com.pwpo.common.model.Itemable;
+import com.pwpo.user.model.Itemable;
 import com.pwpo.common.search.model.SearchCriteria;
 
 import javax.persistence.criteria.CriteriaBuilder;

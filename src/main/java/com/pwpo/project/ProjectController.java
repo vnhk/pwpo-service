@@ -1,10 +1,9 @@
 package com.pwpo.project;
 
-import com.pwpo.common.model.APIResponse;
-import com.pwpo.common.model.ItemDTO;
+import com.pwpo.user.model.APIResponse;
+import com.pwpo.user.model.ItemDTO;
 import com.pwpo.common.search.SearchQueryOption;
-import com.pwpo.project.dto.ProjectPrimaryDTO;
-import com.pwpo.project.dto.ProjectSecondaryDTO;
+import com.pwpo.project.dto.ProjectPrimaryResponseDTO;
 import com.pwpo.user.UserManager;
 import com.pwpo.user.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
@@ -22,17 +21,12 @@ public class ProjectController {
 
     @GetMapping
     public ResponseEntity<APIResponse> getProjectsPrimary(SearchQueryOption options) {
-        return new ResponseEntity<>(projectManager.getProjects(options, ProjectPrimaryDTO.class), HttpStatus.OK);
+        return new ResponseEntity<>(projectManager.getProjects(options, ProjectPrimaryResponseDTO.class), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/project/{id}/primary-attributes")
-    public ResponseEntity<APIResponse> getProjectPrimary(@PathVariable String id) {
-        return new ResponseEntity<>(projectManager.getProjectById(id, ProjectPrimaryDTO.class), HttpStatus.OK);
-    }
-
-    @GetMapping(path = "/project/{id}/secondary-attributes")
-    public ResponseEntity<APIResponse> getProjectSecondary(@PathVariable String id) {
-        return new ResponseEntity<>(projectManager.getProjectById(id, ProjectSecondaryDTO.class), HttpStatus.OK);
+    @GetMapping(path = "/project")
+    public ResponseEntity<APIResponse> getProject(String id, String dto) throws ClassNotFoundException {
+        return new ResponseEntity<>(projectManager.getProjectById(id, (Class<? extends ItemDTO>) Class.forName(dto)), HttpStatus.OK);
     }
 
     @GetMapping(path = "/project/{id}/users")

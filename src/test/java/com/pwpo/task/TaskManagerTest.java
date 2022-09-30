@@ -1,7 +1,7 @@
 package com.pwpo.task;
 
 import com.pwpo.TestUtils;
-import com.pwpo.common.model.APIResponse;
+import com.pwpo.user.model.APIResponse;
 import com.pwpo.common.search.SearchService;
 import com.pwpo.common.service.ItemMapper;
 import com.pwpo.project.Project;

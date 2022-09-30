@@ -1,6 +1,7 @@
 package com.pwpo.task.dto;
 
-import com.pwpo.common.model.ItemDTO;
+import com.pwpo.user.dto.UserDTO;
+import com.pwpo.user.model.ItemDTO;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,7 +13,7 @@ public class TaskSecondaryResponseDTO implements ItemDTO {
     private final Long id;
     private final String description;
     private final String estimation;
-    private final String createdBy;
+    private final UserDTO createdBy;
     private final LocalDateTime created;
     private final LocalDateTime modified;
 }

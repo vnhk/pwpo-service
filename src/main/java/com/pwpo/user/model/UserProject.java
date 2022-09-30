@@ -1,4 +1,4 @@
-package com.pwpo.common.model;
+package com.pwpo.user.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.pwpo.common.serializer.ToEnumDisplayNameSerializer;

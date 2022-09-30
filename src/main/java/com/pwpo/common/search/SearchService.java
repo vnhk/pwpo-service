@@ -1,6 +1,6 @@
 package com.pwpo.common.search;
 
-import com.pwpo.common.model.Itemable;
+import com.pwpo.user.model.Itemable;
 import com.pwpo.common.search.model.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

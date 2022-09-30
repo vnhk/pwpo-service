@@ -2,10 +2,10 @@ package com.pwpo.project;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.pwpo.common.model.Constants;
+import com.pwpo.user.model.Constants;
 import com.pwpo.common.enums.Status;
-import com.pwpo.common.model.Itemable;
-import com.pwpo.common.model.UserProject;
+import com.pwpo.user.model.Itemable;
+import com.pwpo.user.model.UserProject;
 import com.pwpo.common.serializer.ToEnumDisplayNameSerializer;
 import com.pwpo.common.serializer.ToNickNameSerializer;
 import com.pwpo.task.Task;
@@ -36,10 +36,8 @@ public class Project implements Itemable {
     @Column(unique = true)
     private String shortForm;
     @ManyToOne
-    @JsonSerialize(using = ToNickNameSerializer.class)
     private UserDetails owner;
     @ManyToOne
-    @JsonSerialize(using = ToNickNameSerializer.class)
     private UserDetails createdBy;
     private LocalDateTime created;
     private LocalDateTime modified;

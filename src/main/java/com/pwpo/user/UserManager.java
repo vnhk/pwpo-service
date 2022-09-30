@@ -1,7 +1,7 @@
 package com.pwpo.user;
 
-import com.pwpo.common.model.APIResponse;
-import com.pwpo.common.model.ItemDTO;
+import com.pwpo.user.model.APIResponse;
+import com.pwpo.user.model.ItemDTO;
 import com.pwpo.common.service.ItemMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

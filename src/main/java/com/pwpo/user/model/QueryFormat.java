@@ -1,4 +1,4 @@
-package com.pwpo.common.model;
+package com.pwpo.user.model;
 
 public class QueryFormat {
     private QueryFormat() {

@@ -1,6 +1,6 @@
 package com.pwpo.common.search.model;
 
-import com.pwpo.common.model.Itemable;
+import com.pwpo.user.model.Itemable;
 import lombok.Data;
 
 import java.util.Map;

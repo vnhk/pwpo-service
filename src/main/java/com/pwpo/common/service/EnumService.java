@@ -1,7 +1,7 @@
 package com.pwpo.common.service;
 
-import com.pwpo.common.model.APIResponse;
-import com.pwpo.common.model.EnumDTO;
+import com.pwpo.user.model.APIResponse;
+import com.pwpo.user.model.EnumDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

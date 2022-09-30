@@ -2,9 +2,9 @@ package com.pwpo.common.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pwpo.common.model.APIResponse;
-import com.pwpo.common.model.ItemDTO;
-import com.pwpo.common.model.Itemable;
+import com.pwpo.user.model.APIResponse;
+import com.pwpo.user.model.ItemDTO;
+import com.pwpo.user.model.Itemable;
 import com.pwpo.common.search.model.SearchResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

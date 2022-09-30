@@ -1,7 +1,7 @@
 package com.pwpo.common.search;
 
-import com.pwpo.common.model.APIResponse;
-import com.pwpo.common.model.ItemDTO;
+import com.pwpo.user.model.APIResponse;
+import com.pwpo.user.model.ItemDTO;
 import com.pwpo.common.search.model.SearchResponse;
 import com.pwpo.common.service.ItemMapper;
 import lombok.RequiredArgsConstructor;
