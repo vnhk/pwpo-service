@@ -2,14 +2,14 @@ package com.pwpo.task;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.pwpo.common.Constants;
+import com.pwpo.common.model.Constants;
 import com.pwpo.common.deserializer.FromProjectIdDeserializer;
 import com.pwpo.common.deserializer.FromUserIdDeserializer;
 import com.pwpo.common.enums.Priority;
 import com.pwpo.common.enums.Status;
 import com.pwpo.common.model.Itemable;
 import com.pwpo.common.serializer.ToEnumDisplayNameSerializer;
-import com.pwpo.common.serializer.ToFullNameSerializer;
+import com.pwpo.common.serializer.ToNickNameSerializer;
 import com.pwpo.project.Project;
 import com.pwpo.task.enums.TaskType;
 import com.pwpo.user.UserDetails;
@@ -39,7 +39,7 @@ public class Task implements Itemable {
     @JsonSerialize(using = ToEnumDisplayNameSerializer.class)
     private TaskType type;
     @ManyToOne
-    @JsonSerialize(using = ToFullNameSerializer.class)
+    @JsonSerialize(using = ToNickNameSerializer.class)
     @JsonDeserialize(using = FromUserIdDeserializer.class)
     private UserDetails assignee;
     @Enumerated(EnumType.STRING)
@@ -55,11 +55,11 @@ public class Task implements Itemable {
     private LocalDateTime created;
     private LocalDateTime modified;
     @ManyToOne
-    @JsonSerialize(using = ToFullNameSerializer.class)
+    @JsonSerialize(using = ToNickNameSerializer.class)
     @JsonDeserialize(using = FromUserIdDeserializer.class)
     private UserDetails owner;
     @ManyToOne
-    @JsonSerialize(using = ToFullNameSerializer.class)
+    @JsonSerialize(using = ToNickNameSerializer.class)
     private UserDetails createdBy;
     private String estimation;
     private boolean isDeleted;

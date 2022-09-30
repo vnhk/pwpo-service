@@ -1,8 +1,12 @@
 package com.pwpo.task;
 
 import com.pwpo.common.enums.Status;
-import com.pwpo.common.model.APICollectionResponse;
+import com.pwpo.common.model.APIResponse;
 import com.pwpo.common.model.ItemDTO;
+import com.pwpo.common.model.QueryFormat;
+import com.pwpo.common.search.SearchQueryOption;
+import com.pwpo.common.search.SearchService;
+import com.pwpo.common.search.model.SearchResponse;
 import com.pwpo.common.service.ItemMapper;
 import com.pwpo.project.Project;
 import com.pwpo.project.ProjectRepository;
@@ -16,7 +20,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,38 +29,33 @@ public class TaskManager {
     private final ItemMapper mapper;
     private final TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
+    private final SearchService searchService;
 
-    public APICollectionResponse getTasksByProjectId(String id, Class<? extends ItemDTO> dtoClass) {
-        List<Task> tasksByProjectId = taskRepository.findAllByProjectId(Long.valueOf(id));
+    public APIResponse getTasksByProjectId(String id, SearchQueryOption options, Class<? extends ItemDTO> dtoClass) {
+        String query = String.format(QueryFormat.TASKS_BY_PROJECT_ID, Long.valueOf(id));
+        SearchResponse search = searchService.search(query, options);
 
-        List<ItemDTO> collect = tasksByProjectId.stream().map(e -> mapper.mapToDTO(e, dtoClass))
-                .collect(Collectors.toList());
-
-        return new APICollectionResponse(collect, collect.size());
+        return mapper.mapToAPIResponse(search, dtoClass);
     }
 
 
-    public ItemDTO getTaskById(String id, Class<? extends ItemDTO> dtoClass) {
+    public APIResponse getTaskById(String id, Class<? extends ItemDTO> dtoClass) {
         Optional<Task> task = taskRepository.findById(Long.parseLong(id));
 
         if (task.isPresent()) {
-            return mapper.mapToDTO(task.get(), dtoClass);
+            return mapper.mapToAPIResponse(task.get(), dtoClass);
         } else {
             throw new RuntimeException("Could not find task!");
         }
     }
 
-    public APICollectionResponse getTasks(String assignee, Class<? extends ItemDTO> dtoClass) {
-        return getTasksByProjectId("1", dtoClass);
-    }
-
-    public ItemDTO create(TaskRequestDTO body) {
+    public APIResponse create(TaskRequestDTO body) {
         Task task = mapper.mapToObj(body, Task.class);
         task.setProject(projectRepository.findById(task.getProject().getId()).get());
         setInitValues(task);
         Task saved = taskRepository.save(task);
 
-        return mapper.mapToDTO(saved, TaskPrimaryResponseDTO.class);
+        return mapper.mapToAPIResponse(saved, TaskPrimaryResponseDTO.class);
     }
 
     private void setInitValues(Task task) {

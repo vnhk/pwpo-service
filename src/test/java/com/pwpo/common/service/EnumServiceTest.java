@@ -1,8 +1,8 @@
 package com.pwpo.common.service;
 
-import com.pwpo.common.EnumDTO;
+import com.pwpo.common.model.EnumDTO;
 import com.pwpo.common.enums.Priority;
-import com.pwpo.common.model.APICollectionResponse;
+import com.pwpo.common.model.APIResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +22,7 @@ class EnumServiceTest {
 
     @Test
     void getEnumByNameWhenExists() {
-        APICollectionResponse priority = enumService.getEnumByName(Priority.class.getName());
+        APIResponse priority = enumService.getEnumByName(Priority.class.getName());
 
         assertThat(priority.getItems()).hasSize(Priority.values().length);
         for (int i = 0; i < Priority.values().length; i++) {

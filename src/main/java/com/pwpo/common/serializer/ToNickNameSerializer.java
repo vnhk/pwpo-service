@@ -7,10 +7,10 @@ import com.pwpo.user.UserDetails;
 
 import java.io.IOException;
 
-public class ToFullNameSerializer extends JsonSerializer<UserDetails> {
+public class ToNickNameSerializer extends JsonSerializer<UserDetails> {
 
     @Override
     public void serialize(UserDetails userDetails, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
-        jsonGenerator.writeObject(userDetails.getFullName());
+        jsonGenerator.writeObject(userDetails.getNick());
     }
 }

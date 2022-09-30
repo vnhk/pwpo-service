@@ -1,7 +1,7 @@
 package com.pwpo.common.service;
 
-import com.pwpo.common.EnumDTO;
-import com.pwpo.common.model.APICollectionResponse;
+import com.pwpo.common.model.APIResponse;
+import com.pwpo.common.model.EnumDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class EnumService {
-    public APICollectionResponse getEnumByName(String name) {
+    public APIResponse getEnumByName(String name) {
         try {
             List<EnumDTO> result = new ArrayList<>();
 
@@ -26,7 +26,7 @@ public class EnumService {
                 String internalName = enumConstant.toString();
                 result.add(new EnumDTO(internalName, displayName));
             }
-            return new APICollectionResponse(result, result.size());
+            return new APIResponse(result, result.size(), 1, result.size());
         } catch (Exception e) {
             log.error("Could not get enum!", e);
             throw new RuntimeException("Could not get enum!");

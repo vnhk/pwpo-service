@@ -1,6 +1,6 @@
 package com.pwpo.task;
 
-import com.pwpo.common.model.APICollectionResponse;
+import com.pwpo.common.model.APIResponse;
 import com.pwpo.common.model.ItemDTO;
 import com.pwpo.task.dto.TaskPrimaryResponseDTO;
 import com.pwpo.task.dto.TaskRequestDTO;
@@ -11,8 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @RestController
 @RequestMapping(path = "/tasks")
 @RequiredArgsConstructor
@@ -22,23 +20,28 @@ public class TaskController {
 
 
     @GetMapping(path = "/task/{id}/primary-attributes")
-    public ResponseEntity<? extends ItemDTO> getTaskPrimaryById(@PathVariable String id) {
-        return new ResponseEntity<>(taskManager.getTaskById(id, TaskPrimaryResponseDTO.class), HttpStatus.OK);
+    public ResponseEntity<APIResponse> getTaskPrimaryById(@PathVariable String id) {
+        throw new RuntimeException("Deprecated! Use /tasks/task/{id}/ with dtoClass!");
     }
 
     @GetMapping(path = "/task/{id}/secondary-attributes")
-    public ResponseEntity<? extends ItemDTO> getTaskSecondaryById(@PathVariable String id) {
-        return new ResponseEntity<>(taskManager.getTaskById(id, TaskSecondaryResponseDTO.class), HttpStatus.OK);
+    public ResponseEntity<APIResponse> getTaskSecondaryById(@PathVariable String id) {
+        throw new RuntimeException("Deprecated! Use /tasks/task/{id} with dtoClass!");
+    }
+
+    @GetMapping(path = "/task/{id}")
+    public ResponseEntity<APIResponse> getTaskById(@PathVariable String id, String dto) throws ClassNotFoundException {
+        return new ResponseEntity<>(taskManager.getTaskById(id, (Class<? extends ItemDTO>) Class.forName(dto)), HttpStatus.OK);
     }
 
     @GetMapping(path = "/search")
-    public ResponseEntity<APICollectionResponse> getTasks(@RequestParam(required = false) String assignee,
-                                                          @RequestParam(required = false) String createdBy) {
-        return new ResponseEntity<>(taskManager.getTasks(assignee, TaskPrimaryResponseDTO.class), HttpStatus.OK);
+    public ResponseEntity<APIResponse> getTasks(@RequestParam(required = false) String assignee,
+                                                @RequestParam(required = false) String createdBy) {
+        throw new RuntimeException("Deprecated! Use search from SearchController!");
     }
 
     @PostMapping
-    public ResponseEntity<? extends ItemDTO> createTask(@Validated @RequestBody TaskRequestDTO body) {
+    public ResponseEntity<APIResponse> createTask(@Validated @RequestBody TaskRequestDTO body) {
         System.out.println(body);
         return new ResponseEntity<>(taskManager.create(body), HttpStatus.OK);
     }

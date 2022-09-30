@@ -2,9 +2,13 @@ package com.pwpo.project;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pwpo.TestUtils;
-import com.pwpo.common.service.ItemMapper;
-import com.pwpo.common.model.APICollectionResponse;
+import com.pwpo.common.model.APIResponse;
 import com.pwpo.common.model.ItemDTO;
+import com.pwpo.common.search.SearchQueryOption;
+import com.pwpo.common.search.SearchService;
+import com.pwpo.common.search.model.SearchResponse;
+import com.pwpo.common.search.model.SortDirection;
+import com.pwpo.common.service.ItemMapper;
 import com.pwpo.project.dto.ProjectPrimaryDTO;
 import com.pwpo.project.dto.ProjectSecondaryDTO;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,12 +30,14 @@ class ProjectManagerTest {
     private ProjectManager projectManager;
     @Mock
     private ProjectRepository projectRepository;
+    @Mock
+    private SearchService searchService;
     private ItemMapper mapper;
 
     @BeforeEach
     void setUp() {
         mapper = new ItemMapper(TestUtils.getObjectMapper());
-        projectManager = new ProjectManager(mapper, projectRepository);
+        projectManager = new ProjectManager(mapper, projectRepository, searchService);
     }
 
     @Test
@@ -44,10 +50,14 @@ class ProjectManagerTest {
         allProjects.add(project2);
         allProjects.add(project3);
 
-        when(projectRepository.findAll()).thenReturn(allProjects);
-        APICollectionResponse projects = projectManager.getProjects(ProjectPrimaryDTO.class);
+        SearchQueryOption options = new SearchQueryOption(SortDirection.DESC, "id", 1, 10, Project.class.getName());
+        SearchResponse searchResponse = new SearchResponse(allProjects, allProjects.size(), 1, allProjects.size());
 
-        assertThat(projects.getTotalCount()).isEqualTo(3);
+        when(searchService.search(null, options)).thenReturn(searchResponse);
+        APIResponse projects = projectManager.getProjects(options, ProjectPrimaryDTO.class);
+
+        assertThat(projects.getCurrentFound()).isEqualTo(3);
+        assertThat(projects.getAllFound()).isEqualTo(3);
         assertThat(projects.getItems()).hasSize(3);
         assertThat(projects.getItems().get(0) instanceof ProjectPrimaryDTO).isTrue();
         assertThat(projects.getItems().get(1) instanceof ProjectPrimaryDTO).isTrue();
@@ -68,11 +78,15 @@ class ProjectManagerTest {
         allProjects.add(project2);
         allProjects.add(project3);
 
-        when(projectRepository.findAll()).thenReturn(allProjects);
-        APICollectionResponse projects = projectManager.getProjects(ProjectSecondaryDTO.class);
+        SearchQueryOption options = new SearchQueryOption(SortDirection.DESC, "id", 1, 10, Project.class.getName());
+        SearchResponse searchResponse = new SearchResponse(allProjects, allProjects.size(), 1, allProjects.size());
 
-        assertThat(projects.getTotalCount()).isEqualTo(3);
+        when(searchService.search(null, options)).thenReturn(searchResponse);
+        APIResponse projects = projectManager.getProjects(options, ProjectSecondaryDTO.class);
+
+        assertThat(projects.getCurrentFound()).isEqualTo(3);
         assertThat(projects.getItems()).hasSize(3);
+        assertThat(projects.getAllFound()).isEqualTo(3);
         assertThat(projects.getItems().get(0) instanceof ProjectSecondaryDTO).isTrue();
         assertThat(projects.getItems().get(1) instanceof ProjectSecondaryDTO).isTrue();
         assertThat(projects.getItems().get(2) instanceof ProjectSecondaryDTO).isTrue();
@@ -87,8 +101,10 @@ class ProjectManagerTest {
         Project project1 = Project.builder().id(1L).name("name1").build();
 
         when(projectRepository.findById(1L)).thenReturn(Optional.ofNullable(project1));
-        ItemDTO projectById = projectManager.getProjectById("1", ProjectPrimaryDTO.class);
+        APIResponse projectByIdResponse = projectManager.getProjectById("1", ProjectPrimaryDTO.class);
 
+        assertThat(projectByIdResponse.getItems()).hasSize(1);
+        ItemDTO projectById = projectByIdResponse.getItems().get(0);
         assertThat(projectById instanceof ProjectPrimaryDTO).isTrue();
         assertThat(((ProjectPrimaryDTO) projectById).getName()).isEqualTo("name1");
         assertThat(((ProjectPrimaryDTO) projectById).getId()).isEqualTo(1L);
@@ -106,7 +122,7 @@ class ProjectManagerTest {
     @Test
     void getProjectWhenCouldNotMapProject() {
         mapper = new ItemMapper(new ObjectMapper());
-        projectManager = new ProjectManager(mapper, projectRepository);
+        projectManager = new ProjectManager(mapper, projectRepository, searchService);
 
         Project project1 = Project.builder().id(1L).name("name1").build();
 
@@ -122,8 +138,10 @@ class ProjectManagerTest {
         Project project1 = Project.builder().id(1L).description("desc1").build();
 
         when(projectRepository.findById(1L)).thenReturn(Optional.ofNullable(project1));
-        ItemDTO projectById = projectManager.getProjectById("1", ProjectSecondaryDTO.class);
+        APIResponse projectByIdResponse = projectManager.getProjectById("1", ProjectSecondaryDTO.class);
 
+        assertThat(projectByIdResponse.getItems()).hasSize(1);
+        ItemDTO projectById = projectByIdResponse.getItems().get(0);
         assertThat(projectById instanceof ProjectSecondaryDTO).isTrue();
         assertThat(((ProjectSecondaryDTO) projectById).getDescription()).isEqualTo("desc1");
         assertThat(((ProjectSecondaryDTO) projectById).getId()).isEqualTo(1L);

@@ -1,16 +1,16 @@
 package com.pwpo.project;
 
-import com.pwpo.common.service.ItemMapper;
-import com.pwpo.common.model.APICollectionResponse;
+import com.pwpo.common.model.APIResponse;
 import com.pwpo.common.model.ItemDTO;
+import com.pwpo.common.search.SearchQueryOption;
+import com.pwpo.common.search.SearchService;
+import com.pwpo.common.search.model.SearchResponse;
+import com.pwpo.common.service.ItemMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
@@ -18,20 +18,17 @@ import java.util.stream.StreamSupport;
 public class ProjectManager {
     private final ItemMapper mapper;
     private final ProjectRepository projectRepository;
+    private final SearchService searchService;
 
-    public APICollectionResponse getProjects(Class<? extends ItemDTO> dtoClass) {
-        Iterable<Project> all = projectRepository.findAll();
-        List<ItemDTO> collect = StreamSupport.stream(all.spliterator(), false)
-                .map(project -> mapper.mapToDTO(project, dtoClass))
-                .collect(Collectors.toList());
-
-        return new APICollectionResponse(collect, collect.size());
+    public APIResponse getProjects(SearchQueryOption options, Class<? extends ItemDTO> dtoClass) {
+        SearchResponse searchResult = searchService.search(null, options);
+        return mapper.mapToAPIResponse(searchResult, dtoClass);
     }
 
-    public ItemDTO getProjectById(String id, Class<? extends ItemDTO> dtoClass) {
+    public APIResponse getProjectById(String id, Class<? extends ItemDTO> dtoClass) {
         Optional<Project> project = projectRepository.findById(Long.parseLong(id));
         if (project.isPresent()) {
-            return mapper.mapToDTO(project.get(), dtoClass);
+            return mapper.mapToAPIResponse(project.get(), dtoClass);
         } else {
             throw new RuntimeException("Could not find project!");
         }

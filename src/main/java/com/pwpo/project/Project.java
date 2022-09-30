@@ -2,12 +2,12 @@ package com.pwpo.project;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.pwpo.common.Constants;
+import com.pwpo.common.model.Constants;
 import com.pwpo.common.enums.Status;
 import com.pwpo.common.model.Itemable;
 import com.pwpo.common.model.UserProject;
 import com.pwpo.common.serializer.ToEnumDisplayNameSerializer;
-import com.pwpo.common.serializer.ToFullNameSerializer;
+import com.pwpo.common.serializer.ToNickNameSerializer;
 import com.pwpo.task.Task;
 import com.pwpo.user.UserDetails;
 import lombok.*;
@@ -36,10 +36,10 @@ public class Project implements Itemable {
     @Column(unique = true)
     private String shortForm;
     @ManyToOne
-    @JsonSerialize(using = ToFullNameSerializer.class)
+    @JsonSerialize(using = ToNickNameSerializer.class)
     private UserDetails owner;
     @ManyToOne
-    @JsonSerialize(using = ToFullNameSerializer.class)
+    @JsonSerialize(using = ToNickNameSerializer.class)
     private UserDetails createdBy;
     private LocalDateTime created;
     private LocalDateTime modified;

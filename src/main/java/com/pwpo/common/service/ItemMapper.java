@@ -2,11 +2,16 @@ package com.pwpo.common.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pwpo.common.model.APIResponse;
 import com.pwpo.common.model.ItemDTO;
 import com.pwpo.common.model.Itemable;
+import com.pwpo.common.search.model.SearchResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +27,22 @@ public class ItemMapper {
             log.error("Could not map item!", e);
             throw new RuntimeException("Could not map item!");
         }
+    }
+
+    public APIResponse mapToAPIResponse(SearchResponse response, Class<? extends ItemDTO> dtoClass) {
+        List<ItemDTO> items = new ArrayList<>();
+
+        List<? extends Itemable> resultList = response.getResultList();
+        resultList.forEach(e -> items.add(mapToDTO(e, dtoClass)));
+
+        return new APIResponse(items, response.getCurrentFound(), response.getCurrentPage(), response.getAllFound());
+    }
+
+    public APIResponse mapToAPIResponse(Itemable item, Class<? extends ItemDTO> dtoClass) {
+        List<ItemDTO> items = new ArrayList<>();
+        items.add(mapToDTO(item, dtoClass));
+
+        return new APIResponse(items, 1, 1, 1);
     }
 
     public <T> T mapToObj(ItemDTO dto, Class<T> objClass) {

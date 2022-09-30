@@ -1,6 +1,6 @@
 package com.pwpo.task.dto;
 
-import com.pwpo.common.Constants;
+import com.pwpo.common.model.Constants;
 import com.pwpo.common.model.ItemDTO;
 import lombok.Builder;
 import lombok.Getter;

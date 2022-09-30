@@ -1,6 +1,8 @@
 package com.pwpo.task;
 
 import com.pwpo.TestUtils;
+import com.pwpo.common.model.APIResponse;
+import com.pwpo.common.search.SearchService;
 import com.pwpo.common.service.ItemMapper;
 import com.pwpo.project.Project;
 import com.pwpo.project.ProjectRepository;
@@ -26,12 +28,14 @@ class TaskManagerTest {
     private TaskRepository taskRepository;
     @Mock
     private ProjectRepository projectRepository;
+    @Mock
+    private SearchService searchService;
     private ItemMapper mapper;
 
     @BeforeEach
     void setUp() {
         mapper = new ItemMapper(TestUtils.getObjectMapper());
-        taskManager = new TaskManager(mapper, taskRepository, projectRepository);
+        taskManager = new TaskManager(mapper, taskRepository, projectRepository, searchService);
     }
 
     @Test
@@ -61,7 +65,7 @@ class TaskManagerTest {
         when(projectRepository.findById(1L))
                 .thenReturn(projectOptional);
 
-        taskManager.create(body);
+        APIResponse apiResponse = taskManager.create(body);
 
         verify(taskRepository, times(1)).save(any());
     }

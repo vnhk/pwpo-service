@@ -20,6 +20,7 @@ public class UserDetails implements Itemable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "nick", unique = true)
     private String nick;
     private String fullName;
 
