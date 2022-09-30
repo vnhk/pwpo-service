@@ -1,7 +1,7 @@
 package com.pwpo.common.search;
 
-import com.pwpo.user.model.Itemable;
 import com.pwpo.common.search.model.*;
+import com.pwpo.user.model.Itemable;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.internal.util.StringHelper;
@@ -25,6 +25,7 @@ public class SearchService {
     @PersistenceContext
     protected EntityManager entityManager;
     protected CriteriaBuilder criteriaBuilder;
+    private static final Boolean nullFirst = false;
 
     @PostConstruct
     public void init() {
@@ -47,7 +48,7 @@ public class SearchService {
             criteriaQuery.where(buildMainPredicate(query, root, entityToFind));
         }
 
-        criteriaQuery.orderBy(new OrderImpl(SearchOperationsHelper.getExpression(root, sortField), isAscendingSortDirection(sortDirection)));
+        criteriaQuery.orderBy(new OrderImpl(SearchOperationsHelper.getExpression(root, sortField), isAscendingSortDirection(sortDirection), nullFirst));
 
         TypedQuery<? extends Itemable> resultQuery = entityManager.createQuery(criteriaQuery);
         Integer allFound = getHowManyItemsExist(criteriaQuery, root);
