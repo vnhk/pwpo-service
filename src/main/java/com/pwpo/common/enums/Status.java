@@ -1,6 +1,6 @@
 package com.pwpo.common.enums;
 
-public enum Status implements DataEnum{
+public enum Status implements DataEnum {
     NEW("New"), IN_PROGRESS("In Progress"), DONE("Done"), CANCELED("Canceled");
 
     private final String displayName;

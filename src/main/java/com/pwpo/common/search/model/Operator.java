@@ -1,5 +1,5 @@
 package com.pwpo.common.search.model;
 
 public enum Operator {
-    AND, OR
+    AND_OPERATOR, OR_OPERATOR
 }

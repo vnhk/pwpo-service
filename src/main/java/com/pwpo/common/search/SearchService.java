@@ -273,8 +273,8 @@ public class SearchService {
         int andIndex;
         int orIndex;
         do {
-            andIndex = query.indexOf(Operator.AND.name());
-            orIndex = query.indexOf(Operator.OR.name());
+            andIndex = query.indexOf(Operator.AND_OPERATOR.name());
+            orIndex = query.indexOf(Operator.OR_OPERATOR.name());
 
             if (orIndex == -1 && andIndex == -1) {
                 break;
@@ -282,18 +282,18 @@ public class SearchService {
 
             if (andIndex != -1 && orIndex != -1) {
                 if (andIndex < orIndex) {
-                    operators.add(Operator.AND);
-                    query = query.replaceFirst(Operator.AND.name(), "LOGIC_OPR");
+                    operators.add(Operator.AND_OPERATOR);
+                    query = query.replaceFirst(Operator.AND_OPERATOR.name(), "LOGIC_OPR");
                 } else {
-                    operators.add(Operator.OR);
-                    query = query.replaceFirst(Operator.OR.name(), "LOGIC_OPR");
+                    operators.add(Operator.OR_OPERATOR);
+                    query = query.replaceFirst(Operator.OR_OPERATOR.name(), "LOGIC_OPR");
                 }
             } else if (andIndex != -1) {
-                operators.add(Operator.AND);
-                query = query.replaceFirst(Operator.AND.name(), "LOGIC_OPR");
+                operators.add(Operator.AND_OPERATOR);
+                query = query.replaceFirst(Operator.AND_OPERATOR.name(), "LOGIC_OPR");
             } else {
-                operators.add(Operator.OR);
-                query = query.replaceFirst(Operator.OR.name(), "LOGIC_OPR");
+                operators.add(Operator.OR_OPERATOR);
+                query = query.replaceFirst(Operator.OR_OPERATOR.name(), "LOGIC_OPR");
             }
         } while (true);
 
@@ -310,9 +310,9 @@ public class SearchService {
     }
 
     private Predicate executeOperator(Operator operator, List<Predicate> predicates) {
-        if (operator.equals(Operator.AND)) {
+        if (operator.equals(Operator.AND_OPERATOR)) {
             return criteriaBuilder.and(predicates.toArray(Predicate[]::new));
-        } else if (operator.equals(Operator.OR)) {
+        } else if (operator.equals(Operator.OR_OPERATOR)) {
             return criteriaBuilder.or(predicates.toArray(Predicate[]::new));
         }
 
@@ -320,7 +320,7 @@ public class SearchService {
     }
 
     private Predicate execute(Root<? extends Itemable> root, SearchCriteria entityCriterion, Class<? extends Itemable> entity) throws NoSuchFieldException {
-        Object value = new Object();
+        Object value;
         String[] subObjects = entityCriterion.getField().split("\\.");
         Field field = entity.getDeclaredField(subObjects[0]);
 
@@ -328,34 +328,56 @@ public class SearchService {
             field = field.getType().getDeclaredField(subObjects[i]);
         }
 
-        if (field.getType().isEnum()) {
-            value = getEnumValue(entityCriterion, field);
+        if (entityCriterion.getOperation().equals(SearchOperation.IN_OPERATION)) {
+            setValueAsArray(entityCriterion, field);
+            return SearchOperationsHelper.in(root, entityCriterion);
         } else {
-            value = getPrimitiveTypeValue(entityCriterion, value, field);
+            value = getValue(entityCriterion.getValue(), field);
         }
 
         entityCriterion.setValue(value);
 
         Predicate result;
         switch (entityCriterion.getOperation()) {
-            case EQUALS -> result = SearchOperationsHelper.equal(root, criteriaBuilder, entityCriterion);
-            case LIKE -> result = SearchOperationsHelper.like(root, criteriaBuilder, entityCriterion);
-            case NOT_EQUALS -> result = SearchOperationsHelper.notEqual(root, criteriaBuilder, entityCriterion);
-            case NOT_LIKE -> result = SearchOperationsHelper.notLike(root, criteriaBuilder, entityCriterion);
+            case EQUALS_OPERATION -> result = SearchOperationsHelper.equal(root, criteriaBuilder, entityCriterion);
+            case LIKE_OPERATION -> result = SearchOperationsHelper.like(root, criteriaBuilder, entityCriterion);
+            case NOT_EQUALS_OPERATION -> result = SearchOperationsHelper.notEqual(root, criteriaBuilder, entityCriterion);
+            case NOT_LIKE_OPERATION -> result = SearchOperationsHelper.notLike(root, criteriaBuilder, entityCriterion);
             default -> throw new IllegalArgumentException("Invalid SearchCriteria operation!");
         }
 
         return result;
     }
 
-    private Object getEnumValue(SearchCriteria entityCriterion, Field field) {
-        return Arrays.stream(field.getType().getEnumConstants())
-                .filter(e -> e.toString().equals(entityCriterion.getValue()))
-                .findFirst().get();
+    private Object getValue(Object value, Field field) {
+        if (field.getType().isEnum()) {
+            value = getEnumValue(value, field);
+        } else {
+            value = getPrimitiveTypeValue(value, field);
+        }
+        return value;
     }
 
-    private static Object getPrimitiveTypeValue(SearchCriteria entityCriterion, Object value, Field field) {
-        String valueAsString = String.valueOf(entityCriterion.getValue());
+    private void setValueAsArray(SearchCriteria entityCriterion, Field field) {
+        String[] val = String.valueOf(entityCriterion.getValue()).split(",");
+        List<Object> values = new ArrayList<>();
+
+        for (int i = 0; i < val.length; i++) {
+            values.add(getValue(val[i], field));
+        }
+
+        entityCriterion.setValue(values);
+    }
+
+    private Enum getEnumValue(Object value, Field field) {
+        Optional<?> el = Arrays.stream(field.getType().getEnumConstants())
+                .filter(e -> e.toString().equals(value))
+                .findFirst();
+        return (Enum) el.orElse(null);
+    }
+
+    private static Object getPrimitiveTypeValue(Object value, Field field) {
+        String valueAsString = String.valueOf(value);
         if (field.getAnnotatedType().getType().equals(Long.class)) {
             value = Long.valueOf(valueAsString);
         } else if (field.getAnnotatedType().getType().equals(String.class)) {

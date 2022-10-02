@@ -1,12 +1,16 @@
 package com.pwpo.common.search;
 
-import com.pwpo.user.model.Itemable;
 import com.pwpo.common.search.model.SearchCriteria;
+import com.pwpo.task.enums.TaskType;
+import com.pwpo.user.model.Itemable;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 
 public class SearchOperationsHelper {
 
@@ -38,4 +42,7 @@ public class SearchOperationsHelper {
         return objectPath;
     }
 
+    public static Predicate in(Root<? extends Itemable> root, SearchCriteria entityCriterion) {
+        return getExpression(root, entityCriterion.getField()).in(Arrays.asList(entityCriterion.getValue()));
+    }
 }
