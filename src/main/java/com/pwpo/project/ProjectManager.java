@@ -1,21 +1,28 @@
 package com.pwpo.project;
 
-import com.pwpo.user.model.APIResponse;
-import com.pwpo.user.model.ItemDTO;
+import com.pwpo.common.enums.Status;
 import com.pwpo.common.search.SearchQueryOption;
 import com.pwpo.common.search.SearchService;
 import com.pwpo.common.search.model.SearchResponse;
 import com.pwpo.common.service.ItemMapper;
+import com.pwpo.project.dto.ProjectPrimaryResponseDTO;
+import com.pwpo.project.dto.ProjectRequestDTO;
+import com.pwpo.user.model.APIResponse;
+import com.pwpo.user.model.ItemDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class ProjectManager {
+    private static final int MAX_PROJECTS = 100;
     private final ItemMapper mapper;
     private final ProjectRepository projectRepository;
     private final SearchService searchService;
@@ -32,5 +39,40 @@ public class ProjectManager {
         } else {
             throw new RuntimeException("Could not find project!");
         }
+    }
+
+    public APIResponse create(ProjectRequestDTO body) {
+        validate(body);
+        Project project = mapper.mapToObj(body, Project.class);
+        setInitValues(project);
+        Project saved = projectRepository.save(project);
+
+        return mapper.mapToAPIResponse(saved, ProjectPrimaryResponseDTO.class);
+    }
+
+    private void validate(ProjectRequestDTO body) {
+        // TODO: 06.10.2022 replace with count(*)
+        List<Project> projects = new ArrayList<>();
+        Iterable<Project> iterable = projectRepository.findAll();
+        iterable.forEach(projects::add);
+
+        if (projects.size() >= MAX_PROJECTS) {
+            throw new RuntimeException("The project limit has been exceeded!");
+        }
+
+        if (projectRepository.findByName(body.getName()).isPresent()) {
+            throw new RuntimeException("Project with the given name already exists!");
+        }
+
+        if (projectRepository.findByShortForm(body.getShortForm()).isPresent()) {
+            throw new RuntimeException("Project with the given short form already exists!");
+        }
+    }
+
+    private void setInitValues(Project project) {
+        project.setStatus(Status.NEW);
+        project.setCreated(LocalDateTime.now());
+        project.setModified(LocalDateTime.now());
+        project.setDeleted(false);
     }
 }

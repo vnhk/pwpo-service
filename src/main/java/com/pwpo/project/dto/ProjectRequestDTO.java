@@ -1,4 +1,4 @@
-package com.pwpo.task.dto;
+package com.pwpo.project.dto;
 
 import com.pwpo.user.model.Constants;
 import com.pwpo.user.model.ItemDTO;
@@ -11,20 +11,15 @@ import java.time.LocalDate;
 
 @Builder
 @Getter
-public class TaskRequestDTO implements ItemDTO {
-    @NotNull
-    private final String type;
+public class ProjectRequestDTO implements ItemDTO {
     @Size(min = 1, max = Constants.SUMMARY_MAX)
     private final String summary;
-    private final Long assignee;
+    @Size(min = 1, max = Constants.NAME_MAX)
+    private final String name;
+    @Size(min = 1, max = Constants.SHORT_FORM_MAX)
+    private String shortForm;
     @NotNull
     private final Long owner;
-    @NotNull
-    private final LocalDate dueDate;
-    @NotNull
-    private final String priority;
     @Size(max = Constants.DESCRIPTION_MAX)
     private final String description;
-    @NotNull
-    private final Long project;
 }

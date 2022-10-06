@@ -11,7 +11,7 @@ VALUES (2, 'Max Musserman', 'maxmusserman');
  IS_DELETED
  MODIFIED
  NAME
- SHORT_FORM
+ SHORT FORM
  STATUS
  SUMMARY
  CREATED_BY_ID
@@ -34,7 +34,7 @@ VALUES (3, '2022-10-12',
 INSERT INTO PROJECT
 VALUES (4, '2022-10-12',
         'Project without users added',
-        false, '2022-10-12', 'Project without users added', 'NOUSRPR', 'IN_PROGRESS', 'Project without users added', 1,
+        false, '2022-10-12', 'Where users?', 'NOUSRPR', 'IN_PROGRESS', 'Project without users added', 1,
         1);
 
 -- ID  	PROJECT_ID  	USER_ID   ROLE

@@ -1,8 +1,9 @@
 package com.pwpo.user;
 
+import com.pwpo.common.service.ItemMapper;
+import com.pwpo.user.dto.UserDTO;
 import com.pwpo.user.model.APIResponse;
 import com.pwpo.user.model.ItemDTO;
-import com.pwpo.common.service.ItemMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,15 @@ public class UserManager {
         List<UserDetails> users = userRepository.findUsersAddedToTheProject(Long.valueOf(id));
         List<ItemDTO> collect = users.stream()
                 .map(user -> mapper.mapToDTO(user, dtoClass))
+                .collect(Collectors.toList());
+
+        return new APIResponse(collect, collect.size(), 1, collect.size());
+    }
+
+    public APIResponse getUsers() {
+        List<UserDetails> users = userRepository.findAll();
+        List<ItemDTO> collect = users.stream()
+                .map(user -> mapper.mapToDTO(user, UserDTO.class))
                 .collect(Collectors.toList());
 
         return new APIResponse(collect, collect.size(), 1, collect.size());

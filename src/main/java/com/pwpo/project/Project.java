@@ -1,7 +1,9 @@
 package com.pwpo.project;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.pwpo.common.deserializer.FromUserIdDeserializer;
 import com.pwpo.user.model.Constants;
 import com.pwpo.common.enums.Status;
 import com.pwpo.user.model.Itemable;
@@ -24,9 +26,9 @@ import java.util.List;
 @AllArgsConstructor
 public class Project implements Itemable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = Constants.DB_SEQUENCE)
+    @SequenceGenerator(name = Constants.DB_SEQUENCE, initialValue = Constants.DB_SEQUENCE_INIT)
     private Long id;
-    private String name;
     private String summary;
     @Enumerated(EnumType.STRING)
     @JsonSerialize(using = ToEnumDisplayNameSerializer.class)
@@ -34,8 +36,11 @@ public class Project implements Itemable {
     @Column(length = Constants.DESCRIPTION_MAX)
     private String description;
     @Column(unique = true)
+    private String name;
+    @Column(unique = true)
     private String shortForm;
     @ManyToOne
+    @JsonDeserialize(using = FromUserIdDeserializer.class)
     private UserDetails owner;
     @ManyToOne
     private UserDetails createdBy;

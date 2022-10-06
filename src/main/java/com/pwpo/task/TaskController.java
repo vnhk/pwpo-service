@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(path = "/tasks")
 @RequiredArgsConstructor
@@ -22,7 +24,7 @@ public class TaskController {
     }
 
     @PostMapping
-    public ResponseEntity<APIResponse> createTask(@Validated @RequestBody TaskRequestDTO body) {
+    public ResponseEntity<APIResponse> createTask(@Valid @RequestBody TaskRequestDTO body) {
         return new ResponseEntity<>(taskManager.create(body), HttpStatus.OK);
     }
 }
