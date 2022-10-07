@@ -101,7 +101,7 @@ class ProjectManagerTest {
         Project project1 = Project.builder().id(1L).name("name1").build();
 
         when(projectRepository.findById(1L)).thenReturn(Optional.ofNullable(project1));
-        APIResponse projectByIdResponse = projectManager.getProjectById("1", ProjectPrimaryResponseDTO.class);
+        APIResponse projectByIdResponse = projectManager.getProjectById(1L, ProjectPrimaryResponseDTO.class);
 
         assertThat(projectByIdResponse.getItems()).hasSize(1);
         ItemDTO projectById = projectByIdResponse.getItems().get(0);
@@ -115,7 +115,7 @@ class ProjectManagerTest {
         when(projectRepository.findById(1L)).thenReturn(Optional.empty());
 
         assertThatExceptionOfType(RuntimeException.class)
-                .isThrownBy(() -> projectManager.getProjectById("1", ProjectPrimaryResponseDTO.class))
+                .isThrownBy(() -> projectManager.getProjectById(1L, ProjectPrimaryResponseDTO.class))
                 .withMessage("Could not find project!");
     }
 
@@ -129,7 +129,7 @@ class ProjectManagerTest {
         when(projectRepository.findById(1L)).thenReturn(Optional.ofNullable(project1));
 
         assertThatExceptionOfType(RuntimeException.class)
-                .isThrownBy(() -> projectManager.getProjectById("1", ProjectPrimaryResponseDTO.class))
+                .isThrownBy(() -> projectManager.getProjectById(1L, ProjectPrimaryResponseDTO.class))
                 .withMessage("Could not map item!");
     }
 
@@ -138,7 +138,7 @@ class ProjectManagerTest {
         Project project1 = Project.builder().id(1L).description("desc1").build();
 
         when(projectRepository.findById(1L)).thenReturn(Optional.ofNullable(project1));
-        APIResponse projectByIdResponse = projectManager.getProjectById("1", ProjectSecondaryResponseDTO.class);
+        APIResponse projectByIdResponse = projectManager.getProjectById(1L, ProjectSecondaryResponseDTO.class);
 
         assertThat(projectByIdResponse.getItems()).hasSize(1);
         ItemDTO projectById = projectByIdResponse.getItems().get(0);

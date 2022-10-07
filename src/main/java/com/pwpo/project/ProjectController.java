@@ -5,6 +5,7 @@ import com.pwpo.project.dto.ProjectPrimaryResponseDTO;
 import com.pwpo.project.dto.ProjectRequestDTO;
 import com.pwpo.user.UserManager;
 import com.pwpo.user.dto.UserDTO;
+import com.pwpo.user.dto.UserProjectDTO;
 import com.pwpo.user.model.APIResponse;
 import com.pwpo.user.model.ItemDTO;
 import lombok.RequiredArgsConstructor;
@@ -28,13 +29,24 @@ public class ProjectController {
     }
 
     @GetMapping(path = "/project")
-    public ResponseEntity<APIResponse> getProject(String id, String dto) throws ClassNotFoundException {
+    public ResponseEntity<APIResponse> getProject(Long id, String dto) throws ClassNotFoundException {
         return new ResponseEntity<>(projectManager.getProjectById(id, (Class<? extends ItemDTO>) Class.forName(dto)), HttpStatus.OK);
     }
 
     @GetMapping(path = "/project/{id}/users")
-    public ResponseEntity<APIResponse> getUsersAddedToTheProject(@PathVariable String id) {
+    public ResponseEntity<APIResponse> getUsersAddedToTheProject(@PathVariable Long id) {
         return new ResponseEntity<>(userManager.getUsersAddedToProject(id, UserDTO.class), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/project/{id}/users-not-added")
+    public ResponseEntity<APIResponse> getUsersNotAddedToTheProject(@PathVariable Long id) {
+        return new ResponseEntity<>(userManager.getUsersNotAddedToProject(id, UserDTO.class), HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/project/{id}/users")
+    public ResponseEntity addUserToTheProject(@PathVariable Long id, @Valid @RequestBody UserProjectDTO userProject) {
+        userManager.addUserToTheProject(id, userProject.getUser(), userProject.getProjectRole());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping

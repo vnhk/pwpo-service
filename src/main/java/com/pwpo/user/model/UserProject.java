@@ -17,7 +17,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class UserProject {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = Constants.DB_SEQUENCE)
+    @SequenceGenerator(name = Constants.DB_SEQUENCE, initialValue = Constants.DB_SEQUENCE_INIT)
     private Long id;
     @ManyToOne
     private UserDetails user;

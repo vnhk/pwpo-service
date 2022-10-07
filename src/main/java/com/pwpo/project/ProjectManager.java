@@ -33,8 +33,8 @@ public class ProjectManager {
         return mapper.mapToAPIResponse(searchResult, dtoClass);
     }
 
-    public APIResponse getProjectById(String id, Class<? extends ItemDTO> dtoClass) {
-        Optional<Project> project = projectRepository.findById(Long.parseLong(id));
+    public APIResponse getProjectById(Long id, Class<? extends ItemDTO> dtoClass) {
+        Optional<Project> project = projectRepository.findById(id);
         if (project.isPresent()) {
             return mapper.mapToAPIResponse(project.get(), dtoClass);
         } else {
