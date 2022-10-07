@@ -1,6 +1,7 @@
 package com.pwpo.project;
 
 import com.pwpo.common.enums.Status;
+import com.pwpo.common.exception.ValidationException;
 import com.pwpo.common.search.SearchQueryOption;
 import com.pwpo.common.search.SearchService;
 import com.pwpo.common.search.model.SearchResponse;
@@ -57,15 +58,15 @@ public class ProjectManager {
         iterable.forEach(projects::add);
 
         if (projects.size() >= MAX_PROJECTS) {
-            throw new RuntimeException("The project limit has been exceeded!");
+            throw new ValidationException("The project limit has been exceeded!");
         }
 
         if (projectRepository.findByName(body.getName()).isPresent()) {
-            throw new RuntimeException("Project with the given name already exists!");
+            throw new ValidationException("name", "Project with the given name already exists!");
         }
 
         if (projectRepository.findByShortForm(body.getShortForm()).isPresent()) {
-            throw new RuntimeException("Project with the given short form already exists!");
+            throw new ValidationException("shortForm", "Project with the given short form already exists!");
         }
     }
 
