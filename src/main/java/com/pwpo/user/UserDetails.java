@@ -1,6 +1,7 @@
 package com.pwpo.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.pwpo.task.timelog.TimeLog;
 import com.pwpo.user.model.Itemable;
 import com.pwpo.user.model.UserProject;
 import com.pwpo.project.Project;
@@ -20,10 +21,9 @@ public class UserDetails implements Itemable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "nick", unique = true)
+    @Column(unique = true)
     private String nick;
     private String fullName;
-
     @JsonIgnore
     @OneToMany(mappedBy = "owner")
     private List<Project> ownedProjects;
@@ -42,4 +42,7 @@ public class UserDetails implements Itemable {
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<UserProject> addedToProjects;
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<TimeLog> timeLogs;
 }

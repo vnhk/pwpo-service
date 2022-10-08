@@ -1,23 +1,25 @@
 package com.pwpo.task;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.pwpo.user.model.Constants;
 import com.pwpo.common.deserializer.FromProjectIdDeserializer;
 import com.pwpo.common.deserializer.FromUserIdDeserializer;
 import com.pwpo.common.enums.Priority;
 import com.pwpo.common.enums.Status;
-import com.pwpo.user.model.Itemable;
 import com.pwpo.common.serializer.ToEnumDisplayNameSerializer;
-import com.pwpo.common.serializer.ToNickNameSerializer;
 import com.pwpo.project.Project;
 import com.pwpo.task.enums.TaskType;
+import com.pwpo.task.timelog.TimeLog;
 import com.pwpo.user.UserDetails;
+import com.pwpo.user.model.Constants;
+import com.pwpo.user.model.Itemable;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Getter
@@ -56,9 +58,12 @@ public class Task implements Itemable {
     private UserDetails owner;
     @ManyToOne
     private UserDetails createdBy;
-    private String estimation;
+    private Integer estimation;
     private boolean isDeleted;
     @ManyToOne
     @JsonDeserialize(using = FromProjectIdDeserializer.class)
     private Project project;
+    @OneToMany(mappedBy = "task")
+    @JsonIgnore
+    private List<TimeLog> timeLogs;
 }

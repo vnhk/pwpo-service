@@ -50,12 +50,20 @@ public class TaskManager {
     }
 
     public APIResponse create(TaskRequestDTO body) {
+        setEstimation(body);
+
         Task task = mapper.mapToObj(body, Task.class);
         task.setProject(projectRepository.findById(task.getProject().getId()).get());
         setInitValues(task);
         Task saved = taskRepository.save(task);
 
         return mapper.mapToAPIResponse(saved, TaskPrimaryResponseDTO.class);
+    }
+
+    private void setEstimation(TaskRequestDTO body) {
+        if(body.getEstimation() == null) {
+            body.setEstimation(body.getEstimationInHours() * 60 + body.getEstimationInMinutes());
+        }
     }
 
     private void setInitValues(Task task) {
