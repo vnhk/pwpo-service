@@ -20,6 +20,5 @@ public class SearchQueryOption {
     private Integer page;
     @NotNull
     private Integer pageSize;
-    @NotNull
     private String entityToFind;
 }

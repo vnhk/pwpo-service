@@ -34,13 +34,13 @@ public class ProjectController {
     }
 
     @GetMapping(path = "/project/{id}/users")
-    public ResponseEntity<APIResponse> getUsersAddedToTheProject(@PathVariable Long id) {
-        return new ResponseEntity<>(userManager.getUsersAddedToProject(id, UserDTO.class), HttpStatus.OK);
+    public ResponseEntity<APIResponse> getUsersAddedToTheProject(@PathVariable Long id, SearchQueryOption options) {
+        return new ResponseEntity<>(userManager.getUsersAddedToProject(id, options), HttpStatus.OK);
     }
 
     @GetMapping(path = "/project/{id}/users-not-added")
     public ResponseEntity<APIResponse> getUsersNotAddedToTheProject(@PathVariable Long id) {
-        return new ResponseEntity<>(userManager.getUsersNotAddedToProject(id, UserDTO.class), HttpStatus.OK);
+        return new ResponseEntity<>(userManager.getUsersNotAddedToProject(id), HttpStatus.OK);
     }
 
     @PostMapping(path = "/project/{id}/users")

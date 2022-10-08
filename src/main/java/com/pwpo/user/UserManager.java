@@ -1,6 +1,8 @@
 package com.pwpo.user;
 
 import com.pwpo.common.exception.ValidationException;
+import com.pwpo.common.search.SearchQueryOption;
+import com.pwpo.common.search.model.SortDirection;
 import com.pwpo.common.service.ItemMapper;
 import com.pwpo.project.Project;
 import com.pwpo.project.ProjectRepository;
@@ -10,8 +12,12 @@ import com.pwpo.user.model.ItemDTO;
 import com.pwpo.user.model.UserProject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,16 +31,39 @@ public class UserManager {
     private final ProjectRepository projectRepository;
     private final UserProjectRepository userProjectRepository;
 
-    public APIResponse getUsersAddedToProject(Long id, Class<? extends ItemDTO> dtoClass) {
-        List<UserDetails> users = userRepository.findUsersAddedToTheProject(Long.valueOf(id));
-        List<ItemDTO> collect = users.stream()
-                .map(user -> mapper.mapToDTO(user, dtoClass))
-                .collect(Collectors.toList());
+    public APIResponse getUsersAddedToProject(Long id, SearchQueryOption options) {
+        PageRequest of = PageRequest.of(options.getPage() - 1, options.getPageSize(), getSortBy(options));
 
-        return new APIResponse(collect, collect.size(), 1, collect.size());
+        Page<UserDetails> users = userRepository.findUsersAddedToTheProject(id, of);
+        List<ItemDTO> result = new ArrayList<>();
+        for (UserDetails user : users) {
+            UserDTO itemDTO = (UserDTO) mapper.mapToDTO(user, UserDTO.class);
+            ProjectRole projectRole = user.getAddedToProjects().stream().filter(e -> e.getProject().getId().equals(id)).map(UserProject::getRole)
+                    .findFirst().get();
+            itemDTO.setProjectRole(projectRole.getDisplayName());
+
+            result.add(itemDTO);
+        }
+
+        return new APIResponse(result, result.size(), options.getPage(), Math.toIntExact(users.getTotalElements()));
     }
 
-    public APIResponse getUsersNotAddedToProject(Long id, Class<? extends ItemDTO> dtoClass) {
+    private Sort getSortBy(SearchQueryOption options) {
+        String sortField = camelToSnake(options.getSortField());
+        if (options.getSortDirection().equals(SortDirection.ASC)) {
+            return Sort.by(sortField).ascending();
+        } else {
+            return Sort.by(sortField).descending();
+        }
+    }
+
+    private String camelToSnake(String str) {
+        String regex = "([a-z])([A-Z]+)";
+        String replacement = "$1_$2";
+        return str.replaceAll(regex, replacement).toUpperCase();
+    }
+
+    public APIResponse getUsersNotAddedToProject(Long id) {
         List<UserDetails> addedUsers = userRepository.findUsersAddedToTheProject(id);
         List<UserDetails> allUsers = userRepository.findAll();
         List<Long> addedUsersId = addedUsers.stream().map(UserDetails::getId).toList();
@@ -43,7 +72,7 @@ public class UserManager {
                 .toList();
 
         List<ItemDTO> collect = notAddedUsers.stream()
-                .map(user -> mapper.mapToDTO(user, dtoClass))
+                .map(user -> mapper.mapToDTO(user, UserDTO.class))
                 .collect(Collectors.toList());
 
         return new APIResponse(collect, collect.size(), 1, collect.size());
