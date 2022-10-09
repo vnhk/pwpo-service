@@ -45,7 +45,7 @@ public class TimeLogManager {
     }
 
     public Integer getLoggedTime(Long id) {
-        List<Integer> timeLogs = timeLogRepository.findLoggedTimeInMinutesByTaskId(id);
+        List<Integer> timeLogs = timeLogRepository.findAllLoggedTimeInMinutesByTaskId(id);
 
         Integer result = 0;
         for (Integer timeLog : timeLogs) {
