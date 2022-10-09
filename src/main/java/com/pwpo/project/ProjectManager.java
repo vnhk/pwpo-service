@@ -53,6 +53,8 @@ public class ProjectManager {
 
     private void validate(ProjectRequestDTO body) {
         // TODO: 06.10.2022 replace with count(*)
+        // TODO: 09.10.2022 in newly created project and task with added users to the project (max Tester, joe Manager),
+        //  joe cannot log time - User does not have access to the project
         List<Project> projects = new ArrayList<>();
         Iterable<Project> iterable = projectRepository.findAll();
         iterable.forEach(projects::add);
