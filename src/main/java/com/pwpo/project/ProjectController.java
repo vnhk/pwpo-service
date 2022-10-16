@@ -1,10 +1,10 @@
 package com.pwpo.project;
 
+import com.pwpo.common.ChartData;
 import com.pwpo.common.search.SearchQueryOption;
 import com.pwpo.project.dto.ProjectPrimaryResponseDTO;
 import com.pwpo.project.dto.ProjectRequestDTO;
 import com.pwpo.user.UserManager;
-import com.pwpo.user.dto.UserDTO;
 import com.pwpo.user.dto.UserProjectDTO;
 import com.pwpo.user.model.APIResponse;
 import com.pwpo.user.model.ItemDTO;
@@ -22,6 +22,7 @@ import javax.validation.Valid;
 public class ProjectController {
     private final ProjectManager projectManager;
     private final UserManager userManager;
+    private final VisualizationProjectManager visualizationProjectManager;
 
     @GetMapping
     public ResponseEntity<APIResponse> getProjectsPrimary(SearchQueryOption options) {
@@ -36,6 +37,26 @@ public class ProjectController {
     @GetMapping(path = "/project/{id}/users")
     public ResponseEntity<APIResponse> getUsersAddedToTheProject(@PathVariable Long id, SearchQueryOption options) {
         return new ResponseEntity<>(userManager.getUsersAddedToProject(id, options), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/project/{id}/visualization/task-types")
+    public ResponseEntity<ChartData[]> getTaskTypesVisualization(@PathVariable Long id) {
+        return new ResponseEntity<>(visualizationProjectManager.getTaskTypes(id), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/project/{id}/visualization/project-roles")
+    public ResponseEntity<ChartData[]> getRolesChartData(@PathVariable Long id) {
+        return new ResponseEntity<>(visualizationProjectManager.getRolesChartData(id), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/project/{id}/visualization/sum-time")
+    public ResponseEntity<ChartData[]> getProjectSumTimeChartData(@PathVariable Long id) {
+        return new ResponseEntity<>(visualizationProjectManager.getProjectSumTimeChartData(id), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/project/{id}/visualization/task-priorities")
+    public ResponseEntity<ChartData[]> getTaskPrioritiesVisualization(@PathVariable Long id) {
+        return new ResponseEntity<>(visualizationProjectManager.getTaskPriorities(id), HttpStatus.OK);
     }
 
     @GetMapping(path = "/project/{id}/users-not-added")
