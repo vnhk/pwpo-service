@@ -13,7 +13,7 @@ import com.pwpo.task.enums.TaskType;
 import com.pwpo.task.timelog.TimeLog;
 import com.pwpo.user.UserDetails;
 import com.pwpo.user.model.Constants;
-import com.pwpo.user.model.Itemable;
+import com.pwpo.user.model.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -28,7 +28,8 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Task implements Itemable {
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public class Task extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = Constants.DB_SEQUENCE)
     @SequenceGenerator(name = Constants.DB_SEQUENCE, initialValue = Constants.DB_SEQUENCE_INIT)
@@ -51,15 +52,12 @@ public class Task implements Itemable {
     private String summary;
     @Column(length = Constants.DESCRIPTION_MAX)
     private String description;
-    private LocalDateTime created;
-    private LocalDateTime modified;
     @ManyToOne
     @JsonDeserialize(using = FromUserIdDeserializer.class)
     private UserDetails owner;
     @ManyToOne
     private UserDetails createdBy;
     private Integer estimation;
-    private boolean isDeleted;
     @ManyToOne
     @JsonDeserialize(using = FromProjectIdDeserializer.class)
     private Project project;

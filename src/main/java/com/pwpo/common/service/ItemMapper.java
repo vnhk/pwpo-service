@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pwpo.user.model.APIResponse;
 import com.pwpo.user.model.ItemDTO;
-import com.pwpo.user.model.Itemable;
+import com.pwpo.user.model.BaseEntity;
 import com.pwpo.common.search.model.SearchResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import java.util.List;
 public class ItemMapper {
     private final ObjectMapper mapper;
 
-    public ItemDTO mapToDTO(Itemable item, Class<? extends ItemDTO> dtoClass) {
+    public ItemDTO mapToDTO(BaseEntity item, Class<? extends ItemDTO> dtoClass) {
         try {
             String itemAsString = mapper.writeValueAsString(item);
             return mapper.readValue(itemAsString, dtoClass);
@@ -32,13 +32,13 @@ public class ItemMapper {
     public APIResponse mapToAPIResponse(SearchResponse response, Class<? extends ItemDTO> dtoClass) {
         List<ItemDTO> items = new ArrayList<>();
 
-        List<? extends Itemable> resultList = response.getResultList();
+        List<? extends BaseEntity> resultList = response.getResultList();
         resultList.forEach(e -> items.add(mapToDTO(e, dtoClass)));
 
         return new APIResponse(items, response.getCurrentFound(), response.getCurrentPage(), response.getAllFound());
     }
 
-    public APIResponse mapToAPIResponse(Itemable item, Class<? extends ItemDTO> dtoClass) {
+    public APIResponse mapToAPIResponse(BaseEntity item, Class<? extends ItemDTO> dtoClass) {
         List<ItemDTO> items = new ArrayList<>();
         items.add(mapToDTO(item, dtoClass));
 

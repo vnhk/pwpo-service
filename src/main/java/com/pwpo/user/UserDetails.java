@@ -2,7 +2,7 @@ package com.pwpo.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pwpo.task.timelog.TimeLog;
-import com.pwpo.user.model.Itemable;
+import com.pwpo.user.model.BaseEntity;
 import com.pwpo.user.model.UserProject;
 import com.pwpo.project.Project;
 import com.pwpo.task.Task;
@@ -17,7 +17,8 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDetails implements Itemable {
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public class UserDetails extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

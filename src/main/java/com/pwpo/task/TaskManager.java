@@ -70,8 +70,6 @@ public class TaskManager {
         task.setStatus(Status.NEW);
         Project project = task.getProject();
         task.setCreated(LocalDateTime.now());
-        task.setModified(LocalDateTime.now());
-        task.setDeleted(false);
         task.setNumber(generateNumber(project));
     }
 

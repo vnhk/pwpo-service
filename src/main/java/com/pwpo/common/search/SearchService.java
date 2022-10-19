@@ -1,7 +1,7 @@
 package com.pwpo.common.search;
 
 import com.pwpo.common.search.model.*;
-import com.pwpo.user.model.Itemable;
+import com.pwpo.user.model.BaseEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.internal.util.StringHelper;
@@ -34,15 +34,15 @@ public class SearchService {
 
     public SearchResponse search(String query, SearchQueryOption options) {
         validateOptions(options);
-        Class<? extends Itemable> entityToFind = getEntityToFind(options);
+        Class<? extends BaseEntity> entityToFind = getEntityToFind(options);
 
         SortDirection sortDirection = options.getSortDirection();
         String sortField = options.getSortField();
         Integer page = options.getPage();
         Integer pageSize = options.getPageSize();
 
-        CriteriaQuery<? extends Itemable> criteriaQuery = criteriaBuilder.createQuery(entityToFind);
-        Root<? extends Itemable> root = criteriaQuery.from(entityToFind);
+        CriteriaQuery<? extends BaseEntity> criteriaQuery = criteriaBuilder.createQuery(entityToFind);
+        Root<? extends BaseEntity> root = criteriaQuery.from(entityToFind);
 
         if (StringUtils.isNoneEmpty(query)) {
             criteriaQuery.where(buildMainPredicate(query, root, entityToFind));
@@ -50,12 +50,12 @@ public class SearchService {
 
         criteriaQuery.orderBy(new OrderImpl(SearchOperationsHelper.getExpression(root, sortField), isAscendingSortDirection(sortDirection), nullFirst));
 
-        TypedQuery<? extends Itemable> resultQuery = entityManager.createQuery(criteriaQuery);
+        TypedQuery<? extends BaseEntity> resultQuery = entityManager.createQuery(criteriaQuery);
         Integer allFound = getHowManyItemsExist(criteriaQuery, root);
 
         resultQuery.setFirstResult(pageSize * (page - 1));
         resultQuery.setMaxResults(pageSize);
-        List<? extends Itemable> resultList = resultQuery.getResultList();
+        List<? extends BaseEntity> resultList = resultQuery.getResultList();
 
         return new SearchResponse(resultList, resultList.size(), page, allFound);
     }
@@ -73,15 +73,15 @@ public class SearchService {
         }
     }
 
-    private Class<? extends Itemable> getEntityToFind(SearchQueryOption options) {
+    private Class<? extends BaseEntity> getEntityToFind(SearchQueryOption options) {
         try {
-            return (Class<? extends Itemable>) Class.forName(options.getEntityToFind());
+            return (Class<? extends BaseEntity>) Class.forName(options.getEntityToFind());
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Could not create query for " + options.getEntityToFind() + "!");
         }
     }
 
-    private Integer getHowManyItemsExist(CriteriaQuery<? extends Itemable> criteriaQuery, Root<? extends Itemable> root) {
+    private Integer getHowManyItemsExist(CriteriaQuery<? extends BaseEntity> criteriaQuery, Root<? extends BaseEntity> root) {
         criteriaQuery.select(root.get("id"));
         return entityManager.createQuery(criteriaQuery).getResultList().size();
     }
@@ -90,7 +90,7 @@ public class SearchService {
         return sortDirection.equals(SortDirection.ASC);
     }
 
-    private Predicate buildMainPredicate(String query, Root<? extends Itemable> root, Class<? extends Itemable> entityToFind) {
+    private Predicate buildMainPredicate(String query, Root<? extends BaseEntity> root, Class<? extends BaseEntity> entityToFind) {
         log.info(String.format("Processing query:[%s]", query));
 
         List<Operator> operators = new ArrayList<>();
@@ -105,7 +105,7 @@ public class SearchService {
         }
     }
 
-    private Predicate buildPredicate(String queryWithOneSubQuery, Root<? extends Itemable> root, Class<? extends Itemable> entityToFind) {
+    private Predicate buildPredicate(String queryWithOneSubQuery, Root<? extends BaseEntity> root, Class<? extends BaseEntity> entityToFind) {
         queryWithOneSubQuery = removeParentheses(queryWithOneSubQuery);
         SearchCriteria searchCriteria = buildSearchCriteria(queryWithOneSubQuery);
         log.info(String.format("Criteria created:[%s]", searchCriteria));
@@ -113,8 +113,8 @@ public class SearchService {
         return preparePredicates(root, searchCriteria, entityToFind);
     }
 
-    private Predicate buildPredicate(String query, Root<? extends Itemable> root,
-                                     Class<? extends Itemable> entityToFind, List<Operator> operators) {
+    private Predicate buildPredicate(String query, Root<? extends BaseEntity> root,
+                                     Class<? extends BaseEntity> entityToFind, List<Operator> operators) {
         SearchCriteriaHolder mainCriteriaHolder = buildCriteriaHolder(query, operators);
         mainCriteriaHolder.setEntityToFind(entityToFind);
         QueryHolder holder = mainCriteriaHolder.getHolder();
@@ -126,8 +126,8 @@ public class SearchService {
         return predicate;
     }
 
-    private Predicate buildPredicates(QueryHolder holder, SearchCriteriaHolder mainCriteriaHolder, Root<? extends Itemable> root) {
-        Class<? extends Itemable> entityToFind = mainCriteriaHolder.getEntityToFind();
+    private Predicate buildPredicates(QueryHolder holder, SearchCriteriaHolder mainCriteriaHolder, Root<? extends BaseEntity> root) {
+        Class<? extends BaseEntity> entityToFind = mainCriteriaHolder.getEntityToFind();
         SearchCriteria fstSearchCriteria;
         SearchCriteria sndSearchCriteria;
 
@@ -300,7 +300,7 @@ public class SearchService {
         return query;
     }
 
-    private Predicate preparePredicates(Root<? extends Itemable> root, SearchCriteria searchCriteria, Class<? extends Itemable> entityToFind) {
+    private Predicate preparePredicates(Root<? extends BaseEntity> root, SearchCriteria searchCriteria, Class<? extends BaseEntity> entityToFind) {
         try {
             return execute(root, searchCriteria, entityToFind);
         } catch (NoSuchFieldException e) {
@@ -319,7 +319,7 @@ public class SearchService {
         throw new IllegalArgumentException("Invalid operator!");
     }
 
-    private Predicate execute(Root<? extends Itemable> root, SearchCriteria entityCriterion, Class<? extends Itemable> entity) throws NoSuchFieldException {
+    private Predicate execute(Root<? extends BaseEntity> root, SearchCriteria entityCriterion, Class<? extends BaseEntity> entity) throws NoSuchFieldException {
         Object value;
         String[] subObjects = entityCriterion.getField().split("\\.");
         Field field = entity.getDeclaredField(subObjects[0]);

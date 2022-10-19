@@ -4,18 +4,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.pwpo.common.deserializer.FromUserIdDeserializer;
-import com.pwpo.user.model.Constants;
 import com.pwpo.common.enums.Status;
-import com.pwpo.user.model.Itemable;
-import com.pwpo.user.model.UserProject;
 import com.pwpo.common.serializer.ToEnumDisplayNameSerializer;
-import com.pwpo.common.serializer.ToNickNameSerializer;
 import com.pwpo.task.Task;
 import com.pwpo.user.UserDetails;
+import com.pwpo.user.model.BaseEntity;
+import com.pwpo.user.model.Constants;
+import com.pwpo.user.model.UserProject;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -24,7 +22,8 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Project implements Itemable {
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public class Project extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = Constants.DB_SEQUENCE)
     @SequenceGenerator(name = Constants.DB_SEQUENCE, initialValue = Constants.DB_SEQUENCE_INIT)
@@ -44,9 +43,6 @@ public class Project implements Itemable {
     private UserDetails owner;
     @ManyToOne
     private UserDetails createdBy;
-    private LocalDateTime created;
-    private LocalDateTime modified;
-    private boolean isDeleted;
     @OneToMany(mappedBy = "project")
     @JsonIgnore
     private List<Task> tasks;

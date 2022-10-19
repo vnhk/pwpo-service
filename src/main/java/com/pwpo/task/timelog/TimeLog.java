@@ -3,7 +3,7 @@ package com.pwpo.task.timelog;
 import com.pwpo.task.Task;
 import com.pwpo.user.UserDetails;
 import com.pwpo.user.model.Constants;
-import com.pwpo.user.model.Itemable;
+import com.pwpo.user.model.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,7 +16,8 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class TimeLog implements Itemable {
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public class TimeLog extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = Constants.DB_SEQUENCE)
     @SequenceGenerator(name = Constants.DB_SEQUENCE, initialValue = Constants.DB_SEQUENCE_INIT)

@@ -75,7 +75,5 @@ public class ProjectManager {
     private void setInitValues(Project project) {
         project.setStatus(Status.NEW);
         project.setCreated(LocalDateTime.now());
-        project.setModified(LocalDateTime.now());
-        project.setDeleted(false);
     }
 }
