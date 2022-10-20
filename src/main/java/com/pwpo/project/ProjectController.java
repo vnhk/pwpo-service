@@ -2,12 +2,13 @@ package com.pwpo.project;
 
 import com.pwpo.common.ChartData;
 import com.pwpo.common.search.SearchQueryOption;
+import com.pwpo.project.dto.EditProjectRequestDTO;
 import com.pwpo.project.dto.ProjectPrimaryResponseDTO;
 import com.pwpo.project.dto.ProjectRequestDTO;
 import com.pwpo.user.UserManager;
 import com.pwpo.user.dto.UserProjectDTO;
-import com.pwpo.user.model.APIResponse;
-import com.pwpo.user.model.ItemDTO;
+import com.pwpo.common.model.APIResponse;
+import com.pwpo.common.model.ItemDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -73,5 +74,10 @@ public class ProjectController {
     @PostMapping
     public ResponseEntity<APIResponse> createProject(@Valid @RequestBody ProjectRequestDTO body) {
         return new ResponseEntity<>(projectManager.create(body), HttpStatus.OK);
+    }
+
+    @PutMapping
+    public ResponseEntity<APIResponse> editProject(@Valid @RequestBody EditProjectRequestDTO body) {
+        return new ResponseEntity<>(projectManager.edit(body), HttpStatus.OK);
     }
 }

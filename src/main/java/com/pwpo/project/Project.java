@@ -8,8 +8,8 @@ import com.pwpo.common.enums.Status;
 import com.pwpo.common.serializer.ToEnumDisplayNameSerializer;
 import com.pwpo.task.Task;
 import com.pwpo.user.UserDetails;
-import com.pwpo.user.model.BaseEntity;
-import com.pwpo.user.model.Constants;
+import com.pwpo.common.model.BaseEntity;
+import com.pwpo.common.model.Constants;
 import com.pwpo.user.model.UserProject;
 import lombok.*;
 
@@ -24,10 +24,6 @@ import java.util.List;
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Project extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = Constants.DB_SEQUENCE)
-    @SequenceGenerator(name = Constants.DB_SEQUENCE, initialValue = Constants.DB_SEQUENCE_INIT)
-    private Long id;
     private String summary;
     @Enumerated(EnumType.STRING)
     @JsonSerialize(using = ToEnumDisplayNameSerializer.class)
@@ -49,4 +45,7 @@ public class Project extends BaseEntity {
     @OneToMany(mappedBy = "project")
     @JsonIgnore
     private List<UserProject> addedToProjects;
+    @OneToMany(mappedBy = "project")
+    @JsonIgnore
+    private List<ProjectHistory> history;
 }

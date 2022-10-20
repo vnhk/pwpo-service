@@ -1,6 +1,6 @@
 package com.pwpo.common.controller;
 
-import com.pwpo.user.model.APIResponse;
+import com.pwpo.common.model.APIResponse;
 import com.pwpo.common.service.EnumService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

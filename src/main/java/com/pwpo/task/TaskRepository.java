@@ -8,9 +8,7 @@ import java.util.List;
 
 @Repository
 public interface TaskRepository extends CrudRepository<Task, Long> {
-    List<Task> findAllByProjectId(Long projectId);
-
-    @Query("SELECT type, count(id) from Task WHERE project.id = ?1 group by type")
+    @Query("SELECT type, count(project.id) from Task WHERE project.id = ?1 group by type")
     Object[] getTaskTypeChartData(Long projectId);
 
     @Query("SELECT priority, count(id) from Task WHERE project.id = ?1 group by priority")

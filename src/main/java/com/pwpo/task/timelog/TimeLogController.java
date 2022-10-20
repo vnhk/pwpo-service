@@ -1,7 +1,7 @@
 package com.pwpo.task.timelog;
 
 import com.pwpo.common.search.SearchQueryOption;
-import com.pwpo.user.model.APIResponse;
+import com.pwpo.common.model.APIResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -2,7 +2,7 @@ package com.pwpo.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pwpo.task.timelog.TimeLog;
-import com.pwpo.user.model.BaseEntity;
+import com.pwpo.common.model.BaseEntity;
 import com.pwpo.user.model.UserProject;
 import com.pwpo.project.Project;
 import com.pwpo.task.Task;
@@ -19,9 +19,6 @@ import java.util.List;
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class UserDetails extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     @Column(unique = true)
     private String nick;
     private String fullName;

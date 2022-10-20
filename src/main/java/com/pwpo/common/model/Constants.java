@@ -1,4 +1,4 @@
-package com.pwpo.user.model;
+package com.pwpo.common.model;
 
 public class Constants {
     public static final int DESCRIPTION_MAX = 1500;

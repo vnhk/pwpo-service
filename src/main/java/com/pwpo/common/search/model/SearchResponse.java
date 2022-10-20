@@ -1,6 +1,6 @@
 package com.pwpo.common.search.model;
 
-import com.pwpo.user.model.BaseEntity;
+import com.pwpo.common.model.Persistable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,7 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class SearchResponse {
-    private List<? extends BaseEntity> resultList;
+    private List<? extends Persistable> resultList;
     private Integer currentFound;
     private Integer currentPage;
     private Integer allFound;

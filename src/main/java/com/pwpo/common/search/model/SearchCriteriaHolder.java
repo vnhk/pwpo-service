@@ -1,6 +1,6 @@
 package com.pwpo.common.search.model;
 
-import com.pwpo.user.model.BaseEntity;
+import com.pwpo.common.model.BaseEntity;
 import lombok.Data;
 
 import java.util.Map;

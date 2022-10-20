@@ -1,9 +1,9 @@
 package com.pwpo.common.search;
 
-import com.pwpo.user.model.APIResponse;
-import com.pwpo.user.model.ItemDTO;
 import com.pwpo.common.search.model.SearchResponse;
 import com.pwpo.common.service.ItemMapper;
+import com.pwpo.common.model.APIResponse;
+import com.pwpo.common.model.ItemDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +21,8 @@ public class SearchController {
     public ResponseEntity<APIResponse> search(@RequestParam(required = false) String query,
                                               @RequestParam(required = true) String dto,
                                               SearchQueryOption options) throws NoSuchFieldException, ClassNotFoundException {
+        /// TODO: 19.10.2022 EXPIRED handling
+
         SearchResponse search = searchService.search(query, options);
         APIResponse apiResponse = mapper.mapToAPIResponse(search, (Class<? extends ItemDTO>) Class.forName(dto));
 

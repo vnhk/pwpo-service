@@ -7,8 +7,8 @@ import com.pwpo.common.service.ItemMapper;
 import com.pwpo.project.Project;
 import com.pwpo.project.ProjectRepository;
 import com.pwpo.user.dto.UserDTO;
-import com.pwpo.user.model.APIResponse;
-import com.pwpo.user.model.ItemDTO;
+import com.pwpo.common.model.APIResponse;
+import com.pwpo.common.model.ItemDTO;
 import com.pwpo.user.model.UserProject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -66,7 +66,7 @@ public class UserManager {
     public APIResponse getUsersNotAddedToProject(Long id) {
         List<UserDetails> addedUsers = userRepository.findUsersAddedToTheProject(id);
         List<UserDetails> allUsers = userRepository.findAll();
-        List<Long> addedUsersId = addedUsers.stream().map(UserDetails::getId).toList();
+        List<Long> addedUsersId = addedUsers.stream().map(u -> u.getId()).toList();
 
         List<UserDetails> notAddedUsers = allUsers.stream().filter(e -> !addedUsersId.contains(e.getId()))
                 .toList();

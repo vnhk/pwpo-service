@@ -1,4 +1,4 @@
-package com.pwpo.user.model;
+package com.pwpo.common.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

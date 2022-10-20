@@ -1,6 +1,6 @@
 package com.pwpo.user;
 
-import com.pwpo.user.model.APIResponse;
+import com.pwpo.common.model.APIResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

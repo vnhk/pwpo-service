@@ -1,25 +1,24 @@
 package com.pwpo.project.dto;
 
-import com.pwpo.user.model.Constants;
-import com.pwpo.user.model.ItemDTO;
-import lombok.Builder;
+import com.pwpo.common.model.Constants;
+import com.pwpo.common.model.ItemDTO;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
 
-@Builder
 @Getter
+@Setter
 public class ProjectRequestDTO implements ItemDTO {
     @Size(min = 1, max = Constants.SUMMARY_MAX)
-    private final String summary;
+    protected String summary;
     @Size(min = 1, max = Constants.NAME_MAX)
-    private final String name;
+    protected String name;
     @Size(min = 1, max = Constants.SHORT_FORM_MAX)
-    private String shortForm;
+    protected String shortForm;
     @NotNull
-    private final Long owner;
+    protected Long owner;
     @Size(max = Constants.DESCRIPTION_MAX)
-    private final String description;
+    protected String description;
 }

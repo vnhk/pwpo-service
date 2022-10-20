@@ -1,7 +1,7 @@
 package com.pwpo.common.search;
 
 import com.pwpo.common.search.model.*;
-import com.pwpo.user.model.BaseEntity;
+import com.pwpo.common.model.BaseEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.internal.util.StringHelper;
@@ -22,10 +22,24 @@ import java.util.*;
 @Service
 @Slf4j
 public class SearchService {
+    private static final Boolean nullFirst = false;
     @PersistenceContext
     protected EntityManager entityManager;
     protected CriteriaBuilder criteriaBuilder;
-    private static final Boolean nullFirst = false;
+
+    private static Object getPrimitiveTypeValue(Object value, Field field) {
+        String valueAsString = String.valueOf(value);
+        if (field.getAnnotatedType().getType().equals(Long.class)) {
+            value = Long.valueOf(valueAsString);
+        } else if (field.getAnnotatedType().getType().equals(String.class)) {
+            value = valueAsString;
+        } else if (field.getAnnotatedType().getType().equals(Integer.class)) {
+            value = Integer.valueOf(valueAsString);
+        } else if (field.getAnnotatedType().getType().equals(Double.class)) {
+            value = Double.valueOf(valueAsString);
+        }
+        return value;
+    }
 
     @PostConstruct
     public void init() {
@@ -325,7 +339,7 @@ public class SearchService {
         Field field = entity.getDeclaredField(subObjects[0]);
 
         for (int i = 1; i < subObjects.length; i++) {
-            field = field.getType().getDeclaredField(subObjects[i]);
+            field = getDeclaredField(subObjects[i], field, entity);
         }
 
         if (entityCriterion.getOperation().equals(SearchOperation.IN_OPERATION)) {
@@ -347,6 +361,14 @@ public class SearchService {
         }
 
         return result;
+    }
+
+    private Field getDeclaredField(String fieldName, Field field, Class<? extends BaseEntity> entity) throws NoSuchFieldException {
+        try {
+            return field.getType().getDeclaredField(fieldName);
+        } catch (NoSuchFieldException e) {
+            return entity.getSuperclass().getDeclaredField(fieldName);
+        }
     }
 
     private Object getValue(Object value, Field field) {
@@ -374,19 +396,5 @@ public class SearchService {
                 .filter(e -> e.toString().equals(value))
                 .findFirst();
         return (Enum) el.orElse(null);
-    }
-
-    private static Object getPrimitiveTypeValue(Object value, Field field) {
-        String valueAsString = String.valueOf(value);
-        if (field.getAnnotatedType().getType().equals(Long.class)) {
-            value = Long.valueOf(valueAsString);
-        } else if (field.getAnnotatedType().getType().equals(String.class)) {
-            value = valueAsString;
-        } else if (field.getAnnotatedType().getType().equals(Integer.class)) {
-            value = Integer.valueOf(valueAsString);
-        } else if (field.getAnnotatedType().getType().equals(Double.class)) {
-            value = Double.valueOf(valueAsString);
-        }
-        return value;
     }
 }

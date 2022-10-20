@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.pwpo.user.dto.UserDTO;
-import com.pwpo.user.model.ItemDTO;
+import com.pwpo.common.model.ItemDTO;
 import lombok.Builder;
 import lombok.Data;
 
@@ -21,5 +21,5 @@ public class ProjectSecondaryResponseDTO implements ItemDTO {
     private final LocalDateTime created;
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
-    private final LocalDateTime modified;
+    private final LocalDateTime updated;
 }

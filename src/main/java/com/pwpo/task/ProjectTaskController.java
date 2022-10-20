@@ -1,7 +1,7 @@
 package com.pwpo.task;
 
-import com.pwpo.user.model.APIResponse;
-import com.pwpo.user.model.ItemDTO;
+import com.pwpo.common.model.APIResponse;
+import com.pwpo.common.model.ItemDTO;
 import com.pwpo.common.search.SearchQueryOption;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -12,13 +12,12 @@ import com.pwpo.project.Project;
 import com.pwpo.task.enums.TaskType;
 import com.pwpo.task.timelog.TimeLog;
 import com.pwpo.user.UserDetails;
-import com.pwpo.user.model.Constants;
-import com.pwpo.user.model.BaseEntity;
+import com.pwpo.common.model.BaseEntity;
+import com.pwpo.common.model.Constants;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -30,10 +29,6 @@ import java.util.List;
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Task extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = Constants.DB_SEQUENCE)
-    @SequenceGenerator(name = Constants.DB_SEQUENCE, initialValue = Constants.DB_SEQUENCE_INIT)
-    private Long id;
     @Column(unique = true)
     private String number;
     @Enumerated(EnumType.STRING)

@@ -1,9 +1,9 @@
 package com.pwpo.task;
 
 import com.pwpo.common.enums.Status;
-import com.pwpo.user.model.APIResponse;
-import com.pwpo.user.model.ItemDTO;
-import com.pwpo.user.model.QueryFormat;
+import com.pwpo.common.model.APIResponse;
+import com.pwpo.common.model.ItemDTO;
+import com.pwpo.common.model.QueryFormat;
 import com.pwpo.common.search.SearchQueryOption;
 import com.pwpo.common.search.SearchService;
 import com.pwpo.common.search.model.SearchResponse;

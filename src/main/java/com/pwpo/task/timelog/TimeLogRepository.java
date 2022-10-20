@@ -13,6 +13,6 @@ import java.util.List;
 public interface TimeLogRepository extends JpaRepository<TimeLog, Long> {
     Page<TimeLog> findByTaskId(Long id, Pageable pageable);
 
-    @Query("select loggedTimeInMinutes from TimeLog where task.id = ?1")
+    @Query("select loggedTimeInMinutes from TimeLog where id = ?1")
     List<Integer> findAllLoggedTimeInMinutesByTaskId(Long id);
 }

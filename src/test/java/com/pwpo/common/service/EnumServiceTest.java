@@ -1,8 +1,8 @@
 package com.pwpo.common.service;
 
-import com.pwpo.user.model.EnumDTO;
+import com.pwpo.common.model.EnumDTO;
 import com.pwpo.common.enums.Priority;
-import com.pwpo.user.model.APIResponse;
+import com.pwpo.common.model.APIResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
