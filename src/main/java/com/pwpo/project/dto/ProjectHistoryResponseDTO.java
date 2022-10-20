@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.pwpo.common.model.ItemDTO;
+import com.pwpo.user.dto.UserDTO;
 import lombok.Builder;
 import lombok.Data;
 
@@ -22,4 +23,5 @@ public class ProjectHistoryResponseDTO implements ItemDTO {
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private final LocalDateTime expired;
     private final String owner;
+    private final UserDTO editor;
 }

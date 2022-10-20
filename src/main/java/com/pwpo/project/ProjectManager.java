@@ -2,6 +2,9 @@ package com.pwpo.project;
 
 import com.pwpo.common.enums.Status;
 import com.pwpo.common.exception.ValidationException;
+import com.pwpo.common.model.APIResponse;
+import com.pwpo.common.model.ItemDTO;
+import com.pwpo.common.model.QueryFormat;
 import com.pwpo.common.search.SearchQueryOption;
 import com.pwpo.common.search.SearchService;
 import com.pwpo.common.search.model.SearchResponse;
@@ -10,9 +13,6 @@ import com.pwpo.project.dto.EditProjectRequestDTO;
 import com.pwpo.project.dto.ProjectHistoryResponseDTO;
 import com.pwpo.project.dto.ProjectPrimaryResponseDTO;
 import com.pwpo.project.dto.ProjectRequestDTO;
-import com.pwpo.common.model.APIResponse;
-import com.pwpo.common.model.ItemDTO;
-import com.pwpo.common.model.QueryFormat;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -136,7 +136,7 @@ public class ProjectManager {
     }
 
     private ProjectHistory buildProjectHistory(Project project) {
-        return ProjectHistory.builder()
+        ProjectHistory projectHistory = ProjectHistory.builder()
                 .project(project)
                 .name(project.getName())
                 .description(project.getDescription())
@@ -145,6 +145,12 @@ public class ProjectManager {
                 .owner(project.getOwner().getNick())
                 .summary(project.getSummary())
                 .build();
+
+        //editor is logged user, for now owner
+        projectHistory.setEditor(project.getOwner());
+        project.getOwner().getEdited().add(projectHistory);
+
+        return projectHistory;
     }
 
     public APIResponse getHistory(Long id, SearchQueryOption options) {

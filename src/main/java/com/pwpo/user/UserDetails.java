@@ -1,11 +1,12 @@
 package com.pwpo.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.pwpo.task.timelog.TimeLog;
 import com.pwpo.common.model.BaseEntity;
-import com.pwpo.user.model.UserProject;
+import com.pwpo.common.model.BaseHistoryEntity;
 import com.pwpo.project.Project;
 import com.pwpo.task.Task;
+import com.pwpo.task.timelog.TimeLog;
+import com.pwpo.user.model.UserProject;
 import lombok.*;
 
 import javax.persistence.*;
@@ -43,4 +44,7 @@ public class UserDetails extends BaseEntity {
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<TimeLog> timeLogs;
+    @OneToMany(mappedBy = "editor")
+    @JsonIgnore
+    private List<BaseHistoryEntity> edited;
 }
