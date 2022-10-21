@@ -1,7 +1,7 @@
 package com.pwpo.common.search;
 
 import com.pwpo.common.search.model.SearchCriteria;
-import com.pwpo.common.model.BaseEntity;
+import com.pwpo.common.model.db.BaseEntity;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Path;

@@ -8,7 +8,7 @@ import com.pwpo.common.enums.Status;
 import com.pwpo.common.serializer.ToEnumDisplayNameSerializer;
 import com.pwpo.task.Task;
 import com.pwpo.user.UserDetails;
-import com.pwpo.common.model.BaseEntity;
+import com.pwpo.common.model.db.BaseEntity;
 import com.pwpo.common.model.Constants;
 import com.pwpo.user.model.UserProject;
 import lombok.*;

@@ -1,5 +1,6 @@
-package com.pwpo.common.model;
+package com.pwpo.common.model.db;
 
+import com.pwpo.common.model.Constants;
 import com.pwpo.user.UserDetails;
 import lombok.Getter;
 import lombok.Setter;

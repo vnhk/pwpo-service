@@ -8,7 +8,7 @@ import com.pwpo.project.Project;
 import com.pwpo.project.ProjectRepository;
 import com.pwpo.user.dto.UserDTO;
 import com.pwpo.common.model.APIResponse;
-import com.pwpo.common.model.ItemDTO;
+import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.user.model.UserProject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

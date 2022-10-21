@@ -1,16 +1,20 @@
-package com.pwpo.project;
+package com.pwpo.project.service;
 
 import com.pwpo.common.enums.Status;
 import com.pwpo.common.exception.ValidationException;
 import com.pwpo.common.model.APIResponse;
-import com.pwpo.common.model.ItemDTO;
+import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.common.model.QueryFormat;
 import com.pwpo.common.search.SearchQueryOption;
 import com.pwpo.common.search.SearchService;
 import com.pwpo.common.search.model.SearchResponse;
 import com.pwpo.common.service.ItemMapper;
+import com.pwpo.project.Project;
+import com.pwpo.project.ProjectHistory;
+import com.pwpo.project.ProjectHistoryRepository;
+import com.pwpo.project.ProjectRepository;
 import com.pwpo.project.dto.EditProjectRequestDTO;
-import com.pwpo.project.dto.ProjectHistoryResponseDTO;
+import com.pwpo.project.dto.history.ProjectHistoryResponseDTO;
 import com.pwpo.project.dto.ProjectPrimaryResponseDTO;
 import com.pwpo.project.dto.ProjectRequestDTO;
 import lombok.RequiredArgsConstructor;

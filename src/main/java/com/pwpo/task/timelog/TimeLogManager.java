@@ -8,7 +8,7 @@ import com.pwpo.task.Task;
 import com.pwpo.task.TaskRepository;
 import com.pwpo.user.UserRepository;
 import com.pwpo.common.model.APIResponse;
-import com.pwpo.common.model.ItemDTO;
+import com.pwpo.common.model.dto.ItemDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

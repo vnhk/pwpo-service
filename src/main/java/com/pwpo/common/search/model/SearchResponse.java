@@ -1,6 +1,6 @@
 package com.pwpo.common.search.model;
 
-import com.pwpo.common.model.Persistable;
+import com.pwpo.common.model.db.Persistable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

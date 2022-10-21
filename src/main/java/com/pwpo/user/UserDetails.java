@@ -1,8 +1,8 @@
 package com.pwpo.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.pwpo.common.model.BaseEntity;
-import com.pwpo.common.model.BaseHistoryEntity;
+import com.pwpo.common.model.db.BaseEntity;
+import com.pwpo.common.model.db.BaseHistoryEntity;
 import com.pwpo.project.Project;
 import com.pwpo.task.Task;
 import com.pwpo.task.timelog.TimeLog;

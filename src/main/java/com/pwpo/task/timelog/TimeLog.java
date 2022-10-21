@@ -2,7 +2,7 @@ package com.pwpo.task.timelog;
 
 import com.pwpo.task.Task;
 import com.pwpo.user.UserDetails;
-import com.pwpo.common.model.BaseEntity;
+import com.pwpo.common.model.db.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;

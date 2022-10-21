@@ -1,4 +1,4 @@
-package com.pwpo.common.model;
+package com.pwpo.common.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

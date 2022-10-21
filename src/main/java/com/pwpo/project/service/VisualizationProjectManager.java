@@ -1,4 +1,4 @@
-package com.pwpo.project;
+package com.pwpo.project.service;
 
 import com.pwpo.common.ChartData;
 import com.pwpo.common.enums.Priority;

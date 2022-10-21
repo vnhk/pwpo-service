@@ -1,6 +1,6 @@
 package com.pwpo.user.dto;
 
-import com.pwpo.common.model.ItemDTO;
+import com.pwpo.common.model.dto.ItemDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

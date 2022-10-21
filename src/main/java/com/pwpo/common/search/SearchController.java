@@ -3,7 +3,7 @@ package com.pwpo.common.search;
 import com.pwpo.common.search.model.SearchResponse;
 import com.pwpo.common.service.ItemMapper;
 import com.pwpo.common.model.APIResponse;
-import com.pwpo.common.model.ItemDTO;
+import com.pwpo.common.model.dto.ItemDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

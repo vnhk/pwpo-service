@@ -1,4 +1,4 @@
-package com.pwpo.common.model;
+package com.pwpo.common.model.db;
 
 public interface Persistable {
 }

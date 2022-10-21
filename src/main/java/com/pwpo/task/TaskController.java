@@ -2,7 +2,7 @@ package com.pwpo.task;
 
 import com.pwpo.task.dto.TaskRequestDTO;
 import com.pwpo.common.model.APIResponse;
-import com.pwpo.common.model.ItemDTO;
+import com.pwpo.common.model.dto.ItemDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

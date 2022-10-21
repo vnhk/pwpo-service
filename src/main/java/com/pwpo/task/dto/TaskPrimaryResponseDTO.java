@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.pwpo.project.dto.ProjectPrimaryResponseDTO;
 import com.pwpo.user.dto.UserDTO;
-import com.pwpo.common.model.ItemDTO;
+import com.pwpo.common.model.dto.ItemDTO;
 import lombok.Builder;
 import lombok.Getter;
 

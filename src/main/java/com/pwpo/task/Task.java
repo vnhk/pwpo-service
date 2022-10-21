@@ -12,7 +12,7 @@ import com.pwpo.project.Project;
 import com.pwpo.task.enums.TaskType;
 import com.pwpo.task.timelog.TimeLog;
 import com.pwpo.user.UserDetails;
-import com.pwpo.common.model.BaseEntity;
+import com.pwpo.common.model.db.BaseEntity;
 import com.pwpo.common.model.Constants;
 import lombok.*;
 

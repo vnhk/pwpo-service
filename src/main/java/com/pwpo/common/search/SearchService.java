@@ -1,7 +1,7 @@
 package com.pwpo.common.search;
 
 import com.pwpo.common.search.model.*;
-import com.pwpo.common.model.BaseEntity;
+import com.pwpo.common.model.db.BaseEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.internal.util.StringHelper;

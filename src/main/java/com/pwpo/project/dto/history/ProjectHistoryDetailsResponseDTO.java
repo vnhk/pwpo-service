@@ -1,9 +1,9 @@
-package com.pwpo.project.dto;
+package com.pwpo.project.dto.history;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.pwpo.common.model.ItemDTO;
+import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.user.dto.UserDTO;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 @Builder
 @Data
-public class ProjectHistoryResponseDTO implements ItemDTO {
+public class ProjectHistoryDetailsResponseDTO implements ItemDTO {
     private final Long id;
     private final String name;
     private final String shortForm;
