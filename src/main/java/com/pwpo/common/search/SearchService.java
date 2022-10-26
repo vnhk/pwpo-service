@@ -1,7 +1,7 @@
 package com.pwpo.common.search;
 
-import com.pwpo.common.search.model.*;
 import com.pwpo.common.model.db.BaseEntity;
+import com.pwpo.common.search.model.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.internal.util.StringHelper;
@@ -27,7 +27,7 @@ public class SearchService {
     protected EntityManager entityManager;
     protected CriteriaBuilder criteriaBuilder;
 
-    private static Object getPrimitiveTypeValue(Object value, Field field) {
+    private Object getPrimitiveTypeValue(Object value, Field field) {
         String valueAsString = String.valueOf(value);
         if (field.getAnnotatedType().getType().equals(Long.class)) {
             value = Long.valueOf(valueAsString);

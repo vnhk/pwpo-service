@@ -5,11 +5,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.pwpo.common.deserializer.FromUserIdDeserializer;
 import com.pwpo.common.enums.Status;
+import com.pwpo.common.model.Constants;
+import com.pwpo.common.model.db.BaseEntity;
+import com.pwpo.common.model.db.BaseHistoryEntity;
 import com.pwpo.common.serializer.ToEnumDisplayNameSerializer;
 import com.pwpo.task.Task;
 import com.pwpo.user.UserDetails;
-import com.pwpo.common.model.db.BaseEntity;
-import com.pwpo.common.model.Constants;
 import com.pwpo.user.model.UserProject;
 import lombok.*;
 
@@ -48,4 +49,9 @@ public class Project extends BaseEntity {
     @OneToMany(mappedBy = "project")
     @JsonIgnore
     private List<ProjectHistory> history;
+
+    @Override
+    public List getHistoryEntities() {
+        return history;
+    }
 }

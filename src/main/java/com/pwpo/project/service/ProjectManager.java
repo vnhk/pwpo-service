@@ -3,8 +3,8 @@ package com.pwpo.project.service;
 import com.pwpo.common.enums.Status;
 import com.pwpo.common.exception.ValidationException;
 import com.pwpo.common.model.APIResponse;
-import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.common.model.QueryFormat;
+import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.common.search.SearchQueryOption;
 import com.pwpo.common.search.SearchService;
 import com.pwpo.common.search.model.SearchResponse;
@@ -14,9 +14,9 @@ import com.pwpo.project.ProjectHistory;
 import com.pwpo.project.ProjectHistoryRepository;
 import com.pwpo.project.ProjectRepository;
 import com.pwpo.project.dto.EditProjectRequestDTO;
-import com.pwpo.project.dto.history.ProjectHistoryResponseDTO;
 import com.pwpo.project.dto.ProjectPrimaryResponseDTO;
 import com.pwpo.project.dto.ProjectRequestDTO;
+import com.pwpo.project.dto.history.ProjectHistoryResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -101,7 +101,7 @@ public class ProjectManager {
     }
 
     private boolean isTheSameProject(EditProjectRequestDTO body, Optional<Project> opt) {
-        return !opt.get().getId().equals(body.getId());
+        return !opt.get().getId().equals(body.getEntityId());
     }
 
     private void setInitValues(Project project) {
@@ -111,21 +111,12 @@ public class ProjectManager {
 
     @Transactional
     public APIResponse edit(EditProjectRequestDTO body) {
-        Optional<Project> byId = projectRepository.findById(body.getId());
+        Optional<Project> byId = projectRepository.findById(body.getEntityId());
         validateEditRequest(byId, body);
 
-        Project origProject = byId.get();
-        ProjectHistory projectHistory = buildProjectHistory(origProject);
-        updateProject(origProject, body);
-        LocalDateTime updateTime = LocalDateTime.now();
+        Project edited = projectRepository.edit(body);
 
-        origProject.setUpdated(updateTime);
-        projectHistory.setExpired(updateTime);
-
-        origProject = projectRepository.save(origProject);
-        projectHistoryRepository.save(projectHistory);
-
-        return mapper.mapToAPIResponse(origProject, ProjectPrimaryResponseDTO.class);
+        return mapper.mapToAPIResponse(edited, ProjectPrimaryResponseDTO.class);
     }
 
     private void updateProject(Project origProject, EditProjectRequestDTO body) {

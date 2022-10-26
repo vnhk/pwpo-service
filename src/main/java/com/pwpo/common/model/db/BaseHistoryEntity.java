@@ -1,6 +1,7 @@
 package com.pwpo.common.model.db;
 
 import com.pwpo.common.model.Constants;
+import com.pwpo.project.ProjectHistory;
 import com.pwpo.user.UserDetails;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,4 +20,7 @@ public abstract class BaseHistoryEntity implements Persistable {
     protected LocalDateTime expired;
     @ManyToOne
     protected UserDetails editor;
+
+    public abstract void buildTargetEntityConnection(BaseEntity entity);
+
 }

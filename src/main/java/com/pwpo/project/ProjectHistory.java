@@ -3,8 +3,9 @@ package com.pwpo.project;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.pwpo.common.enums.Status;
-import com.pwpo.common.model.Comparable;
 import com.pwpo.common.model.Constants;
+import com.pwpo.common.model.HistoryField;
+import com.pwpo.common.model.db.BaseEntity;
 import com.pwpo.common.model.db.BaseHistoryEntity;
 import com.pwpo.common.serializer.ToEnumDisplayNameSerializer;
 import lombok.*;
@@ -19,22 +20,29 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class ProjectHistory extends BaseHistoryEntity {
-    @Comparable
+    @HistoryField
     private String summary;
     @Enumerated(EnumType.STRING)
     @JsonSerialize(using = ToEnumDisplayNameSerializer.class)
-    @Comparable
+    @HistoryField
     private Status status;
     @Column(length = Constants.DESCRIPTION_MAX)
-    @Comparable
+    @HistoryField
     private String description;
-    @Comparable
+    @HistoryField
     private String name;
-    @Comparable
+    @HistoryField
     private String shortForm;
-    @Comparable(path = "owner.nick")
+    @HistoryField(path = "nick")
     private String owner;
     @ManyToOne
     @JsonIgnore
+    @HistoryField(comparable = false, isTargetEntity = true)
     private Project project;
+
+    @Override
+    public void buildTargetEntityConnection(BaseEntity entity) {
+        this.project = (Project) entity;
+        project.getHistoryEntities().add(this);
+    }
 }

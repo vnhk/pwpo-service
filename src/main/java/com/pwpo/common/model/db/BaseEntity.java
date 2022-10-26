@@ -8,6 +8,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,4 +23,9 @@ public abstract class BaseEntity implements Persistable {
     protected LocalDateTime updated;
     @CreationTimestamp
     protected LocalDateTime created;
+
+    public List<? extends Persistable> getHistoryEntities() {
+        //change to abstract!!
+        return new ArrayList<>();
+    }
 }
