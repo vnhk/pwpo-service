@@ -4,6 +4,7 @@ import com.pwpo.common.exception.ValidationException;
 import com.pwpo.common.model.HistoryField;
 import com.pwpo.common.model.db.BaseEntity;
 import com.pwpo.common.model.db.BaseHistoryEntity;
+import com.pwpo.common.model.db.Persistable;
 import com.pwpo.common.model.edit.Editable;
 import com.pwpo.user.UserDetails;
 import lombok.extern.slf4j.Slf4j;
@@ -60,14 +61,40 @@ public class BaseRepositoryImpl<T extends BaseEntity, ID extends Serializable> e
     }
 
     private void update(BaseEntity entity, Editable<ID> editable) throws NoSuchFieldException, IllegalAccessException {
-        Field[] declaredFields = editable.getClass().getDeclaredFields();
+        List<Field> declaredFields = getFieldsFromEditable(editable);
 
         for (Field declaredField : declaredFields) {
             String name = declaredField.getName();
             Field entityField = entity.getClass().getDeclaredField(name);
-            Object val = declaredField.get(editable);
-            entityField.set(entity, val);
+            Object val = getValFromField(editable, declaredField);
+            setFieldVal(entity, entityField, val);
         }
+    }
+
+    private void setFieldVal(Persistable entity, Field entityField, Object val) throws IllegalAccessException {
+        if(val instanceof Long && entityField.getType().getSuperclass().equals(BaseEntity.class)) {
+            //it means that we try to set ID (Long) as a BaseEntityClass ex. UserDetails owner in Project = 1L;
+            val = entityManager.find(entityField.getType(), val);
+        }
+        entityField.setAccessible(true);
+        entityField.set(entity, val);
+        entityField.setAccessible(false);
+    }
+
+    private Object getValFromField(Editable<ID> editable, Field declaredField) throws IllegalAccessException {
+        declaredField.setAccessible(true);
+        Object val = declaredField.get(editable);
+        declaredField.setAccessible(false);
+        return val;
+    }
+
+    private List<Field> getFieldsFromEditable(Editable<ID> editable) {
+        List<Field> parentSupperClassDeclaredFields = Arrays.stream(editable.getClass().getSuperclass().getDeclaredFields()).toList();
+        List<Field> editableFields = Arrays.stream(editable.getClass().getDeclaredFields()).collect(Collectors.toList());
+        editableFields.addAll(parentSupperClassDeclaredFields);
+
+        return editableFields.stream().filter(e -> !e.getName().equalsIgnoreCase("id"))
+                .collect(Collectors.toList());
     }
 
     private BaseHistoryEntity buildHistory(BaseEntity entity, Class<? extends BaseHistoryEntity> historyClass) throws NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, InstantiationException {
@@ -79,9 +106,7 @@ public class BaseRepositoryImpl<T extends BaseEntity, ID extends Serializable> e
             String name = historyField.getName();
             Field entityField = entityClass.getDeclaredField(name);
             Object val = getVal(entity, entityField, historyField);
-            historyField.setAccessible(true);
-            historyField.set(history, val);
-            historyField.setAccessible(false);
+            setFieldVal(history, historyField, val);
         }
 
         setTargetEntity(history, entity);
@@ -105,10 +130,7 @@ public class BaseRepositoryImpl<T extends BaseEntity, ID extends Serializable> e
 
     private UserDetails getLoggedUser() {
         //should be logged user, for now hardcoded user with Id = 1;
-        UserDetails userDetails = new UserDetails();
-        userDetails.setId(1L);
-
-        return userDetails;
+        return entityManager.find(UserDetails.class, 1L);
     }
 
     private Object getVal(BaseEntity entity, Field entityField, Field historyField) throws IllegalAccessException, NoSuchFieldException {
