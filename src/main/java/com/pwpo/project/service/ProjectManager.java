@@ -3,39 +3,40 @@ package com.pwpo.project.service;
 import com.pwpo.common.enums.Status;
 import com.pwpo.common.exception.ValidationException;
 import com.pwpo.common.model.APIResponse;
-import com.pwpo.common.model.QueryFormat;
 import com.pwpo.common.model.dto.ItemDTO;
+import com.pwpo.common.model.edit.Editable;
 import com.pwpo.common.search.SearchQueryOption;
 import com.pwpo.common.search.SearchService;
 import com.pwpo.common.search.model.SearchResponse;
+import com.pwpo.common.service.BaseService;
 import com.pwpo.common.service.ItemMapper;
 import com.pwpo.project.Project;
-import com.pwpo.project.ProjectHistory;
-import com.pwpo.project.ProjectHistoryRepository;
 import com.pwpo.project.ProjectRepository;
 import com.pwpo.project.dto.EditProjectRequestDTO;
 import com.pwpo.project.dto.ProjectPrimaryResponseDTO;
 import com.pwpo.project.dto.ProjectRequestDTO;
-import com.pwpo.project.dto.history.ProjectHistoryResponseDTO;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
-public class ProjectManager {
+public class ProjectManager extends BaseService<Project, Long> {
     private static final int MAX_PROJECTS = 100;
     private final ItemMapper mapper;
     private final ProjectRepository projectRepository;
-    private final ProjectHistoryRepository projectHistoryRepository;
     private final SearchService searchService;
+
+    public ProjectManager(ProjectRepository repository, ItemMapper mapper, SearchService searchService) {
+        super(repository, mapper);
+        this.projectRepository = repository;
+        this.mapper = mapper;
+        this.searchService = searchService;
+    }
 
     public APIResponse getProjects(SearchQueryOption options, Class<? extends ItemDTO> dtoClass) {
         SearchResponse searchResult = searchService.search(null, options);
@@ -81,26 +82,7 @@ public class ProjectManager {
         }
     }
 
-    private void validateEditRequest(Optional<Project> byId, EditProjectRequestDTO body) {
-        // TODO: 09.10.2022 in newly created project and task with added users to the project (max Tester, joe Manager),
-        //  joe cannot log time - User does not have access to the project
-
-        if (byId.isEmpty()) {
-            throw new ValidationException("The project does not exist!");
-        }
-
-        Optional<Project> byName = projectRepository.findByName(body.getName());
-        if (byName.isPresent() && isTheSameProject(body, byName)) {
-            throw new ValidationException("name", "Project with the given name already exists!");
-        }
-
-        Optional<Project> byShortForm = projectRepository.findByShortForm(body.getShortForm());
-        if (byShortForm.isPresent() && isTheSameProject(body, byShortForm)) {
-            throw new ValidationException("shortForm", "Project with the given short form already exists!");
-        }
-    }
-
-    private boolean isTheSameProject(EditProjectRequestDTO body, Optional<Project> opt) {
+    private boolean isTheSameProject(EditProjectRequestDTO<Long> body, Optional<Project> opt) {
         return !opt.get().getId().equals(body.getEntityId());
     }
 
@@ -109,50 +91,25 @@ public class ProjectManager {
         project.setCreated(LocalDateTime.now());
     }
 
-    @Transactional
-    public APIResponse edit(EditProjectRequestDTO body) {
-        Optional<Project> byId = projectRepository.findById(body.getEntityId());
-        validateEditRequest(byId, body);
+    @Override
+    protected void validateEditRequest(Optional<Project> orig, Editable<Long> body) {
+        // TODO: 09.10.2022 in newly created project and task with added users to the project (max Tester, joe Manager),
+        //  joe cannot log time - User does not have access to the project
 
-        Project edited = projectRepository.edit(body);
+        EditProjectRequestDTO<Long> request = (EditProjectRequestDTO<Long>) body;
 
-        return mapper.mapToAPIResponse(edited, ProjectPrimaryResponseDTO.class);
-    }
+        if (orig.isEmpty()) {
+            throw new ValidationException("The project does not exist!");
+        }
 
-    private void updateProject(Project origProject, EditProjectRequestDTO body) {
-        Project project = mapper.mapToObj(body, Project.class);
+        Optional<Project> byName = projectRepository.findByName(request.getName());
+        if (byName.isPresent() && isTheSameProject(request, byName)) {
+            throw new ValidationException("name", "Project with the given name already exists!");
+        }
 
-        origProject.setName(project.getName());
-        origProject.setShortForm(project.getShortForm());
-        origProject.setDescription(project.getDescription());
-        origProject.setOwner(project.getOwner());
-        origProject.setStatus(project.getStatus());
-        origProject.setSummary(project.getSummary());
-    }
-
-    private ProjectHistory buildProjectHistory(Project project) {
-        ProjectHistory projectHistory = ProjectHistory.builder()
-                .project(project)
-                .name(project.getName())
-                .description(project.getDescription())
-                .shortForm(project.getShortForm())
-                .status(project.getStatus())
-                .owner(project.getOwner().getNick())
-                .summary(project.getSummary())
-                .build();
-
-        //editor is logged user, for now owner
-        projectHistory.setEditor(project.getOwner());
-        project.getOwner().getEdited().add(projectHistory);
-
-        return projectHistory;
-    }
-
-    public APIResponse getHistory(Long id, SearchQueryOption options) {
-        options.setEntityToFind(ProjectHistory.class.getName());
-        String query = String.format(QueryFormat.PROJECT_BY_ID, id);
-        SearchResponse searchResult = searchService.search(query, options);
-
-        return mapper.mapToAPIResponse(searchResult, ProjectHistoryResponseDTO.class);
+        Optional<Project> byShortForm = projectRepository.findByShortForm(request.getShortForm());
+        if (byShortForm.isPresent() && isTheSameProject(request, byShortForm)) {
+            throw new ValidationException("shortForm", "Project with the given short form already exists!");
+        }
     }
 }

@@ -1,6 +1,10 @@
 package com.pwpo.project;
 
 import com.pwpo.common.ChartData;
+import com.pwpo.common.controller.BaseEntityController;
+import com.pwpo.common.model.APIResponse;
+import com.pwpo.common.model.dto.ItemDTO;
+import com.pwpo.common.model.edit.Editable;
 import com.pwpo.common.search.SearchQueryOption;
 import com.pwpo.project.dto.EditProjectRequestDTO;
 import com.pwpo.project.dto.ProjectPrimaryResponseDTO;
@@ -9,9 +13,6 @@ import com.pwpo.project.service.ProjectManager;
 import com.pwpo.project.service.VisualizationProjectManager;
 import com.pwpo.user.UserManager;
 import com.pwpo.user.dto.UserProjectDTO;
-import com.pwpo.common.model.APIResponse;
-import com.pwpo.common.model.dto.ItemDTO;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,12 +21,18 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(path = "/projects")
-@RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:4200")
-public class ProjectController {
+public class ProjectController extends BaseEntityController<Project, Long> {
     private final ProjectManager projectManager;
     private final UserManager userManager;
     private final VisualizationProjectManager visualizationProjectManager;
+
+    public ProjectController(ProjectManager projectManager, UserManager userManager, VisualizationProjectManager visualizationProjectManager) {
+        super(projectManager);
+        this.projectManager = projectManager;
+        this.userManager = userManager;
+        this.visualizationProjectManager = visualizationProjectManager;
+    }
 
     @GetMapping
     public ResponseEntity<APIResponse> getProjectsPrimary(SearchQueryOption options) {
@@ -79,7 +86,7 @@ public class ProjectController {
     }
 
     @PutMapping
-    public ResponseEntity<APIResponse> editProject(@Valid @RequestBody EditProjectRequestDTO body) {
-        return new ResponseEntity<>(projectManager.edit(body), HttpStatus.OK);
+    public ResponseEntity<APIResponse> edit(@Valid @RequestBody EditProjectRequestDTO<Long> body) {
+        return super.edit(body);
     }
 }
