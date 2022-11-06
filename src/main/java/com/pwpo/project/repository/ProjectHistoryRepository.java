@@ -1,6 +1,7 @@
-package com.pwpo.project;
+package com.pwpo.project.repository;
 
 import com.pwpo.common.service.BaseRepository;
+import com.pwpo.project.model.ProjectHistory;
 
 import java.util.Optional;
 

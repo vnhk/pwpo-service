@@ -1,4 +1,4 @@
-package com.pwpo.task;
+package com.pwpo.task.service;
 
 import com.pwpo.common.enums.Status;
 import com.pwpo.common.model.APIResponse;
@@ -8,8 +8,10 @@ import com.pwpo.common.search.SearchQueryOption;
 import com.pwpo.common.search.SearchService;
 import com.pwpo.common.search.model.SearchResponse;
 import com.pwpo.common.service.ItemMapper;
-import com.pwpo.project.Project;
-import com.pwpo.project.ProjectRepository;
+import com.pwpo.project.model.Project;
+import com.pwpo.project.repository.ProjectRepository;
+import com.pwpo.task.model.Task;
+import com.pwpo.task.TaskRepository;
 import com.pwpo.task.dto.TaskPrimaryResponseDTO;
 import com.pwpo.task.dto.TaskRequestDTO;
 import lombok.RequiredArgsConstructor;

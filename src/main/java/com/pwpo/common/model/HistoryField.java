@@ -8,7 +8,8 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface HistoryField {
-    String path() default "";
+    String savePath() default "";
+    String comparePath() default "";
     boolean comparable() default true;
 
     boolean isTargetEntity() default false;

@@ -1,6 +1,6 @@
 package com.pwpo.task.timelog;
 
-import com.pwpo.task.Task;
+import com.pwpo.task.model.Task;
 import com.pwpo.user.UserDetails;
 import com.pwpo.common.model.db.BaseEntity;
 import lombok.*;

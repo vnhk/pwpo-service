@@ -1,8 +1,9 @@
-package com.pwpo.task;
+package com.pwpo.task.controller;
 
 import com.pwpo.common.model.APIResponse;
 import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.common.search.SearchQueryOption;
+import com.pwpo.task.service.TaskManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

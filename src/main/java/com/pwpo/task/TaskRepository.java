@@ -1,8 +1,8 @@
 package com.pwpo.task;
 
 import com.pwpo.common.service.BaseRepository;
+import com.pwpo.task.model.Task;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
 
 
 public interface TaskRepository extends BaseRepository<Task, Long> {

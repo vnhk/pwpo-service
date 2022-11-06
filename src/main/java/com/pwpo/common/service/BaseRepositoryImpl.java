@@ -72,7 +72,7 @@ public class BaseRepositoryImpl<T extends BaseEntity, ID extends Serializable> e
     }
 
     private void setFieldVal(Persistable entity, Field entityField, Object val) throws IllegalAccessException {
-        if(val instanceof Long && entityField.getType().getSuperclass().equals(BaseEntity.class)) {
+        if (val instanceof Long && entityField.getType().getSuperclass().equals(BaseEntity.class)) {
             //it means that we try to set ID (Long) as a BaseEntityClass ex. UserDetails owner in Project = 1L;
             val = entityManager.find(entityField.getType(), val);
         }
@@ -133,14 +133,14 @@ public class BaseRepositoryImpl<T extends BaseEntity, ID extends Serializable> e
         return entityManager.find(UserDetails.class, 1L);
     }
 
-    private Object getVal(BaseEntity entity, Field entityField, Field historyField) throws IllegalAccessException, NoSuchFieldException {
-        String path = historyField.getAnnotation(HistoryField.class).path();
+    private Object getVal(Object entity, Field entityField, Field historyField) throws IllegalAccessException, NoSuchFieldException {
+        String path = historyField.getAnnotation(HistoryField.class).savePath();
         if (Strings.isNotBlank(path)) {
             String[] values = path.split("\\.");
             //example in Project: User owner->owner.nick
             for (String value : values) {
                 entityField.setAccessible(true);
-                entity = (BaseEntity) entityField.get(entity);
+                entity = entityField.get(entity);
                 entityField.setAccessible(false);
                 entityField = entityField.getType().getDeclaredField(value);
             }

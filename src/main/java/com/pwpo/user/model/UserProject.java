@@ -3,7 +3,7 @@ package com.pwpo.user.model;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.pwpo.common.model.db.BaseEntity;
 import com.pwpo.common.serializer.ToEnumDisplayNameSerializer;
-import com.pwpo.project.Project;
+import com.pwpo.project.model.Project;
 import com.pwpo.user.ProjectRole;
 import com.pwpo.user.UserDetails;
 import lombok.*;

@@ -8,8 +8,8 @@ import java.util.List;
 
 @Builder
 @Data
-public class CompareResponseDTO implements ItemDTO {
-    private Long entityId;
-    private Long historyId;
+public class CompareResponseDTO<ID> implements ItemDTO {
+    private ID entityId;
+    private ID historyId;
     private List<DiffAttribute> diff;
 }

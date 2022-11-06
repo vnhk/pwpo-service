@@ -4,7 +4,7 @@ import com.pwpo.common.enums.Status;
 import com.pwpo.common.model.db.BaseHistoryEntity;
 import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.common.model.edit.Editable;
-import com.pwpo.project.ProjectHistory;
+import com.pwpo.project.model.ProjectHistory;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,14 +1,14 @@
-package com.pwpo.project;
+package com.pwpo.project.controller;
 
 import com.pwpo.common.ChartData;
 import com.pwpo.common.controller.BaseEntityController;
 import com.pwpo.common.model.APIResponse;
 import com.pwpo.common.model.dto.ItemDTO;
-import com.pwpo.common.model.edit.Editable;
 import com.pwpo.common.search.SearchQueryOption;
 import com.pwpo.project.dto.EditProjectRequestDTO;
 import com.pwpo.project.dto.ProjectPrimaryResponseDTO;
 import com.pwpo.project.dto.ProjectRequestDTO;
+import com.pwpo.project.model.Project;
 import com.pwpo.project.service.ProjectManager;
 import com.pwpo.project.service.VisualizationProjectManager;
 import com.pwpo.user.UserManager;

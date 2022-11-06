@@ -1,7 +1,7 @@
-package com.pwpo.project;
+package com.pwpo.project.repository;
 
 import com.pwpo.common.service.BaseRepository;
-import org.springframework.stereotype.Repository;
+import com.pwpo.project.model.Project;
 
 import java.util.Optional;
 

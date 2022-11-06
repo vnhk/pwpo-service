@@ -1,4 +1,4 @@
-package com.pwpo.task;
+package com.pwpo.task.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -8,7 +8,7 @@ import com.pwpo.common.deserializer.FromUserIdDeserializer;
 import com.pwpo.common.enums.Priority;
 import com.pwpo.common.enums.Status;
 import com.pwpo.common.serializer.ToEnumDisplayNameSerializer;
-import com.pwpo.project.Project;
+import com.pwpo.project.model.Project;
 import com.pwpo.task.enums.TaskType;
 import com.pwpo.task.timelog.TimeLog;
 import com.pwpo.user.UserDetails;

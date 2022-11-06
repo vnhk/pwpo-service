@@ -1,4 +1,4 @@
-package com.pwpo.project;
+package com.pwpo.project.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -24,7 +24,7 @@ public class ProjectHistory extends BaseHistoryEntity {
     private String summary;
     @Enumerated(EnumType.STRING)
     @JsonSerialize(using = ToEnumDisplayNameSerializer.class)
-    @HistoryField
+    @HistoryField(comparePath = "displayName")
     private Status status;
     @Column(length = Constants.DESCRIPTION_MAX)
     @HistoryField
@@ -33,7 +33,7 @@ public class ProjectHistory extends BaseHistoryEntity {
     private String name;
     @HistoryField
     private String shortForm;
-    @HistoryField(path = "nick")
+    @HistoryField(savePath = "nick", comparePath = "nick")
     private String owner;
     @ManyToOne
     @JsonIgnore
@@ -44,5 +44,11 @@ public class ProjectHistory extends BaseHistoryEntity {
     public void buildTargetEntityConnection(BaseEntity entity) {
         this.project = (Project) entity;
         project.getHistoryEntities().add(this);
+    }
+
+    @Override
+    @JsonIgnore
+    public BaseEntity getTargetEntity() {
+        return project;
     }
 }
