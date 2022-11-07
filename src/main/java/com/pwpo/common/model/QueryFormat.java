@@ -7,4 +7,5 @@ public class QueryFormat {
     public static final String TASKS_BY_PROJECT_ID = "(project.id EQUALS_OPERATION %d)";
     public static final String ENTITY_BY_ID = "(id EQUALS_OPERATION %d)";
     public static final String PROJECT_BY_ID = "(project.id EQUALS_OPERATION %d)";
+    public static final String TASK_BY_ID = "(task.id EQUALS_OPERATION %d)";
 }

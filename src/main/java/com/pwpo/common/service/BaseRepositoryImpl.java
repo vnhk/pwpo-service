@@ -61,7 +61,7 @@ public class BaseRepositoryImpl<T extends BaseEntity, ID extends Serializable> e
     }
 
     private void update(BaseEntity entity, Editable<ID> editable) throws NoSuchFieldException, IllegalAccessException {
-        List<Field> declaredFields = getFieldsFromEditable(editable);
+        List<Field> declaredFields = getFieldsFromEditable(editable, entity);
 
         for (Field declaredField : declaredFields) {
             String name = declaredField.getName();
@@ -88,12 +88,15 @@ public class BaseRepositoryImpl<T extends BaseEntity, ID extends Serializable> e
         return val;
     }
 
-    private List<Field> getFieldsFromEditable(Editable<ID> editable) {
+    protected List<Field> getFieldsFromEditable(Editable<ID> editable, BaseEntity entity) {
         List<Field> parentSupperClassDeclaredFields = Arrays.stream(editable.getClass().getSuperclass().getDeclaredFields()).toList();
         List<Field> editableFields = Arrays.stream(editable.getClass().getDeclaredFields()).collect(Collectors.toList());
         editableFields.addAll(parentSupperClassDeclaredFields);
 
+        List<String> availableFieldsInEntity = Arrays.stream(entity.getClass().getDeclaredFields()).map(Field::getName).toList();
+
         return editableFields.stream().filter(e -> !e.getName().equalsIgnoreCase("id"))
+                .filter(e -> availableFieldsInEntity.contains(e.getName()))
                 .collect(Collectors.toList());
     }
 

@@ -4,9 +4,8 @@ import com.pwpo.common.controller.BaseHistoryEntityController;
 import com.pwpo.common.model.APIResponse;
 import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.common.search.SearchQueryOption;
-import com.pwpo.project.dto.ProjectPrimaryResponseDTO;
 import com.pwpo.project.dto.history.ProjectHistoryDetailsResponseDTO;
-import com.pwpo.project.dto.history.ProjectHistoryResponseDTO;
+import com.pwpo.common.model.dto.HistoryReponseDTO;
 import com.pwpo.project.model.ProjectHistory;
 import com.pwpo.project.service.ProjectHistoryManager;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +36,7 @@ public class ProjectHistoryController extends BaseHistoryEntityController<Projec
 
     @Override
     protected Class<? extends ItemDTO> getHistoryDTO() {
-        return ProjectHistoryResponseDTO.class;
+        return HistoryReponseDTO.class;
     }
 
     @Override

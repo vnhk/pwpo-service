@@ -1,20 +1,23 @@
 package com.pwpo.task.service;
 
 import com.pwpo.common.enums.Status;
+import com.pwpo.common.exception.ValidationException;
 import com.pwpo.common.model.APIResponse;
-import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.common.model.QueryFormat;
+import com.pwpo.common.model.dto.ItemDTO;
+import com.pwpo.common.model.edit.Editable;
 import com.pwpo.common.search.SearchQueryOption;
 import com.pwpo.common.search.SearchService;
 import com.pwpo.common.search.model.SearchResponse;
+import com.pwpo.common.service.BaseService;
 import com.pwpo.common.service.ItemMapper;
 import com.pwpo.project.model.Project;
 import com.pwpo.project.repository.ProjectRepository;
-import com.pwpo.task.model.Task;
 import com.pwpo.task.TaskRepository;
 import com.pwpo.task.dto.TaskPrimaryResponseDTO;
 import com.pwpo.task.dto.TaskRequestDTO;
-import lombok.RequiredArgsConstructor;
+import com.pwpo.task.model.EstimableDTO;
+import com.pwpo.task.model.Task;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -24,14 +27,21 @@ import java.util.Optional;
 import java.util.Random;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
-public class TaskManager {
+public class TaskManager extends BaseService<Task, Long> {
     public static final int MAX_TASKS_IN_PROJECT = 9998;
     private final ItemMapper mapper;
     private final TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
     private final SearchService searchService;
+
+    public TaskManager(ItemMapper mapper, TaskRepository taskRepository, ProjectRepository projectRepository, SearchService searchService) {
+        super(taskRepository, mapper);
+        this.mapper = mapper;
+        this.taskRepository = taskRepository;
+        this.projectRepository = projectRepository;
+        this.searchService = searchService;
+    }
 
     public APIResponse getTasksByProjectId(String id, SearchQueryOption options, Class<? extends ItemDTO> dtoClass) {
         String query = String.format(QueryFormat.TASKS_BY_PROJECT_ID, Long.valueOf(id));
@@ -40,6 +50,19 @@ public class TaskManager {
         return mapper.mapToAPIResponse(search, dtoClass);
     }
 
+
+    @Override
+    protected void validateEditRequest(Optional orig, Editable body) {
+        if (orig.isEmpty()) {
+            throw new ValidationException("Could not find task with given id!");
+        }
+    }
+
+    @Override
+    public APIResponse edit(Editable<Long> body) {
+        setEstimation((EstimableDTO) body);
+        return super.edit(body);
+    }
 
     public APIResponse getTaskById(String id, Class<? extends ItemDTO> dtoClass) {
         Optional<Task> task = taskRepository.findById(Long.parseLong(id));
@@ -62,9 +85,9 @@ public class TaskManager {
         return mapper.mapToAPIResponse(saved, TaskPrimaryResponseDTO.class);
     }
 
-    private void setEstimation(TaskRequestDTO body) {
-        if(body.getEstimation() == null) {
-            body.setEstimation(body.getEstimationInHours() * 60 + body.getEstimationInMinutes());
+    private void setEstimation(EstimableDTO body) {
+        if (body.getEstimationValue() == null) {
+            body.setEstimationValue(body.getEstimationInHoursValue() * 60 + body.getEstimationInMinutesValue());
         }
     }
 

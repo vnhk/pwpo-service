@@ -1,4 +1,4 @@
-package com.pwpo.project.dto.history;
+package com.pwpo.common.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 @Builder
 @Data
-public class ProjectHistoryResponseDTO implements ItemDTO {
+public class HistoryReponseDTO implements ItemDTO {
     private final Long id;
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")

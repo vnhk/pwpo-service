@@ -1,10 +1,14 @@
 package com.pwpo.task.dto;
 
 import com.pwpo.common.enums.Priority;
+import com.pwpo.common.enums.Status;
 import com.pwpo.common.model.Constants;
+import com.pwpo.common.model.db.BaseHistoryEntity;
 import com.pwpo.common.model.dto.ItemDTO;
+import com.pwpo.common.model.edit.Editable;
 import com.pwpo.task.enums.TaskType;
 import com.pwpo.task.model.EstimableDTO;
+import com.pwpo.task.model.TaskHistory;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,26 +16,32 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.time.LocalDate;
 
-@Getter
 @Setter
-public class TaskRequestDTO implements ItemDTO, EstimableDTO {
+@Getter
+public class EditTaskRequestDTO<ID extends Serializable> implements Editable<ID>, EstimableDTO {
     @NotNull
-    protected TaskType type;
+    private ID id;
+    @NotNull
+    private Status status;
+    @NotNull
+    private TaskType type;
     @Size(min = 1, max = Constants.SUMMARY_MAX)
-    protected String summary;
-    protected Long assignee;
+    private String summary;
+    private Long assignee;
     @NotNull
-    protected Long owner;
+    private Long owner;
     @NotNull
-    protected LocalDate dueDate;
+    private LocalDate dueDate;
     @NotNull
-    protected Priority priority;
+    private Priority priority;
     @Size(max = Constants.DESCRIPTION_MAX)
-    protected String description;
-    @NotNull
-    protected Long project;
+    private String description;
+    @Max(value = 60 * 3600 + 60)
+    @Min(value = 0)
+    private Integer estimation;
     @Max(value = 3600)
     @Min(value = 0)
     @NotNull
@@ -40,9 +50,21 @@ public class TaskRequestDTO implements ItemDTO, EstimableDTO {
     @Min(value = 0)
     @NotNull
     protected Integer estimationInMinutes;
-    @Max(value = 60 * 3600 + 60)
-    @Min(value = 0)
-    protected Integer estimation;
+
+    @Override
+    public ID getEntityId() {
+        return id;
+    }
+
+    @Override
+    public Class<? extends ItemDTO> getResponseDTO() {
+        return TaskPrimaryResponseDTO.class;
+    }
+
+    @Override
+    public Class<? extends BaseHistoryEntity> getHistoryClass() {
+        return TaskHistory.class;
+    }
 
     @Override
     public Integer getEstimationValue() {

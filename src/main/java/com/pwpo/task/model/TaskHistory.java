@@ -1,26 +1,19 @@
 package com.pwpo.task.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.pwpo.common.deserializer.FromProjectIdDeserializer;
-import com.pwpo.common.deserializer.FromUserIdDeserializer;
 import com.pwpo.common.enums.Priority;
 import com.pwpo.common.enums.Status;
-import com.pwpo.common.serializer.ToEnumDisplayNameSerializer;
-import com.pwpo.project.model.Project;
-import com.pwpo.project.model.ProjectHistory;
-import com.pwpo.task.enums.TaskType;
-import com.pwpo.task.timelog.TimeLog;
-import com.pwpo.user.UserDetails;
-import com.pwpo.common.model.db.BaseEntity;
 import com.pwpo.common.model.Constants;
+import com.pwpo.common.model.HistoryField;
+import com.pwpo.common.model.db.BaseEntity;
+import com.pwpo.common.model.db.BaseHistoryEntity;
+import com.pwpo.common.serializer.ToEnumDisplayNameSerializer;
+import com.pwpo.task.enums.TaskType;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
-
 
 @Getter
 @Setter
@@ -29,44 +22,46 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class Task extends BaseEntity {
-    @Column(unique = true)
-    private String number;
+public class TaskHistory extends BaseHistoryEntity {
     @Enumerated(EnumType.STRING)
     @JsonSerialize(using = ToEnumDisplayNameSerializer.class)
+    @HistoryField(comparePath = "displayName")
     private TaskType type;
-    @ManyToOne
-    @JsonDeserialize(using = FromUserIdDeserializer.class)
-    private UserDetails assignee;
+    @HistoryField(savePath = "nick", comparePath = "nick")
+    private String assignee;
     @Enumerated(EnumType.STRING)
     @JsonSerialize(using = ToEnumDisplayNameSerializer.class)
+    @HistoryField(comparePath = "displayName")
     private Status status;
+    @HistoryField
     private LocalDate dueDate;
     @Enumerated(EnumType.STRING)
     @JsonSerialize(using = ToEnumDisplayNameSerializer.class)
+    @HistoryField(comparePath = "displayName")
     private Priority priority;
+    @HistoryField
     private String summary;
     @Column(length = Constants.DESCRIPTION_MAX)
+    @HistoryField
     private String description;
-    @ManyToOne
-    @JsonDeserialize(using = FromUserIdDeserializer.class)
-    private UserDetails owner;
-    @ManyToOne
-    private UserDetails createdBy;
+    @HistoryField(savePath = "nick", comparePath = "nick")
+    private String owner;
+    @HistoryField
     private Integer estimation;
     @ManyToOne
-    @JsonDeserialize(using = FromProjectIdDeserializer.class)
-    private Project project;
-    @OneToMany(mappedBy = "task")
     @JsonIgnore
-    private List<TimeLog> timeLogs;
-    @OneToMany(mappedBy = "task")
-    @JsonIgnore
-    private List<TaskHistory> history;
+    @HistoryField(comparable = false, isTargetEntity = true)
+    private Task task;
+
+    @Override
+    public void buildTargetEntityConnection(BaseEntity entity) {
+        this.task = (Task) entity;
+        task.getHistoryEntities().add(this);
+    }
 
     @Override
     @JsonIgnore
-    public List getHistoryEntities() {
-        return history;
+    public BaseEntity getTargetEntity() {
+        return task;
     }
 }
