@@ -52,7 +52,7 @@ public class ProjectManager extends BaseService<Project, Long> {
         }
     }
 
-    public APIResponse create(ProjectRequestDTO body) {
+    public APIResponse<? extends ItemDTO> create(ProjectRequestDTO body) {
         validate(body);
         Project project = mapper.mapToObj(body, Project.class);
         setInitValues(project);

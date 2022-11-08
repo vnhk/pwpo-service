@@ -1,15 +1,16 @@
 package com.pwpo.common.model;
 
-import com.pwpo.common.model.dto.ItemDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 @AllArgsConstructor
 @Getter
-public class APIResponse {
-    private List<? extends ItemDTO> items;
+@Setter
+public class APIResponse<T> {
+    private List<T> items;
     private int currentFound;
     private int currentPage;
     private int allFound;

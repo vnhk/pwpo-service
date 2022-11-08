@@ -9,9 +9,11 @@ import java.util.*;
 @Service
 public class DiffService {
 
-    private final static String SPACE_REGEX = " " ;
+    private final static String SPACE_REGEX = " ";
 
     public List<DiffWord> diff(String fst, String snd) {
+        // TODO: 08.11.2022 fst=Project that is used for testing application | snd=Edited Desc | exception!!!
+        // TODO: 08.11.2022 snd all different values | exception!!!
         String[] wordsFst = fst.split(SPACE_REGEX);
         String[] wordsSnd = snd.split(SPACE_REGEX);
 

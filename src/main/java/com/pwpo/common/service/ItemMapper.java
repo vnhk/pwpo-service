@@ -3,8 +3,8 @@ package com.pwpo.common.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pwpo.common.model.APIResponse;
-import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.common.model.db.Persistable;
+import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.common.search.model.SearchResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,20 +29,20 @@ public class ItemMapper {
         }
     }
 
-    public APIResponse mapToAPIResponse(SearchResponse response, Class<? extends ItemDTO> dtoClass) {
+    public APIResponse<? extends ItemDTO> mapToAPIResponse(SearchResponse response, Class<? extends ItemDTO> dtoClass) {
         List<ItemDTO> items = new ArrayList<>();
 
         List<? extends Persistable> resultList = response.getResultList();
         resultList.forEach(e -> items.add(mapToDTO(e, dtoClass)));
 
-        return new APIResponse(items, response.getCurrentFound(), response.getCurrentPage(), response.getAllFound());
+        return new APIResponse<>(items, response.getCurrentFound(), response.getCurrentPage(), response.getAllFound());
     }
 
-    public APIResponse mapToAPIResponse(Persistable item, Class<? extends ItemDTO> dtoClass) {
+    public APIResponse<? extends ItemDTO> mapToAPIResponse(Persistable item, Class<? extends ItemDTO> dtoClass) {
         List<ItemDTO> items = new ArrayList<>();
         items.add(mapToDTO(item, dtoClass));
 
-        return new APIResponse(items, 1, 1, 1);
+        return new APIResponse<>(items, 1, 1, 1);
     }
 
     public <T> T mapToObj(ItemDTO dto, Class<T> objClass) {

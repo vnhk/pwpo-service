@@ -28,7 +28,6 @@ VALUES (4, '2022-10-12',
         'Project without users added', 'Where users?', 'NOUSRPR', 'IN_PROGRESS', 'Project without users added', 1, 1,
         '2022-10-10');
 
-
 INSERT INTO USER_PROJECT (ID, PROJECT_ID, USER_ID, ROLE, CREATED, UPDATED)
 VALUES (1, 1, 1, 'DEVELOPER', '2022-10-12', '2022-10-10');
 

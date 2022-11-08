@@ -12,13 +12,13 @@ import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.common.search.SearchQueryOption;
 import com.pwpo.common.search.SearchService;
 import com.pwpo.common.search.model.SearchResponse;
-import com.pwpo.project.model.ProjectHistory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,7 +31,7 @@ public abstract class BaseHistoryService<T extends Persistable, ID extends Seria
 
 
     public APIResponse getHistory(ID id, SearchQueryOption options, Class<? extends ItemDTO> dto) {
-        options.setEntityToFind(ProjectHistory.class.getName());
+        options.setEntityToFind(getEntityToFind());
         String query = getQuery(id);
         SearchResponse searchResult = searchService.search(query, options);
 
@@ -117,8 +117,8 @@ public abstract class BaseHistoryService<T extends Persistable, ID extends Seria
      * When performing the diff, sometimes the algorithm encounters a BaseEntity complex field (eq. Status / Project / User).
      * Diff service requires all comparable data to be text. @HistoryField annotation has a path attribute that can be used to define field.
      *
-     * @param field      main field annotated with @HistoryField, for example String name / Status status / Project project
-     * @param object     BaseHistory or BaseEntity object
+     * @param field  main field annotated with @HistoryField, for example String name / Status status / Project project
+     * @param object BaseHistory or BaseEntity object
      * @return field value based on the @HistoryField path, if path is blank then main @param field is returned
      * @throws IllegalAccessException when field is not accessible
      * @throws NoSuchFieldException   when path is invalid
@@ -161,5 +161,10 @@ public abstract class BaseHistoryService<T extends Persistable, ID extends Seria
             throw new ValidationException("Could not find history!");
         }
         return opt.get();
+    }
+
+    private String getEntityToFind() {
+        return ((ParameterizedType) getClass()
+                .getGenericSuperclass()).getActualTypeArguments()[0].getTypeName();
     }
 }

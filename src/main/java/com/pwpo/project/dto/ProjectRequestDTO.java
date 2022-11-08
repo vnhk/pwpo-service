@@ -2,7 +2,9 @@ package com.pwpo.project.dto;
 
 import com.pwpo.common.model.Constants;
 import com.pwpo.common.model.dto.ItemDTO;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
