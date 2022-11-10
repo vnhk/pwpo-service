@@ -17,7 +17,7 @@ Feature: Project controller endpoint tests
       | name              | description         | shortForm | summary         | owner |
       | Project for tests | example description | C0001     | example summary | 1     |
     Then the client receives 400 status
-    And the client receives validation details
+    And the client receives bad request details
       | field | code             | message                                     |
       | name  | FIELD_VALIDATION | Project with the given name already exists! |
 
@@ -46,7 +46,7 @@ Feature: Project controller endpoint tests
       | name           | description        | shortForm | summary        | owner | status |
       | Edited Project | edited description | EDITED    | edited summary | 2     | New    |
     Then the client receives 400 status
-    And the client receives validation details
+    And the client receives bad request details
       | code               | message                     |
       | GENERAL_VALIDATION | The project does not exist! |
 
@@ -56,7 +56,7 @@ Feature: Project controller endpoint tests
       | name              | description        | shortForm | summary        | owner | status |
       | Project for tests | edited description | C0005     | edited summary | 2     | New    |
     Then the client receives 400 status
-    And the client receives validation details
+    And the client receives bad request details
       | field | code             | message                                     |
       | name  | FIELD_VALIDATION | Project with the given name already exists! |
 
@@ -66,6 +66,6 @@ Feature: Project controller endpoint tests
       | name        | description        | shortForm | summary        | owner | status |
       | edited name | edited description | BUIPR     | edited summary | 2     | New    |
     Then the client receives 400 status
-    And the client receives validation details
+    And the client receives bad request details
       | field     | code             | message                                           |
       | shortForm | FIELD_VALIDATION | Project with the given short form already exists! |

@@ -1,5 +1,5 @@
 package com.pwpo.common.exception;
 
 public enum ExceptionCode {
-    GENERAL_VALIDATION, FIELD_VALIDATION
+    GENERAL_VALIDATION, FIELD_VALIDATION, NOT_FOUND
 }

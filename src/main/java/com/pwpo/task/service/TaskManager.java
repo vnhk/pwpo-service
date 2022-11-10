@@ -1,6 +1,7 @@
 package com.pwpo.task.service;
 
 import com.pwpo.common.enums.Status;
+import com.pwpo.common.exception.NotFoundException;
 import com.pwpo.common.exception.ValidationException;
 import com.pwpo.common.model.APIResponse;
 import com.pwpo.common.model.QueryFormat;
@@ -70,7 +71,7 @@ public class TaskManager extends BaseService<Task, Long> {
         if (task.isPresent()) {
             return mapper.mapToAPIResponse(task.get(), dtoClass);
         } else {
-            throw new RuntimeException("Could not find task!");
+            throw new NotFoundException("Could not find task!");
         }
     }
 

@@ -14,4 +14,10 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         ExceptionBadRequestResponse r = new ExceptionBadRequestResponse(ex.getFieldName(), ex.getCode(), ex.getMessage());
         return new ResponseEntity<>(r, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(value = {NotFoundException.class})
+    protected ResponseEntity<ExceptionBadRequestResponse> handleValidationException(NotFoundException ex) {
+        ExceptionBadRequestResponse r = new ExceptionBadRequestResponse(null, ExceptionCode.NOT_FOUND, ex.getMessage());
+        return new ResponseEntity<>(r, HttpStatus.BAD_REQUEST);
+    }
 }
