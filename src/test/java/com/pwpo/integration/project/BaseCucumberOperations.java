@@ -2,6 +2,7 @@ package com.pwpo.integration.project;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pwpo.TestUtils;
+import com.pwpo.common.enums.Status;
 import com.pwpo.common.model.db.Persistable;
 import com.pwpo.common.search.model.SortDirection;
 import io.cucumber.datatable.DataTable;
@@ -15,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Map;
 
 @CucumberContextConfiguration
@@ -41,6 +43,12 @@ public class BaseCucumberOperations {
 
                 if (type.equals(Long.class)) {
                     value = Long.valueOf((String) value);
+                } else if (type.equals(Status.class)) {
+                    String statusDisplayName = (String) value;
+                    value = Arrays.stream(Status.values())
+                            .filter(e -> e.getDisplayName().equals(statusDisplayName))
+                            .findFirst()
+                            .orElseThrow(() -> new RuntimeException("Enum value for DTO should be set with display name!"));
                 }
 
                 dtoField.setAccessible(true);

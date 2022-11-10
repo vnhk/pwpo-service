@@ -2,6 +2,7 @@ package com.pwpo.integration.project;
 
 import com.pwpo.TestUtils;
 import com.pwpo.common.model.APIResponse;
+import com.pwpo.project.dto.EditProjectRequestDTO;
 import com.pwpo.project.dto.ProjectPrimaryResponseDTO;
 import com.pwpo.project.dto.ProjectRequestDTO;
 import org.springframework.test.web.servlet.MvcResult;
@@ -28,6 +29,11 @@ public class ProjectCucumberOperations extends BaseCucumberOperations {
 
     public MvcResult createProject(ProjectRequestDTO req) throws Exception {
         return mockMvc.perform(TestUtils.buildPostRequest("/projects", req, mapper))
+                .andReturn();
+    }
+
+    public MvcResult editProject(EditProjectRequestDTO req) throws Exception {
+        return mockMvc.perform(TestUtils.buildPutRequest("/projects", req, mapper))
                 .andReturn();
     }
 }

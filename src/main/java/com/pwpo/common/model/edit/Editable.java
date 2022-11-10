@@ -5,7 +5,7 @@ import com.pwpo.common.model.dto.ItemDTO;
 
 import java.io.Serializable;
 
-public interface Editable<ID extends Serializable> {
+public interface Editable<ID extends Serializable> extends ItemDTO {
     ID getEntityId();
 
     Class<? extends ItemDTO> getResponseDTO();
