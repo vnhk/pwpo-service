@@ -8,41 +8,38 @@ import com.pwpo.task.model.EstimableDTO;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Getter
 @Setter
 public class TaskRequestDTO implements ItemDTO, EstimableDTO {
     @NotNull
-    protected TaskType type;
+    private TaskType type;
     @Size(min = 1, max = Constants.SUMMARY_MAX)
-    protected String summary;
-    protected Long assignee;
+    private String summary;
+    private Long assignee;
     @NotNull
-    protected Long owner;
+    private Long owner;
     @NotNull
-    protected LocalDate dueDate;
+    private LocalDate dueDate;
     @NotNull
-    protected Priority priority;
+    private Priority priority;
     @Size(max = Constants.DESCRIPTION_MAX)
-    protected String description;
+    private String description;
     @NotNull
-    protected Long project;
+    private Long project;
     @Max(value = 3600)
     @Min(value = 0)
     @NotNull
-    protected Integer estimationInHours;
+    private Integer estimationInHours;
     @Max(value = 60)
     @Min(value = 0)
     @NotNull
-    protected Integer estimationInMinutes;
+    private Integer estimationInMinutes;
     @Max(value = 60 * 3600 + 60)
     @Min(value = 0)
-    protected Integer estimation;
+    private Integer estimation;
 
     @Override
     public Integer getEstimationValue() {

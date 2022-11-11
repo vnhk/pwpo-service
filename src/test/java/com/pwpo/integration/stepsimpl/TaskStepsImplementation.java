@@ -2,6 +2,7 @@ package com.pwpo.integration.stepsimpl;
 
 import com.pwpo.TestUtils;
 import com.pwpo.common.model.APIResponse;
+import com.pwpo.task.dto.EditTaskRequestDTO;
 import com.pwpo.task.dto.TaskPrimaryResponseDTO;
 import com.pwpo.task.dto.TaskRequestDTO;
 import com.pwpo.task.model.Task;
@@ -47,6 +48,29 @@ public class TaskStepsImplementation extends CommonStepsImplementation {
     }
 
     public void performReceiveCreatedTask(DataTable dataTable) throws Exception {
+        APIResponse<TaskPrimaryResponseDTO> createdRes
+                = TestUtils.convertAPIResponse(mvcResult.getResponse(), TaskPrimaryResponseDTO.class, mapper);
+
+        Map<String, String> data = dataTable.asMaps().get(0);
+        TaskPrimaryResponseDTO created = createdRes.getItems().get(0);
+
+        assertThat(Long.parseLong(data.get("owner"))).isEqualTo(created.getOwner().getId());
+        assertThat(Long.parseLong(data.get("assignee"))).isEqualTo(created.getAssignee().getId());
+        assertThat(data.get("status")).isEqualTo(created.getStatus());
+        assertThat(data.get("summary")).isEqualTo(created.getSummary());
+        assertThat(data.get("dueDate")).isEqualTo(created.getDueDate().toString());
+        assertThat(data.get("priority")).isEqualTo(created.getPriority());
+        assertThat(data.get("project")).isEqualTo(String.valueOf(created.getProject().getId()));
+    }
+
+    public void performEditTask(DataTable dataTable, Long taskId) throws Exception {
+        EditTaskRequestDTO req = buildDTO(dataTable, EditTaskRequestDTO.class);
+        req.setId(taskId);
+        mvcResult = mockMvc.perform(TestUtils.buildPutRequest("/tasks", req, mapper))
+                .andReturn();
+    }
+
+    public void performReceiveEditTask(DataTable dataTable) throws Exception {
         APIResponse<TaskPrimaryResponseDTO> editedTaskRes
                 = TestUtils.convertAPIResponse(mvcResult.getResponse(), TaskPrimaryResponseDTO.class, mapper);
 
@@ -59,6 +83,5 @@ public class TaskStepsImplementation extends CommonStepsImplementation {
         assertThat(data.get("summary")).isEqualTo(edited.getSummary());
         assertThat(data.get("dueDate")).isEqualTo(edited.getDueDate().toString());
         assertThat(data.get("priority")).isEqualTo(edited.getPriority());
-        assertThat(data.get("project")).isEqualTo(String.valueOf(edited.getProject().getId()));
     }
 }

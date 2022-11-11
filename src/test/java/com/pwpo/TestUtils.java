@@ -14,7 +14,10 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class TestUtils {
@@ -52,6 +55,18 @@ public class TestUtils {
 
     public static <T> T convertResponse(MockHttpServletResponse response, Class<T> itemClass, ObjectMapper mapper) throws Exception {
         return mapper.readValue(response.getContentAsString(), itemClass);
+    }
+
+    public static <S, T extends Collection<S>> T convertResponse(MockHttpServletResponse response, Class<T> collectionClass, ObjectMapper mapper, Class<S> elClass) throws UnsupportedEncodingException, JsonProcessingException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        T collection = mapper.readValue(response.getContentAsString(), collectionClass);
+        T newCollection = (T) collection.getClass().getDeclaredConstructor().newInstance();
+
+        for (S e : collection) {
+            String content = mapper.writeValueAsString(e);
+            newCollection.add(mapper.readValue(content, elClass));
+        }
+
+        return newCollection;
     }
 
     public static RequestBuilder buildPostRequest(String url, ItemDTO item, ObjectMapper mapper) throws JsonProcessingException {

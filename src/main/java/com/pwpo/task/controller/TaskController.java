@@ -3,7 +3,6 @@ package com.pwpo.task.controller;
 import com.pwpo.common.controller.BaseEntityController;
 import com.pwpo.common.model.APIResponse;
 import com.pwpo.common.model.dto.ItemDTO;
-import com.pwpo.project.dto.EditProjectRequestDTO;
 import com.pwpo.task.dto.EditTaskRequestDTO;
 import com.pwpo.task.dto.TaskRequestDTO;
 import com.pwpo.task.model.Task;

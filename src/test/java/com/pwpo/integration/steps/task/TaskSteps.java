@@ -47,4 +47,19 @@ public class TaskSteps extends BaseCucumberStep {
     public void theClientReceivesNewlyCreatedTask(DataTable dataTable) throws Exception {
         taskStepsImplementation.performReceiveCreatedTask(dataTable);
     }
+
+    @Given("the client wants to edit task with id = {long}")
+    public void theClientWantsToEditTaskWithId(long taskId) {
+        this.taskId = taskId;
+    }
+
+    @When("the client sets following task values")
+    public void theClientSetsFollowingTaskValues(DataTable dataTable) throws Exception {
+        taskStepsImplementation.performEditTask(dataTable, taskId);
+    }
+
+    @And("the client receives edited task")
+    public void theClientReceivesEditedTask(DataTable dataTable) throws Exception {
+        taskStepsImplementation.performReceiveEditTask(dataTable);
+    }
 }

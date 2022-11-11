@@ -10,15 +10,15 @@ Feature: Task controller endpoint tests
   Scenario: the client wants to get task by id in project
     Given the client is on the project with id = 1
     When the client wants to receive task with id = 2
-    And the client receives 200 status
-    Then the client receives APIResponse
+    Then the client receives 200 status
+    And the client receives APIResponse
       | allFound | currentPage | currentFound |
       | 1        | 1           | 1            |
 
   Scenario: the client wants to get task by id, but task does not exist
     When the client wants to receive task with id = 0
-    And the client receives 400 status
-    Then the client receives bad request details
+    Then the client receives 400 status
+    And the client receives bad request details
       | code      | message              |
       | NOT_FOUND | Could not find task! |
 
@@ -31,3 +31,17 @@ Feature: Task controller endpoint tests
     And the client receives newly created Task
       | type    | summary              | assignee | owner | dueDate    | priority | status | project |
       | Feature | task created in test | 1        | 2     | 2020-10-10 | Critical | New    | 5       |
+
+  Scenario: the client wants to edit existing task but form is invalid
+    Given the client wants to edit task with id = 1
+    When the client sets following task values
+      | type | summary              | assignee | owner | dueDate    | priority | description     | estimationInHours | estimationInMinutes | status |
+      |      | task created in test |          |       | 2020-10-10 |          | description val | 10                | 250                 |        |
+    Then the client receives 400 status
+    And the client receives bad request details
+      | field               | code             | message                          |
+      | type                | FIELD_VALIDATION | must not be null                 |
+      | status              | FIELD_VALIDATION | must not be null                 |
+      | owner               | FIELD_VALIDATION | must not be null                 |
+      | priority            | FIELD_VALIDATION | must not be null                 |
+      | estimationInMinutes | FIELD_VALIDATION | must be less than or equal to 60 |

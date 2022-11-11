@@ -12,16 +12,21 @@ import com.pwpo.task.model.TaskHistory;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 
 @Setter
 @Getter
 public class EditTaskRequestDTO<ID extends Serializable> implements Editable<ID>, EstimableDTO {
+    @Max(value = 3600)
+    @Min(value = 0)
+    @NotNull
+    protected Integer estimationInHours;
+    @Max(value = 60)
+    @Min(value = 0)
+    @NotNull
+    protected Integer estimationInMinutes;
     @NotNull
     private ID id;
     @NotNull
@@ -42,14 +47,6 @@ public class EditTaskRequestDTO<ID extends Serializable> implements Editable<ID>
     @Max(value = 60 * 3600 + 60)
     @Min(value = 0)
     private Integer estimation;
-    @Max(value = 3600)
-    @Min(value = 0)
-    @NotNull
-    protected Integer estimationInHours;
-    @Max(value = 60)
-    @Min(value = 0)
-    @NotNull
-    protected Integer estimationInMinutes;
 
     @Override
     public ID getEntityId() {

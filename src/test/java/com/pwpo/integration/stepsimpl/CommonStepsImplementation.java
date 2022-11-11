@@ -15,8 +15,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -48,13 +47,27 @@ public class CommonStepsImplementation {
     }
 
     public void clientReceivesBadRequestDetails(DataTable dataTable) throws Exception {
-        ExceptionBadRequestResponse res = TestUtils.convertResponse(mvcResult.getResponse(), ExceptionBadRequestResponse.class, mapper);
+        List<ExceptionBadRequestResponse> res = TestUtils.convertResponse(mvcResult.getResponse(), List.class, mapper, ExceptionBadRequestResponse.class);
 
-        Map<String, String> data = dataTable.asMaps().get(0);
+        assertThat(dataTable.asMaps().size()).isEqualTo(res.size());
 
-        assertThat(data.get("field")).isEqualTo(res.getField());
-        assertThat(data.get("code")).isEqualTo(res.getCode().name());
-        assertThat(data.get("message")).isEqualTo(res.getMessage());
+        for (int i = 0; i < dataTable.asMaps().size(); i++) {
+            Map<String, String> data = dataTable.asMaps().get(i);
+            String field = data.get("field");
+            String code = data.get("code");
+            String message = data.get("message");
+
+            Optional<ExceptionBadRequestResponse> responseForFieldOpt
+                    = res.stream()
+                    .filter(e -> Objects.equals(e.getField(), field))
+                    .filter(e -> Objects.equals(e.getCode().name(), code))
+                    .filter(e -> Objects.equals(e.getMessage(), message))
+                    .findAny();
+
+            assertThat(responseForFieldOpt)
+                    .withFailMessage(String.format("Could not find match for field: %s, code: %s and message: %s", field, code, message))
+                    .isPresent();
+        }
     }
 
     protected String getDefaultGetParams(Class<? extends Persistable> entityToFind) {
