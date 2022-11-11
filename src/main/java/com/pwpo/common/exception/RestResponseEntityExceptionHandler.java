@@ -19,7 +19,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ExceptionHandler(value = {ValidationException.class})
     protected ResponseEntity<List<ExceptionBadRequestResponse>> handleValidationException(ValidationException ex) {
-        List<ExceptionBadRequestResponse> r = Collections.singletonList(new ExceptionBadRequestResponse(null, ExceptionCode.NOT_FOUND, ex.getMessage()));
+        List<ExceptionBadRequestResponse> r = Collections.singletonList(new ExceptionBadRequestResponse(ex.getFieldName(), ex.getCode(), ex.getMessage()));
         return new ResponseEntity<>(r, HttpStatus.BAD_REQUEST);
     }
 
