@@ -6,6 +6,7 @@ import com.pwpo.common.enums.DataEnum;
 import com.pwpo.common.exception.ExceptionBadRequestResponse;
 import com.pwpo.common.model.APIResponse;
 import com.pwpo.common.model.db.Persistable;
+import com.pwpo.common.model.dto.HistoryReponseDTO;
 import com.pwpo.common.search.model.SortDirection;
 import io.cucumber.datatable.DataTable;
 import org.apache.commons.lang3.StringUtils;
@@ -71,7 +72,20 @@ public class CommonStepsImplementation {
     }
 
     protected String getDefaultGetParams(Class<? extends Persistable> entityToFind) {
-        return TestUtils.buildParams(1, 1000, "id", SortDirection.ASC, entityToFind.getName(), "");
+        String entity = entityToFind == null ? null : entityToFind.getName();
+        return TestUtils.buildParams(1, 1000, "id", SortDirection.ASC, entity, "");
+    }
+
+    public void performReceiveHistory(DataTable dataTable) throws Exception {
+        APIResponse<HistoryReponseDTO> historyResponse
+                = TestUtils.convertAPIResponse(mvcResult.getResponse(), HistoryReponseDTO.class, mapper);
+
+        Map<String, String> data = dataTable.asMaps().get(0);
+        HistoryReponseDTO history = historyResponse.getItems().get(0);
+
+        assertThat(Long.parseLong(data.get("id"))).isEqualTo(history.getId());
+        assertThat(data.get("expired")).isEqualTo(history.getExpired().toString());
+        assertThat(data.get("editor")).isEqualTo(history.getEditor().getNick());
     }
 
     public <T> T buildDTO(DataTable dataTable, Class<T> dtoClass) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {

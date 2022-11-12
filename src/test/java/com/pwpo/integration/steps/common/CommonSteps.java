@@ -22,4 +22,9 @@ public class CommonSteps extends BaseCucumberStep {
     public void theClientReceivesBadRequestDetails(DataTable dataTable) throws Exception {
         commonStepsImplementation.clientReceivesBadRequestDetails(dataTable);
     }
+
+    @And("the client sees history")
+    public void theClientSeesHistory(DataTable dataTable) throws Exception {
+        commonStepsImplementation.performReceiveHistory(dataTable);
+    }
 }

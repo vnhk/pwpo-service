@@ -5,7 +5,9 @@ import com.pwpo.common.model.APIResponse;
 import com.pwpo.project.dto.EditProjectRequestDTO;
 import com.pwpo.project.dto.ProjectPrimaryResponseDTO;
 import com.pwpo.project.dto.ProjectRequestDTO;
+import com.pwpo.project.dto.history.ProjectHistoryDetailsResponseDTO;
 import com.pwpo.project.model.Project;
+import com.pwpo.project.model.ProjectHistory;
 import io.cucumber.datatable.DataTable;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -23,7 +25,7 @@ public class ProjectStepsImplementation extends CommonStepsImplementation {
     }
 
     public void performGetProjects() throws Exception {
-        String params = getDefaultGetParams();
+        String params = super.getDefaultGetParams(Project.class);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/projects" + params))
                 .andExpect(MockMvcResultMatchers.status().is(200))
@@ -85,7 +87,36 @@ public class ProjectStepsImplementation extends CommonStepsImplementation {
         assertThat(data.get("shortForm")).isEqualTo(createdProject.getShortForm());
     }
 
-    private String getDefaultGetParams() {
-        return super.getDefaultGetParams(Project.class);
+    public void performGetProjectHistory(Long projectId) throws Exception {
+        String params = super.getDefaultGetParams(ProjectHistory.class);
+
+        mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/projects/" + projectId + "/history" + params))
+                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andReturn();
+    }
+
+    public void performGetProjectHistoryDetails(Long projectId, Long historyId) throws Exception {
+        String params = super.getDefaultGetParams(ProjectHistory.class);
+
+        mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/projects/" + projectId + "/history/" + historyId + params))
+                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andReturn();
+    }
+
+    public void performReceiveProjectHistoryDetails(DataTable dataTable) throws Exception {
+        APIResponse<ProjectHistoryDetailsResponseDTO> detailsResp
+                = TestUtils.convertAPIResponse(mvcResult.getResponse(), ProjectHistoryDetailsResponseDTO.class, mapper);
+
+        Map<String, String> data = dataTable.asMaps().get(0);
+        ProjectHistoryDetailsResponseDTO details = detailsResp.getItems().get(0);
+
+        assertThat(Long.parseLong(data.get("id"))).isEqualTo(details.getId());
+        assertThat(data.get("name")).isEqualTo(details.getName());
+        assertThat(data.get("owner")).isEqualTo(details.getOwner());
+        assertThat(data.get("status")).isEqualTo(details.getStatus());
+        assertThat(data.get("summary")).isEqualTo(details.getSummary());
+        assertThat(data.get("shortForm")).isEqualTo(details.getShortForm());
+        assertThat(data.get("description")).isEqualTo(details.getDescription());
+        assertThat(data.get("editor")).isEqualTo(details.getEditor().getNick());
     }
 }

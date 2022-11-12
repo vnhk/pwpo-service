@@ -1,0 +1,3 @@
+INSERT INTO PROJECT_HISTORY (ID, EXPIRED, EDITOR_ID, DESCRIPTION, NAME, OWNER, SHORT_FORM, STATUS, SUMMARY, PROJECT_ID)
+VALUES (1, '2022-11-12 14:21:51', 1, 'description', 'Monitoring', 'joedoe',
+        'MONPR', 'NEW', 'Project monitoring', 1)

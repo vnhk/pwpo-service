@@ -21,7 +21,6 @@ import java.time.LocalDate;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class TaskHistory extends BaseHistoryEntity {
     @Enumerated(EnumType.STRING)
     @JsonSerialize(using = ToEnumDisplayNameSerializer.class)

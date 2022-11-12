@@ -7,12 +7,12 @@ import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
-        plugin = {"pretty", "html:target/CucumberProjectIntegrationTest.html"},
-        features = "src/test/resources/features/project/Project.feature",
+        plugin = {"pretty", "html:target/CucumberProjectHistoryIntegrationTest.html"},
+        features = "src/test/resources/features/project/ProjectHistory.feature",
         glue = {
                 "com.pwpo.integration.steps.common",
                 "com.pwpo.integration.steps.project"
         }
 )
-public class CucumberProjectIntegrationTest {
+public class CucumberProjectHistoryIntegrationTest {
 }

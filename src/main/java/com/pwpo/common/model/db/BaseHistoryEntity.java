@@ -10,8 +10,9 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Entity
-public abstract class BaseHistoryEntity implements Persistable {
+public class BaseHistoryEntity implements Persistable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = Constants.DB_SEQUENCE)
     @SequenceGenerator(name = Constants.DB_SEQUENCE, initialValue = Constants.DB_SEQUENCE_INIT)
@@ -20,6 +21,11 @@ public abstract class BaseHistoryEntity implements Persistable {
     @ManyToOne
     protected UserDetails editor;
 
-    public abstract void buildTargetEntityConnection(BaseEntity entity);
-    public abstract BaseEntity getTargetEntity();
+    public void buildTargetEntityConnection(BaseEntity entity) {
+
+    }
+
+    public BaseEntity getTargetEntity() {
+        return null;
+    }
 }

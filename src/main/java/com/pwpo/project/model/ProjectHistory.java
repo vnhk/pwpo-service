@@ -18,7 +18,6 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class ProjectHistory extends BaseHistoryEntity {
     @HistoryField
     private String summary;

@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
-        plugin = {"pretty", "html:target/cucumber"},
+        plugin = {"pretty", "html:target/CucumberTaskIntegrationTest.html"},
         features = "src/test/resources/features/task",
         glue = {
                 "com.pwpo.integration.steps.common",

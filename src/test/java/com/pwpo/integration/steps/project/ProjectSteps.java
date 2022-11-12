@@ -56,4 +56,19 @@ public class ProjectSteps extends BaseCucumberStep {
     public void theClientReceivesEditedProject(DataTable dataTable) throws Exception {
         projectCucumberOperations.performReceiveEditedProject(dataTable);
     }
+
+    @When("the client wants to check history of the project with id = {long}")
+    public void theClientWantsToCheckHistoryOfTheProjectWithId(Long projectId) throws Exception {
+        projectCucumberOperations.performGetProjectHistory(projectId);
+    }
+
+    @When("the client wants to check history details with id = {long} of the project with id = {long}")
+    public void theClientWantsToCheckHistoryDetailsWithIdOfTheProjectWithId(Long historyId, Long projectId) throws Exception {
+        projectCucumberOperations.performGetProjectHistoryDetails(projectId, historyId);
+    }
+
+    @And("the client sees project history details")
+    public void theClientSeesProjectHistoryDetails(DataTable dataTable) throws Exception {
+        projectCucumberOperations.performReceiveProjectHistoryDetails(dataTable);
+    }
 }
