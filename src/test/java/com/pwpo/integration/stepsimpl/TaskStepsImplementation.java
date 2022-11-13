@@ -14,12 +14,14 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Map;
 
+import static com.pwpo.integration.IntegrationDataHolder.apiResponse;
+import static com.pwpo.integration.IntegrationDataHolder.mvcResult;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TaskStepsImplementation extends CommonStepsImplementation {
 
     public TaskStepsImplementation(MockMvc mockMvc) {
-        this.mockMvc = mockMvc;
+        super(mockMvc);
     }
 
     public void performReceiveTasksInProject(Long projectId) throws Exception {
@@ -31,25 +33,25 @@ public class TaskStepsImplementation extends CommonStepsImplementation {
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andReturn();
 
-        apiResponse = TestUtils.convertAPIResponse(result.getResponse(), TaskPrimaryResponseDTO.class, mapper);
+        apiResponse(TestUtils.convertAPIResponse(result.getResponse(), TaskPrimaryResponseDTO.class, mapper));
     }
 
     public void performReceiveTaskById(Long taskId) throws Exception {
         String url = String.format("/tasks/task?id=%d&dto=%s", taskId, TaskPrimaryResponseDTO.class.getName());
-        mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(url))
-                .andReturn();
+        mvcResult(mockMvc.perform(MockMvcRequestBuilders.get(url))
+                .andReturn());
     }
 
     public void performCreateTask(DataTable dataTable, Long projectId) throws Exception {
         TaskRequestDTO req = buildDTO(dataTable, TaskRequestDTO.class);
         req.setProject(projectId);
-        mvcResult = mockMvc.perform(TestUtils.buildPostRequest("/tasks", req, mapper))
-                .andReturn();
+        mvcResult(mockMvc.perform(TestUtils.buildPostRequest("/tasks", req, mapper))
+                .andReturn());
     }
 
     public void performReceiveCreatedTask(DataTable dataTable) throws Exception {
         APIResponse<TaskPrimaryResponseDTO> createdRes
-                = TestUtils.convertAPIResponse(mvcResult.getResponse(), TaskPrimaryResponseDTO.class, mapper);
+                = TestUtils.convertAPIResponse(mvcResult().getResponse(), TaskPrimaryResponseDTO.class, mapper);
 
         Map<String, String> data = dataTable.asMaps().get(0);
         TaskPrimaryResponseDTO created = createdRes.getItems().get(0);
@@ -66,13 +68,13 @@ public class TaskStepsImplementation extends CommonStepsImplementation {
     public void performEditTask(DataTable dataTable, Long taskId) throws Exception {
         EditTaskRequestDTO req = buildDTO(dataTable, EditTaskRequestDTO.class);
         req.setId(taskId);
-        mvcResult = mockMvc.perform(TestUtils.buildPutRequest("/tasks", req, mapper))
-                .andReturn();
+        mvcResult(mockMvc.perform(TestUtils.buildPutRequest("/tasks", req, mapper))
+                .andReturn());
     }
 
     public void performReceiveEditTask(DataTable dataTable) throws Exception {
         APIResponse<TaskPrimaryResponseDTO> editedTaskRes
-                = TestUtils.convertAPIResponse(mvcResult.getResponse(), TaskPrimaryResponseDTO.class, mapper);
+                = TestUtils.convertAPIResponse(mvcResult().getResponse(), TaskPrimaryResponseDTO.class, mapper);
 
         Map<String, String> data = dataTable.asMaps().get(0);
         TaskPrimaryResponseDTO edited = editedTaskRes.getItems().get(0);

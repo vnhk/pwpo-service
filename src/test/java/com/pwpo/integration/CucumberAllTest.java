@@ -7,8 +7,8 @@ import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
-        plugin = {"pretty", "html:target/CucumberTaskIntegrationTest.html"},
-        features = "src/test/resources/features/task"
+        plugin = {"pretty", "html:target/CucumberAll.html"},
+        features = "src/test/resources/features/"
 )
-public class CucumberTaskIntegrationTest {
+public class CucumberAllTest {
 }

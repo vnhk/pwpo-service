@@ -13,5 +13,5 @@ import org.springframework.test.web.servlet.MockMvc;
 @ActiveProfiles("test")
 public abstract class BaseCucumberStep {
     @Autowired
-    protected MockMvc mockMvc;
+    public MockMvc mockMvc;
 }

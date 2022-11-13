@@ -1,7 +1,7 @@
 Feature: Project History tests
 
   Scenario: the client wants to check history of the project
-    When the client wants to check history of the project with id = 1
+    When the client wants to check history of the project with id = 4
     Then the client receives APIResponse
       | allFound | currentPage | currentFound |
       | 1        | 1           | 1            |
@@ -10,7 +10,7 @@ Feature: Project History tests
       | 1  | joedoe | 2022-11-12T14:21:51 |
 
   Scenario: the client wants to check history details of the project
-    When the client wants to check history details with id = 1 of the project with id = 1
+    When the client wants to check history details with id = 1 of the project with id = 4
     Then the client receives APIResponse
       | allFound | currentPage | currentFound |
       | 1        | 1           | 1            |

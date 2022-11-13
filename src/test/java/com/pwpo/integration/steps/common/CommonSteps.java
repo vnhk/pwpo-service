@@ -6,7 +6,7 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 
 public class CommonSteps extends BaseCucumberStep {
-    public CommonStepsImplementation commonStepsImplementation;
+    public CommonStepsImplementation commonStepsImplementation = new CommonStepsImplementation(mockMvc);
 
     @Then("the client receives APIResponse")
     public void clientReceivesAPIResponse(DataTable dataTable) throws Exception {

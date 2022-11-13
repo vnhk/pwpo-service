@@ -11,44 +11,48 @@ import com.pwpo.common.search.model.SortDirection;
 import io.cucumber.datatable.DataTable;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.util.*;
 
+import static com.pwpo.integration.IntegrationDataHolder.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CommonStepsImplementation {
-    public APIResponse apiResponse;
-    public MvcResult mvcResult;
     public ObjectMapper mapper = TestUtils.getObjectMapper();
-    protected MockMvc mockMvc;
+    public MockMvc mockMvc;
+
+    public CommonStepsImplementation(MockMvc mockMvc) {
+        this.mockMvc = mockMvc;
+        clean();
+    }
 
     public void clientReceivesAPIResponse(DataTable dataTable) throws Exception {
-        if (apiResponse == null) {
-            apiResponse = TestUtils.convertAPIResponse(mvcResult.getResponse(), Map.class, mapper);
+        if (apiResponse() == null) {
+            apiResponse(TestUtils.convertAPIResponse(mvcResult().getResponse(), Map.class, mapper));
         }
 
         Map<String, String> data = dataTable.asMaps().get(0);
 
         assertThat(Integer.parseInt(data.get("allFound")))
-                .isEqualTo(apiResponse.getAllFound());
+                .isEqualTo(apiResponse().getAllFound());
 
         assertThat(Integer.parseInt(data.get("currentPage")))
-                .isEqualTo(apiResponse.getCurrentPage());
+                .isEqualTo(apiResponse().getCurrentPage());
 
         assertThat(Integer.parseInt(data.get("currentFound")))
-                .isEqualTo(apiResponse.getCurrentFound());
+                .isEqualTo(apiResponse().getCurrentFound());
     }
 
     public void clientReceivesStatus(int status) {
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(status);
+        assertThat(mvcResult().getResponse().getStatus()).isEqualTo(status);
     }
 
     public void clientReceivesBadRequestDetails(DataTable dataTable) throws Exception {
-        List<ExceptionBadRequestResponse> res = TestUtils.convertResponse(mvcResult.getResponse(), List.class, mapper, ExceptionBadRequestResponse.class);
+        List<ExceptionBadRequestResponse> res =
+                TestUtils.convertResponse(mvcResult().getResponse(), List.class, mapper, ExceptionBadRequestResponse.class);
 
         assertThat(dataTable.asMaps().size()).isEqualTo(res.size());
 
@@ -78,7 +82,7 @@ public class CommonStepsImplementation {
 
     public void performReceiveHistory(DataTable dataTable) throws Exception {
         APIResponse<HistoryReponseDTO> historyResponse
-                = TestUtils.convertAPIResponse(mvcResult.getResponse(), HistoryReponseDTO.class, mapper);
+                = TestUtils.convertAPIResponse(mvcResult().getResponse(), HistoryReponseDTO.class, mapper);
 
         Map<String, String> data = dataTable.asMaps().get(0);
         HistoryReponseDTO history = historyResponse.getItems().get(0);

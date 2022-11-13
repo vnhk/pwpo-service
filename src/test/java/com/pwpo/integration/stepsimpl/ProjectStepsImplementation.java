@@ -16,12 +16,14 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Map;
 
+import static com.pwpo.integration.IntegrationDataHolder.apiResponse;
+import static com.pwpo.integration.IntegrationDataHolder.mvcResult;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ProjectStepsImplementation extends CommonStepsImplementation {
 
     public ProjectStepsImplementation(MockMvc mockMvc) {
-        this.mockMvc = mockMvc;
+        super(mockMvc);
     }
 
     public void performGetProjects() throws Exception {
@@ -31,7 +33,7 @@ public class ProjectStepsImplementation extends CommonStepsImplementation {
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andReturn();
 
-        apiResponse = TestUtils.convertAPIResponse(result.getResponse(), ProjectPrimaryResponseDTO.class, mapper);
+        apiResponse(TestUtils.convertAPIResponse(result.getResponse(), ProjectPrimaryResponseDTO.class, mapper));
     }
 
     public void performGetProjectById(Long projectId) throws Exception {
@@ -40,27 +42,25 @@ public class ProjectStepsImplementation extends CommonStepsImplementation {
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andReturn();
 
-        apiResponse = TestUtils.convertAPIResponse(result.getResponse(), ProjectPrimaryResponseDTO.class, mapper);
+        apiResponse(TestUtils.convertAPIResponse(result.getResponse(), ProjectPrimaryResponseDTO.class, mapper));
     }
 
     public void performCreateProject(DataTable dataTable) throws Exception {
         ProjectRequestDTO req = buildDTO(dataTable, ProjectRequestDTO.class);
 
-        mvcResult = mockMvc.perform(TestUtils.buildPostRequest("/projects", req, mapper))
-                .andReturn();
+        mvcResult(mockMvc.perform(TestUtils.buildPostRequest("/projects", req, mapper)).andReturn());
     }
 
     public void performEditProject(DataTable dataTable, Long id) throws Exception {
         EditProjectRequestDTO req = buildDTO(dataTable, EditProjectRequestDTO.class);
         req.setId(id);
 
-        mvcResult = mockMvc.perform(TestUtils.buildPutRequest("/projects", req, mapper))
-                .andReturn();
+        mvcResult(mockMvc.perform(TestUtils.buildPutRequest("/projects", req, mapper)).andReturn());
     }
 
     public void performReceiveEditedProject(DataTable dataTable) throws Exception {
         APIResponse<ProjectPrimaryResponseDTO> editedProjectRes
-                = TestUtils.convertAPIResponse(mvcResult.getResponse(), ProjectPrimaryResponseDTO.class, mapper);
+                = TestUtils.convertAPIResponse(mvcResult().getResponse(), ProjectPrimaryResponseDTO.class, mapper);
 
         Map<String, String> data = dataTable.asMaps().get(0);
         ProjectPrimaryResponseDTO edited = editedProjectRes.getItems().get(0);
@@ -75,7 +75,7 @@ public class ProjectStepsImplementation extends CommonStepsImplementation {
 
     public void performReceiveCreatedProject(DataTable dataTable) throws Exception {
         APIResponse<ProjectPrimaryResponseDTO> createdProjectRes
-                = TestUtils.convertAPIResponse(mvcResult.getResponse(), ProjectPrimaryResponseDTO.class, mapper);
+                = TestUtils.convertAPIResponse(mvcResult().getResponse(), ProjectPrimaryResponseDTO.class, mapper);
 
         Map<String, String> data = dataTable.asMaps().get(0);
         ProjectPrimaryResponseDTO createdProject = createdProjectRes.getItems().get(0);
@@ -90,22 +90,22 @@ public class ProjectStepsImplementation extends CommonStepsImplementation {
     public void performGetProjectHistory(Long projectId) throws Exception {
         String params = super.getDefaultGetParams(ProjectHistory.class);
 
-        mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/projects/" + projectId + "/history" + params))
+        mvcResult(mockMvc.perform(MockMvcRequestBuilders.get("/projects/" + projectId + "/history" + params))
                 .andExpect(MockMvcResultMatchers.status().is(200))
-                .andReturn();
+                .andReturn());
     }
 
     public void performGetProjectHistoryDetails(Long projectId, Long historyId) throws Exception {
         String params = super.getDefaultGetParams(ProjectHistory.class);
 
-        mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/projects/" + projectId + "/history/" + historyId + params))
+        mvcResult(mockMvc.perform(MockMvcRequestBuilders.get("/projects/" + projectId + "/history/" + historyId + params))
                 .andExpect(MockMvcResultMatchers.status().is(200))
-                .andReturn();
+                .andReturn());
     }
 
     public void performReceiveProjectHistoryDetails(DataTable dataTable) throws Exception {
         APIResponse<ProjectHistoryDetailsResponseDTO> detailsResp
-                = TestUtils.convertAPIResponse(mvcResult.getResponse(), ProjectHistoryDetailsResponseDTO.class, mapper);
+                = TestUtils.convertAPIResponse(mvcResult().getResponse(), ProjectHistoryDetailsResponseDTO.class, mapper);
 
         Map<String, String> data = dataTable.asMaps().get(0);
         ProjectHistoryDetailsResponseDTO details = detailsResp.getItems().get(0);
