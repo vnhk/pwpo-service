@@ -27,4 +27,9 @@ public class CommonSteps extends BaseCucumberStep {
     public void theClientSeesHistory(DataTable dataTable) throws Exception {
         commonStepsImplementation.performReceiveHistory(dataTable);
     }
+
+    @And("the client sees comparison details")
+    public void theClientSeesComparisonDetails(DataTable dataTable) throws Exception {
+        commonStepsImplementation.performCheckComparisonDetails(dataTable);
+    }
 }

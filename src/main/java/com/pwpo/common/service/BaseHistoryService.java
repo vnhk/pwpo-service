@@ -98,7 +98,8 @@ public abstract class BaseHistoryService<T extends Persistable, ID extends Seria
     }
 
     /**
-     * History fields in BaseHistoryEntity classes must be of String type. Therefore, no additional logic is needed to obtain their value
+     * History fields in BaseHistoryEntity classes must be of String type or with toString() method (Enums).
+     * Therefore, no additional logic is needed to obtain their value
      *
      * @param field  BaseHistoryEntity field
      * @param entity BaseHistoryEntity

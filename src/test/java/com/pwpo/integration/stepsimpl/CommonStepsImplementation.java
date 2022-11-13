@@ -6,6 +6,9 @@ import com.pwpo.common.enums.DataEnum;
 import com.pwpo.common.exception.ExceptionBadRequestResponse;
 import com.pwpo.common.model.APIResponse;
 import com.pwpo.common.model.db.Persistable;
+import com.pwpo.common.model.diff.CompareResponseDTO;
+import com.pwpo.common.model.diff.DiffAttribute;
+import com.pwpo.common.model.diff.DiffWord;
 import com.pwpo.common.model.dto.HistoryReponseDTO;
 import com.pwpo.common.search.model.SortDirection;
 import io.cucumber.datatable.DataTable;
@@ -124,4 +127,35 @@ public class CommonStepsImplementation {
         return dto;
     }
 
+    public void performCheckComparisonDetails(DataTable dataTable) throws Exception {
+        List<Map<String, String>> maps = dataTable.asMaps();
+        assertThat(maps).withFailMessage("2 rows table is required for this step!").hasSize(1);
+        Map<String, String> map = maps.get(0);
+        APIResponse<CompareResponseDTO> compareResponseDTOAPIResponse =
+                TestUtils.convertAPIResponse(mvcResult().getResponse(), CompareResponseDTO.class, mapper);
+
+        CompareResponseDTO responseDTO = compareResponseDTOAPIResponse.getItems().get(0);
+
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            String field = entry.getKey();
+            String value = entry.getValue();
+
+            Optional<DiffAttribute> diffOpt = responseDTO.getDiff()
+                    .stream().filter(e -> ((DiffAttribute) e).getAttribute().equals(field))
+                    .findFirst();
+
+            assertThat(diffOpt)
+                    .withFailMessage("Field " + field + " not found in response!")
+                    .isPresent();
+
+            DiffAttribute diffAttribute = diffOpt.get();
+
+            List<DiffWord> diff = diffAttribute.getDiff();
+            StringBuilder res = new StringBuilder();
+            for (DiffWord diffWord : diff) {
+                res.append(diffWord.toString()).append(" ");
+            }
+            assertThat(value).isEqualTo(res.substring(0, res.length() - 1));
+        }
+    }
 }

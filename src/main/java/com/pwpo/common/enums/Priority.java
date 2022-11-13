@@ -11,7 +11,7 @@ public enum Priority implements DataEnum {
 
     @Override
     public String toString() {
-        return name();
+        return getDisplayName();
     }
 
     @Override

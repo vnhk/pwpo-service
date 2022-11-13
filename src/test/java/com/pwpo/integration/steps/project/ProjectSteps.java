@@ -62,13 +62,18 @@ public class ProjectSteps extends BaseCucumberStep {
         projectCucumberOperations.performGetProjectHistory(projectId);
     }
 
-    @When("the client wants to check history details with id = {long} of the project with id = {long}")
-    public void theClientWantsToCheckHistoryDetailsWithIdOfTheProjectWithId(Long historyId, Long projectId) throws Exception {
+    @When("the client checks history details with id = {long} of the project with id = {long}")
+    public void theClientChecksHistoryDetailsWithIdOfTheProjectWithId(Long historyId, Long projectId) throws Exception {
         projectCucumberOperations.performGetProjectHistoryDetails(projectId, historyId);
     }
 
     @And("the client sees project history details")
     public void theClientSeesProjectHistoryDetails(DataTable dataTable) throws Exception {
         projectCucumberOperations.performReceiveProjectHistoryDetails(dataTable);
+    }
+
+    @When("the client compare history with id = {long} with latest project version with id = {long}")
+    public void theClientCompareHistoryWithIdWithLatestProjectVersionWithId(Long historyId, Long projectId) throws Exception {
+        projectCucumberOperations.performCompareHistory(historyId, projectId);
     }
 }

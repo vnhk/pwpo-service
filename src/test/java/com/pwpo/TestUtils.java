@@ -15,8 +15,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -65,7 +63,7 @@ public class TestUtils {
         return mapper.readValue(response.getContentAsString(), itemClass);
     }
 
-    public static <S, T extends Collection<S>> T convertResponse(MockHttpServletResponse response, Class<T> collectionClass, ObjectMapper mapper, Class<S> elClass) throws UnsupportedEncodingException, JsonProcessingException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    public static <S, T extends Collection<S>> T convertResponse(MockHttpServletResponse response, Class<T> collectionClass, ObjectMapper mapper, Class<S> elClass) throws Exception {
         T collection = mapper.readValue(response.getContentAsString(), collectionClass);
         T newCollection = (T) collection.getClass().getDeclaredConstructor().newInstance();
 

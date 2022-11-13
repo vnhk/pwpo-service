@@ -96,9 +96,7 @@ public class ProjectStepsImplementation extends CommonStepsImplementation {
     }
 
     public void performGetProjectHistoryDetails(Long projectId, Long historyId) throws Exception {
-        String params = super.getDefaultGetParams(ProjectHistory.class);
-
-        mvcResult(mockMvc.perform(MockMvcRequestBuilders.get("/projects/" + projectId + "/history/" + historyId + params))
+        mvcResult(mockMvc.perform(MockMvcRequestBuilders.get("/projects/" + projectId + "/history/" + historyId))
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andReturn());
     }
@@ -118,5 +116,11 @@ public class ProjectStepsImplementation extends CommonStepsImplementation {
         assertThat(data.get("shortForm")).isEqualTo(details.getShortForm());
         assertThat(data.get("description")).isEqualTo(details.getDescription());
         assertThat(data.get("editor")).isEqualTo(details.getEditor().getNick());
+    }
+
+    public void performCompareHistory(Long historyId, Long projectId) throws Exception {
+        mvcResult(mockMvc.perform(MockMvcRequestBuilders.get("/projects/" + projectId + "/history/" + historyId + "/compare"))
+                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andReturn());
     }
 }
