@@ -23,7 +23,7 @@ public class EnumService {
             for (Object enumConstant : enumConstants) {
                 Method m = enumClass.getMethod("getDisplayName");
                 String displayName = (String) m.invoke(enumConstant);
-                String internalName = enumConstant.toString();
+                String internalName = ((Enum) enumConstant).name();
                 result.add(new EnumDTO(internalName, displayName));
             }
             return new APIResponse(result, result.size(), 1, result.size());

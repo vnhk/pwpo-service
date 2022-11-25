@@ -16,6 +16,6 @@ public interface UserRepository extends BaseRepository<UserDetails, Long> {
     Page<UserDetails> findUsersAddedToTheProject(Long projectId, Pageable pageable);
 
     @Query("SELECT ud FROM UserDetails as ud, UserProject as up WHERE ud.id = up.user.id " +
-            "AND up.project.id = ?1 AND ud.updated = -1 AND up.updated = -1")
+            "AND up.project.id = ?1")
     List<UserDetails> findUsersAddedToTheProject(Long projectId);
 }

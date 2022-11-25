@@ -15,7 +15,7 @@ public class EnumController {
     private final EnumService enumService;
 
     @GetMapping(path = "/enum")
-    public ResponseEntity<APIResponse> getEnum(@RequestParam() String name) {
+    public ResponseEntity<APIResponse> getEnum(@RequestParam String name) {
         return new ResponseEntity<>(enumService.getEnumByName(name), HttpStatus.OK);
     }
 }

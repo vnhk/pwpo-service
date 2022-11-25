@@ -377,6 +377,11 @@ public class SearchService {
         } else {
             value = getPrimitiveTypeValue(value, field);
         }
+
+        if (value == null) {
+            log.warn("Query parameter \"" + field.getName() + "\" is empty!");
+        }
+
         return value;
     }
 
@@ -393,7 +398,7 @@ public class SearchService {
 
     private Enum getEnumValue(Object value, Field field) {
         Optional<?> el = Arrays.stream(field.getType().getEnumConstants())
-                .filter(e -> e.toString().equals(value))
+                .filter(e -> ((Enum) e).name().equals(value))
                 .findFirst();
         return (Enum) el.orElse(null);
     }
