@@ -4,7 +4,7 @@ import com.pwpo.common.model.QueryFormat;
 import com.pwpo.common.model.db.BaseHistoryEntity;
 import com.pwpo.common.search.SearchService;
 import com.pwpo.common.service.BaseHistoryService;
-import com.pwpo.common.service.DiffService;
+import com.pwpo.common.diff.DiffService;
 import com.pwpo.common.service.ItemMapper;
 import com.pwpo.task.TaskHistoryRepository;
 import com.pwpo.task.model.TaskHistory;

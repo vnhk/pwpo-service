@@ -1,10 +1,13 @@
-package com.pwpo.common.service;
+package com.pwpo.common.diff;
 
 import com.pwpo.common.model.diff.DiffType;
 import com.pwpo.common.model.diff.DiffWord;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 @Service
 public class DiffService {
@@ -12,30 +15,14 @@ public class DiffService {
     private final static String SPACE_REGEX = " ";
 
     public List<DiffWord> diff(String fst, String snd) {
-        // TODO: 08.11.2022 fst=Project that is used for testing application | snd=Edited Desc | exception!!!
-        // TODO: 08.11.2022 snd all different values | exception!!!
         String[] wordsFst = fst.split(SPACE_REGEX);
         String[] wordsSnd = snd.split(SPACE_REGEX);
 
         int fstLen = wordsFst.length;
         int sndLen = wordsSnd.length;
 
-        if (fstLen == 1 || sndLen == 1) {
-            if (fst.equals(snd)) {
-                return Collections.singletonList(new DiffWord(fst, DiffType.EQUAL));
-            }
-            List<DiffWord> diffWords = new ArrayList<>();
-            diffWords.add(new DiffWord(fst, DiffType.REMOVED));
-            diffWords.add(new DiffWord(snd, DiffType.ADDED));
-
-            return diffWords;
-        }
-
         int[][] tab = prepareTable(wordsFst, wordsSnd);
         List<String> commonWords = getCommonWords(wordsFst, wordsSnd, tab);
-
-//        System.out.println(Arrays.deepToString(tab));
-//        System.out.println(commonWords);
 
         return compare(wordsFst, wordsSnd, fstLen, sndLen, commonWords);
     }
@@ -53,7 +40,7 @@ public class DiffService {
 
         while (!riExceeded || !aiExceeded || !biExceeded) {
             if (!riExceeded) {
-                if (wordsFst[ai].equals(commonWords.get(ri))) {
+                if (commonWords.size() > ri && wordsFst[ai].equals(commonWords.get(ri))) {
                     if (wordsFst[ai].equals(wordsSnd[bi])) {
                         whenWordsAreEqual(result, wordsFst[ai]);
                         bi++;
@@ -117,15 +104,21 @@ public class DiffService {
     }
 
     private void whenRemovedFromFstString(List<DiffWord> result, String word) {
-        result.add(new DiffWord(word, DiffType.REMOVED));
+        if (word.length() > 0) {
+            result.add(new DiffWord(word, DiffType.REMOVED));
+        }
     }
 
     private void whenAddedToSndString(List<DiffWord> result, String word) {
-        result.add(new DiffWord(word, DiffType.ADDED));
+        if (word.length() > 0) {
+            result.add(new DiffWord(word, DiffType.ADDED));
+        }
     }
 
     private void whenWordsAreEqual(List<DiffWord> result, String word) {
-        result.add(new DiffWord(word, DiffType.EQUAL));
+        if (word.length() > 0) {
+            result.add(new DiffWord(word, DiffType.EQUAL));
+        }
     }
 
     private int[][] prepareTable(String[] wordsFst, String[] wordsSnd) {

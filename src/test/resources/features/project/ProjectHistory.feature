@@ -24,5 +24,5 @@ Feature: Project History tests
       | allFound | currentPage | currentFound |
       | 1        | 1           | 1            |
     And the client sees comparison details
-      | name                      | shortForm       | summary                                     | status            | description                               | owner   |
-      | -Monitoring +Where users? | -MONPR +NOUSRPR | =Project -monitoring +without +users +added | -New +In Progress | -description +Project without users added | =joedoe |
+      | name                       | shortForm       | summary                                     | status             | description                                  | owner   |
+      | -Monitoring +Where +users? | -MONPR +NOUSRPR | =Project -monitoring +without +users +added | -New +In +Progress | -description +Project +without +users +added | =joedoe |
