@@ -10,9 +10,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
@@ -26,6 +30,22 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     @ExceptionHandler(value = {NotFoundException.class})
     protected ResponseEntity<List<ExceptionBadRequestResponse>> handleValidationException(NotFoundException ex) {
         List<ExceptionBadRequestResponse> r = Collections.singletonList(new ExceptionBadRequestResponse(null, ExceptionCode.NOT_FOUND, ex.getMessage()));
+        return new ResponseEntity<>(r, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = {ConstraintViolationException.class})
+    protected ResponseEntity<List<ExceptionBadRequestResponse>> handleValidationException(ConstraintViolationException ex) {
+        List<ExceptionBadRequestResponse> r = new ArrayList<>();
+        Set<ConstraintViolation<?>> constraintViolations = ex.getConstraintViolations();
+
+        for (ConstraintViolation<?> cv : constraintViolations) {
+            String field = "";
+            for (Path.Node node : cv.getPropertyPath()) {
+                field = node.getName();
+            }
+            r.add(new ExceptionBadRequestResponse(field, ExceptionCode.FIELD_VALIDATION, cv.getMessage()));
+        }
+
         return new ResponseEntity<>(r, HttpStatus.BAD_REQUEST);
     }
 

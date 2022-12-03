@@ -19,33 +19,20 @@ import java.time.LocalDate;
 @Setter
 @Getter
 public class EditTaskRequestDTO<ID extends Serializable> implements Editable<ID>, EstimableDTO {
-    @Max(value = 3600)
-    @Min(value = 0)
     @NotNull
     protected Integer estimationInHours;
-    @Max(value = 60)
-    @Min(value = 0)
     @NotNull
     protected Integer estimationInMinutes;
     @NotNull
     private ID id;
-    @NotNull
     private Status status;
-    @NotNull
     private TaskType type;
-    @Size(min = 1, max = Constants.SUMMARY_MAX)
     private String summary;
     private Long assignee;
-    @NotNull
     private Long owner;
-    @NotNull
     private LocalDate dueDate;
-    @NotNull
     private Priority priority;
-    @Size(max = Constants.DESCRIPTION_MAX)
     private String description;
-    @Max(value = 60 * 3600 + 60)
-    @Min(value = 0)
     private Integer estimation;
 
     @Override

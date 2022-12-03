@@ -27,7 +27,7 @@ class EnumServiceTest {
         assertThat(priority.getItems()).hasSize(Priority.values().length);
         for (int i = 0; i < Priority.values().length; i++) {
             assertThat(((EnumDTO) priority.getItems().get(i)).getDisplayName()).isEqualTo(Priority.values()[i].getDisplayName());
-            assertThat(((EnumDTO) priority.getItems().get(i)).getInternalName()).isEqualTo(Priority.values()[i].toString());
+            assertThat(((EnumDTO) priority.getItems().get(i)).getInternalName()).isEqualTo(Priority.values()[i].name());
         }
     }
 

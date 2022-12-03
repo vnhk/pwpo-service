@@ -21,6 +21,16 @@ Feature: Project controller endpoint tests
       | field | code             | message                                     |
       | name  | FIELD_VALIDATION | Project with the given name already exists! |
 
+  Scenario: the client wants to create new project, but short name is incorrect and name is missing
+    When the client wants to create project with following data
+      | name | description         | shortForm                           | summary         | owner |
+      |      | example description | C0033455121321312312312332131231201 | example summary | 1     |
+    Then the client receives 400 status
+    And the client receives bad request details
+      | field     | code             | message                       |
+      | shortForm | FIELD_VALIDATION | size must be between 1 and 15 |
+      | name      | FIELD_VALIDATION | must not be null              |
+
   Scenario: the client wants to create new project
     When the client wants to create project with following data
       | name        | description         | shortForm | summary         | owner |

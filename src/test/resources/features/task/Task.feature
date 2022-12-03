@@ -44,4 +44,3 @@ Feature: Task controller endpoint tests
       | status              | FIELD_VALIDATION | must not be null                 |
       | owner               | FIELD_VALIDATION | must not be null                 |
       | priority            | FIELD_VALIDATION | must not be null                 |
-      | estimationInMinutes | FIELD_VALIDATION | must be less than or equal to 60 |

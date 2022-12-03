@@ -9,4 +9,6 @@ import java.io.Serializable;
 @NoRepositoryBean
 public interface BaseRepository<T, ID extends Serializable> extends JpaRepository<T, ID> {
     <S extends T> S edit(Editable<ID> editable);
+
+    <S extends T> S save(S entity);
 }

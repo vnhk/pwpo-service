@@ -6,12 +6,14 @@ import com.pwpo.common.model.db.BaseEntity;
 import com.pwpo.common.model.db.BaseHistoryEntity;
 import com.pwpo.common.model.db.Persistable;
 import com.pwpo.common.model.edit.Editable;
+import com.pwpo.common.validator.EditProcess;
+import com.pwpo.common.validator.EntityValidator;
+import com.pwpo.common.validator.SaveProcess;
 import com.pwpo.user.UserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.io.Serializable;
@@ -25,20 +27,26 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class BaseRepositoryImpl<T extends BaseEntity, ID extends Serializable> extends SimpleJpaRepository<T, ID> implements BaseRepository<T, ID> {
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
+    private final EntityValidator validator;
 
     public BaseRepositoryImpl(JpaEntityInformation<T, ?> entityInformation, EntityManager entityManager) {
         super(entityInformation, entityManager);
         this.entityManager = entityManager;
+        this.validator = new EntityValidator();
     }
 
-    @Transactional
+    @Override
+    public <S extends T> S save(S entity) {
+        validator.validate(entity, SaveProcess.class);
+        return super.save(entity);
+    }
+
     @Override
     public <S extends T> S edit(Editable<ID> editable) {
         try {
-            Optional<? extends BaseEntity> byId = findById(editable.getEntityId());
-            validateEdit(byId);
-            BaseEntity entity = byId.get();
+            BaseEntity entity = getEntity(editable.getEntityId());
+
             BaseHistoryEntity history = buildHistory(entity, editable.getHistoryClass());
             update(entity, editable);
 
@@ -47,13 +55,20 @@ public class BaseRepositoryImpl<T extends BaseEntity, ID extends Serializable> e
             entity.setUpdated(updateTime);
             history.setExpired(updateTime);
 
-            saveHistory(history);
-
-            return super.save((S) entity);
+            return edit(entity, history);
+        } catch (RuntimeException ex) {
+            throw ex;
         } catch (Exception ex) {
             log.error("Could not edit entity!", ex);
             throw new RuntimeException("Could not edit entity!");
         }
+    }
+
+    private <S extends T> S edit(BaseEntity entity, BaseHistoryEntity history) {
+        validator.validate(entity, EditProcess.class);
+        saveHistory(history);
+
+        return super.save((S) entity);
     }
 
     private void saveHistory(BaseHistoryEntity history) {
@@ -163,9 +178,13 @@ public class BaseRepositoryImpl<T extends BaseEntity, ID extends Serializable> e
                 .collect(Collectors.toList());
     }
 
-    private void validateEdit(Optional<? extends BaseEntity> byId) {
+    private BaseEntity getEntity(ID id) {
+        Optional<? extends BaseEntity> byId = findById(id);
+
         if (byId.isEmpty()) {
             throw new ValidationException("The entity does not exist!");
         }
+
+        return byId.get();
     }
 }

@@ -18,17 +18,12 @@ import java.io.Serializable;
 public class EditProjectRequestDTO<ID extends Serializable> implements Editable<ID> {
     @NotNull
     private ID id;
-    @NotNull
     private Status status;
-    @Size(min = 1, max = Constants.SUMMARY_MAX)
     private String summary;
-    @Size(min = 1, max = Constants.NAME_MAX)
     private String name;
-    @Size(min = 1, max = Constants.SHORT_FORM_MAX)
     private String shortForm;
     @NotNull
     private Long owner;
-    @Size(max = Constants.DESCRIPTION_MAX)
     private String description;
 
     @Override

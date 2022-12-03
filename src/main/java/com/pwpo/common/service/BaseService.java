@@ -5,7 +5,6 @@ import com.pwpo.common.model.db.Persistable;
 import com.pwpo.common.model.edit.Editable;
 import lombok.RequiredArgsConstructor;
 
-import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.Optional;
 
@@ -14,7 +13,6 @@ public abstract class BaseService<T extends Persistable, ID extends Serializable
     private final BaseRepository<T, ID> repository;
     private final ItemMapper mapper;
 
-    @Transactional
     public APIResponse edit(Editable<ID> body) {
         Optional<T> orig = repository.findById(body.getEntityId());
         validateEditRequest(orig, body);
@@ -24,5 +22,7 @@ public abstract class BaseService<T extends Persistable, ID extends Serializable
         return mapper.mapToAPIResponse(edited, body.getResponseDTO());
     }
 
-    protected abstract void validateEditRequest(Optional<T> orig, Editable<ID> body);
+    protected void validateEditRequest(Optional<T> orig, Editable<ID> body) {
+
+    }
 }

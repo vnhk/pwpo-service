@@ -6,5 +6,8 @@ public class Constants {
     public static final String DB_SEQUENCE = "seq_db";
     public static final int DB_SEQUENCE_INIT = 100;
     public static final int NAME_MAX = 35;
-    public static final int SHORT_FORM_MAX = 6;
+    public static final int NUMBER_MAX = 15;
+    public static final int SHORT_FORM_MAX = 15;
+    public static final long ESTIMATION_MAX = 60 * 3600 + 60;
+    public static final long ESTIMATION_MIN = 0;
 }

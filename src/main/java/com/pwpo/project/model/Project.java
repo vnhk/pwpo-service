@@ -14,6 +14,9 @@ import com.pwpo.user.model.UserProject;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Getter
@@ -24,28 +27,48 @@ import java.util.List;
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Project extends BaseEntity {
+    @Size(min = 1, max = Constants.SUMMARY_MAX)
+    @NotNull
+    @Column(length = Constants.SUMMARY_MAX)
     private String summary;
+
+    @NotNull
     @Enumerated(EnumType.STRING)
     @JsonSerialize(using = ToEnumDisplayNameSerializer.class)
     private Status status;
+
+    @Size(max = Constants.DESCRIPTION_MAX)
     @Column(length = Constants.DESCRIPTION_MAX)
     private String description;
-    @Column(unique = true)
+
+    @Size(min = 1, max = Constants.NAME_MAX)
+    @Column(unique = true, length = Constants.NAME_MAX)
+    @NotNull
     private String name;
-    @Column(unique = true)
+
+    @Size(min = 1, max = Constants.SHORT_FORM_MAX)
+    @Column(unique = true, length = Constants.SHORT_FORM_MAX)
+    @NotNull
     private String shortForm;
+
     @ManyToOne
     @JsonDeserialize(using = FromUserIdDeserializer.class)
+    @NotNull
     private UserDetails owner;
+
     @ManyToOne
     @JsonDeserialize(using = FromUserIdDeserializer.class)
+//    @NotNull until auth
     private UserDetails createdBy;
+
     @OneToMany(mappedBy = "project")
     @JsonIgnore
     private List<Task> tasks;
+
     @OneToMany(mappedBy = "project")
     @JsonIgnore
     private List<UserProject> addedToProjects;
+
     @OneToMany(mappedBy = "project")
     @JsonIgnore
     private List<ProjectHistory> history;
