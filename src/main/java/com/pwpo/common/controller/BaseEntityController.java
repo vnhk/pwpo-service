@@ -17,4 +17,8 @@ public abstract class BaseEntityController<T extends Persistable, ID extends Ser
     protected ResponseEntity<APIResponse> edit(Editable<ID> body) {
         return new ResponseEntity<>(service.edit(body), HttpStatus.OK);
     }
+
+    protected ResponseEntity<Boolean> exist(ID entityId) {
+        return new ResponseEntity<>(service.exist(entityId), HttpStatus.OK);
+    }
 }

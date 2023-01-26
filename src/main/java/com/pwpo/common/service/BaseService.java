@@ -22,6 +22,10 @@ public abstract class BaseService<T extends Persistable, ID extends Serializable
         return mapper.mapToAPIResponse(edited, body.getResponseDTO());
     }
 
+    public boolean exist(ID id) {
+        return repository.findById(id).isPresent();
+    }
+
     protected void validateEditRequest(Optional<T> orig, Editable<ID> body) {
 
     }

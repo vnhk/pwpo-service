@@ -39,6 +39,11 @@ public class ProjectController extends BaseEntityController<Project, Long> {
         return new ResponseEntity<>(projectManager.getProjects(options, ProjectPrimaryResponseDTO.class), HttpStatus.OK);
     }
 
+    @GetMapping(path = "/project/{id}/exists")
+    public ResponseEntity<Boolean> exist(@PathVariable Long id) {
+        return super.exist(id);
+    }
+
     @GetMapping(path = "/project")
     public ResponseEntity<APIResponse> getProject(Long id, String dto) throws ClassNotFoundException {
         return new ResponseEntity<>(projectManager.getProjectById(id, (Class<? extends ItemDTO>) Class.forName(dto)), HttpStatus.OK);
