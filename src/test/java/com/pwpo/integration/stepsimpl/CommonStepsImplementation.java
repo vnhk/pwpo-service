@@ -3,7 +3,7 @@ package com.pwpo.integration.stepsimpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pwpo.TestUtils;
 import com.pwpo.common.enums.DataEnum;
-import com.pwpo.common.exception.ExceptionBadRequestResponse;
+import com.pwpo.common.exception.ApiError;
 import com.pwpo.common.model.APIResponse;
 import com.pwpo.common.model.db.Persistable;
 import com.pwpo.common.model.diff.CompareResponseDTO;
@@ -54,8 +54,8 @@ public class CommonStepsImplementation {
     }
 
     public void clientReceivesBadRequestDetails(DataTable dataTable) throws Exception {
-        List<ExceptionBadRequestResponse> res =
-                TestUtils.convertResponse(mvcResult().getResponse(), List.class, mapper, ExceptionBadRequestResponse.class);
+        List<ApiError> res =
+                TestUtils.convertResponse(mvcResult().getResponse(), List.class, mapper, ApiError.class);
 
         assertThat(dataTable.asMaps().size()).isEqualTo(res.size());
 
@@ -65,7 +65,7 @@ public class CommonStepsImplementation {
             String code = data.get("code");
             String message = data.get("message");
 
-            Optional<ExceptionBadRequestResponse> responseForFieldOpt
+            Optional<ApiError> responseForFieldOpt
                     = res.stream()
                     .filter(e -> Objects.equals(e.getField(), field))
                     .filter(e -> Objects.equals(e.getCode().name(), code))

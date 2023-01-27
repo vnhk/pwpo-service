@@ -10,29 +10,26 @@ import com.pwpo.common.search.SearchService;
 import com.pwpo.common.search.model.SearchResponse;
 import com.pwpo.common.service.BaseService;
 import com.pwpo.common.service.ItemMapper;
+import com.pwpo.common.validator.EntitySaveIntegrityValidation;
+import com.pwpo.project.dto.EditProjectRequestDTO;
 import com.pwpo.project.model.Project;
 import com.pwpo.project.repository.ProjectRepository;
-import com.pwpo.project.dto.EditProjectRequestDTO;
-import com.pwpo.project.dto.ProjectPrimaryResponseDTO;
-import com.pwpo.project.dto.ProjectRequestDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @Slf4j
 public class ProjectManager extends BaseService<Project, Long> {
-    private static final int MAX_PROJECTS = 100;
     private final ItemMapper mapper;
     private final ProjectRepository projectRepository;
     private final SearchService searchService;
 
-    public ProjectManager(ProjectRepository repository, ItemMapper mapper, SearchService searchService) {
-        super(repository, mapper);
+    public ProjectManager(ProjectRepository repository, ItemMapper mapper, SearchService searchService, List<? extends EntitySaveIntegrityValidation<Project>> validations) {
+        super(repository, mapper, validations);
         this.projectRepository = repository;
         this.mapper = mapper;
         this.searchService = searchService;
@@ -52,43 +49,42 @@ public class ProjectManager extends BaseService<Project, Long> {
         }
     }
 
-    public APIResponse<? extends ItemDTO> create(ProjectRequestDTO body) {
-        validate(body);
-        Project project = mapper.mapToObj(body, Project.class);
-        setInitValues(project);
-        Project saved = projectRepository.save(project);
-
-        return mapper.mapToAPIResponse(saved, ProjectPrimaryResponseDTO.class);
-    }
-
-    private void validate(ProjectRequestDTO body) {
-        // TODO: 06.10.2022 replace with count(*)
-        // TODO: 09.10.2022 in newly created project and task with added users to the project (max Tester, joe Manager),
-        //  joe cannot log time - User does not have access to the project
-        List<Project> projects = new ArrayList<>();
-        Iterable<Project> iterable = projectRepository.findAll();
-        iterable.forEach(projects::add);
-
-        if (projects.size() >= MAX_PROJECTS) {
-            throw new ValidationException("The project limit has been exceeded!");
-        }
-
-        if (projectRepository.findByName(body.getName()).isPresent()) {
-            throw new ValidationException("name", "Project with the given name already exists!");
-        }
-
-        if (projectRepository.findByShortForm(body.getShortForm()).isPresent()) {
-            throw new ValidationException("shortForm", "Project with the given short form already exists!");
-        }
-    }
+//    private void validate(ProjectRequestDTO body) {
+//        List<Project> projects = new ArrayList<>();
+//        Iterable<Project> iterable = projectRepository.findAll();
+//        iterable.forEach(projects::add);
+//
+//        if (projects.size() >= MAX_PROJECTS) {
+//            throw new ValidationException("The project limit has been exceeded!");
+//        }
+//
+//        if (projectRepository.findByName(body.getName()).isPresent()) {
+//            throw new ValidationException("name", "Project with the given name already exists!");
+//        }
+//
+//        if (projectRepository.findByShortForm(body.getShortForm()).isPresent()) {
+//            throw new ValidationException("shortForm", "Project with the given short form already exists!");
+//        }
+//    }
 
     private boolean isTheSameProject(EditProjectRequestDTO<Long> body, Optional<Project> opt) {
         return !opt.get().getId().equals(body.getEntityId());
     }
 
-    private void setInitValues(Project project) {
+    @Override
+    protected void postSave(Project project) {
+
+    }
+
+    @Override
+    protected void preSave(Project project) {
         project.setStatus(Status.NEW);
         project.setCreated(LocalDateTime.now());
+    }
+
+    @Override
+    protected Project mapDTO(ItemDTO body) {
+        return mapper.mapToObj(body, Project.class);
     }
 
     @Override

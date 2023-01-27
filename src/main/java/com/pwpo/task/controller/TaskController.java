@@ -4,6 +4,7 @@ import com.pwpo.common.controller.BaseEntityController;
 import com.pwpo.common.model.APIResponse;
 import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.task.dto.EditTaskRequestDTO;
+import com.pwpo.task.dto.TaskPrimaryResponseDTO;
 import com.pwpo.task.dto.TaskRequestDTO;
 import com.pwpo.task.model.Task;
 import com.pwpo.task.service.TaskManager;
@@ -31,7 +32,7 @@ public class TaskController extends BaseEntityController<Task, Long> {
 
     @PostMapping
     public ResponseEntity<APIResponse> createTask(@Valid @RequestBody TaskRequestDTO body) {
-        return new ResponseEntity<>(taskManager.create(body), HttpStatus.OK);
+        return new ResponseEntity<>(taskManager.create(body, TaskPrimaryResponseDTO.class), HttpStatus.OK);
     }
 
     @PutMapping

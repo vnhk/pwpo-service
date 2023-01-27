@@ -22,20 +22,25 @@ import java.util.Set;
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {ValidationException.class})
-    protected ResponseEntity<List<ExceptionBadRequestResponse>> handleValidationException(ValidationException ex) {
-        List<ExceptionBadRequestResponse> r = Collections.singletonList(new ExceptionBadRequestResponse(ex.getFieldName(), ex.getCode(), ex.getMessage()));
+    protected ResponseEntity<List<ApiError>> handleValidationException(ValidationException ex) {
+        List<ApiError> r = Collections.singletonList(new ApiError(ex.getFieldName(), ex.getCode(), ex.getMessage()));
         return new ResponseEntity<>(r, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(value = {IntegrityValidationException.class})
+    protected ResponseEntity<List<ApiError>> handleIntegrityValidationException(IntegrityValidationException ex) {
+        return new ResponseEntity<>(ex.getErrors(), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(value = {NotFoundException.class})
-    protected ResponseEntity<List<ExceptionBadRequestResponse>> handleValidationException(NotFoundException ex) {
-        List<ExceptionBadRequestResponse> r = Collections.singletonList(new ExceptionBadRequestResponse(null, ExceptionCode.NOT_FOUND, ex.getMessage()));
+    protected ResponseEntity<List<ApiError>> handleValidationException(NotFoundException ex) {
+        List<ApiError> r = Collections.singletonList(new ApiError(null, ExceptionCode.NOT_FOUND, ex.getMessage()));
         return new ResponseEntity<>(r, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = {ConstraintViolationException.class})
-    protected ResponseEntity<List<ExceptionBadRequestResponse>> handleValidationException(ConstraintViolationException ex) {
-        List<ExceptionBadRequestResponse> r = new ArrayList<>();
+    protected ResponseEntity<List<ApiError>> handleValidationException(ConstraintViolationException ex) {
+        List<ApiError> r = new ArrayList<>();
         Set<ConstraintViolation<?>> constraintViolations = ex.getConstraintViolations();
 
         for (ConstraintViolation<?> cv : constraintViolations) {
@@ -43,7 +48,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
             for (Path.Node node : cv.getPropertyPath()) {
                 field = node.getName();
             }
-            r.add(new ExceptionBadRequestResponse(field, ExceptionCode.FIELD_VALIDATION, cv.getMessage()));
+            r.add(new ApiError(field, ExceptionCode.FIELD_VALIDATION, cv.getMessage()));
         }
 
         return new ResponseEntity<>(r, HttpStatus.BAD_REQUEST);
@@ -54,14 +59,14 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
                                                                   HttpHeaders headers,
                                                                   HttpStatus status,
                                                                   WebRequest request) {
-        List<ExceptionBadRequestResponse> r = new ArrayList<>();
+        List<ApiError> r = new ArrayList<>();
 
         List<FieldError> fieldErrors = ex
                 .getBindingResult()
                 .getFieldErrors();
 
         for (FieldError fieldError : fieldErrors) {
-            r.add(new ExceptionBadRequestResponse(fieldError.getField(), ExceptionCode.FIELD_VALIDATION, fieldError.getDefaultMessage()));
+            r.add(new ApiError(fieldError.getField(), ExceptionCode.FIELD_VALIDATION, fieldError.getDefaultMessage()));
         }
 
         return new ResponseEntity<>(r, HttpStatus.BAD_REQUEST);

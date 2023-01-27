@@ -12,6 +12,7 @@ import com.pwpo.common.search.SearchService;
 import com.pwpo.common.search.model.SearchResponse;
 import com.pwpo.common.service.BaseService;
 import com.pwpo.common.service.ItemMapper;
+import com.pwpo.common.validator.EntitySaveIntegrityValidation;
 import com.pwpo.project.model.Project;
 import com.pwpo.project.repository.ProjectRepository;
 import com.pwpo.task.TaskRepository;
@@ -36,8 +37,8 @@ public class TaskManager extends BaseService<Task, Long> {
     private final ProjectRepository projectRepository;
     private final SearchService searchService;
 
-    public TaskManager(ItemMapper mapper, TaskRepository taskRepository, ProjectRepository projectRepository, SearchService searchService) {
-        super(taskRepository, mapper);
+    public TaskManager(ItemMapper mapper, TaskRepository taskRepository, ProjectRepository projectRepository, SearchService searchService, List<? extends EntitySaveIntegrityValidation<Task>> validations) {
+        super(taskRepository, mapper, validations);
         this.mapper = mapper;
         this.taskRepository = taskRepository;
         this.projectRepository = projectRepository;
@@ -65,6 +66,25 @@ public class TaskManager extends BaseService<Task, Long> {
         return super.edit(body);
     }
 
+    @Override
+    protected void postSave(Task entity) {
+
+    }
+
+    @Override
+    protected void preSave(Task task) {
+        task.setProject(projectRepository.findById(task.getProject().getId()).get());
+        task.setStatus(Status.NEW);
+        Project project = task.getProject();
+        task.setCreated(LocalDateTime.now());
+        task.setNumber(generateNumber(project));
+    }
+
+    @Override
+    protected Task mapDTO(ItemDTO body) {
+        return mapper.mapToObj(body, Task.class);
+    }
+
     public APIResponse getTaskById(String id, Class<? extends ItemDTO> dtoClass) {
         Optional<Task> task = taskRepository.findById(Long.parseLong(id));
 
@@ -75,28 +95,28 @@ public class TaskManager extends BaseService<Task, Long> {
         }
     }
 
-    public APIResponse create(TaskRequestDTO body) {
-        setEstimation(body);
+//    public APIResponse create(TaskRequestDTO body) {
+//        setEstimation(body);
+//
+//        Task task = mapper.mapToObj(body, Task.class);
+//        task.setProject(projectRepository.findById(task.getProject().getId()).get());
+//        setInitValues(task);
+//        Task saved = taskRepository.save(task);
+//
+//        return mapper.mapToAPIResponse(saved, TaskPrimaryResponseDTO.class);
+//    }
 
-        Task task = mapper.mapToObj(body, Task.class);
-        task.setProject(projectRepository.findById(task.getProject().getId()).get());
-        setInitValues(task);
-        Task saved = taskRepository.save(task);
 
-        return mapper.mapToAPIResponse(saved, TaskPrimaryResponseDTO.class);
+    @Override
+    public APIResponse<? extends ItemDTO> create(ItemDTO body, Class<? extends ItemDTO> responseType) {
+        setEstimation((EstimableDTO) body);
+        return super.create(body, responseType);
     }
 
     private void setEstimation(EstimableDTO body) {
         if (body.getEstimationValue() == null) {
             body.setEstimationValue(body.getEstimationInHoursValue() * 60 + body.getEstimationInMinutesValue());
         }
-    }
-
-    private void setInitValues(Task task) {
-        task.setStatus(Status.NEW);
-        Project project = task.getProject();
-        task.setCreated(LocalDateTime.now());
-        task.setNumber(generateNumber(project));
     }
 
     private String generateNumber(Project project) {

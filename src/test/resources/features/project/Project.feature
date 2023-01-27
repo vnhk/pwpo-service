@@ -79,3 +79,13 @@ Feature: Project controller endpoint tests
     And the client receives bad request details
       | field     | code             | message                                           |
       | shortForm | FIELD_VALIDATION | Project with the given short form already exists! |
+
+  Scenario: the client wants to create new project, but project with given name and short form already exists
+    When the client wants to create project with following data
+      | name              | description         | shortForm | summary         | owner |
+      | Project for tests | example description | BUIPR     | example summary | 1     |
+    Then the client receives 400 status
+    And the client receives bad request details
+      | field     | code             | message                                           |
+      | name      | FIELD_VALIDATION | Project with the given name already exists!       |
+      | shortForm | FIELD_VALIDATION | Project with the given short form already exists! |

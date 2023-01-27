@@ -87,7 +87,7 @@ public class ProjectController extends BaseEntityController<Project, Long> {
 
     @PostMapping
     public ResponseEntity<APIResponse> createProject(@Valid @RequestBody ProjectRequestDTO body) {
-        return new ResponseEntity<>(projectManager.create(body), HttpStatus.OK);
+        return new ResponseEntity<>(projectManager.create(body, ProjectPrimaryResponseDTO.class), HttpStatus.OK);
     }
 
     @PutMapping
