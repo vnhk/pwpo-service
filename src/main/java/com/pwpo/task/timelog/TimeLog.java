@@ -1,7 +1,7 @@
 package com.pwpo.task.timelog;
 
 import com.pwpo.task.model.Task;
-import com.pwpo.user.UserDetails;
+import com.pwpo.user.UserAccount;
 import com.pwpo.common.model.db.BaseEntity;
 import lombok.*;
 
@@ -22,7 +22,7 @@ public class TimeLog extends BaseEntity {
     private LocalDateTime created;
     private LocalDate date;
     @ManyToOne
-    private UserDetails user;
+    private UserAccount user;
     @ManyToOne
     private Task task;
 }

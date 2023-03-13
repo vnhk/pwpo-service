@@ -34,9 +34,9 @@ public class UserManager {
     public APIResponse getUsersAddedToProject(Long id, SearchQueryOption options) {
         PageRequest of = PageRequest.of(options.getPage() - 1, options.getPageSize(), getSortBy(options));
 
-        Page<UserDetails> users = userRepository.findUsersAddedToTheProject(id, of);
+        Page<UserAccount> users = userRepository.findUsersAddedToTheProject(id, of);
         List<ItemDTO> result = new ArrayList<>();
-        for (UserDetails user : users) {
+        for (UserAccount user : users) {
             UserDTO itemDTO = (UserDTO) mapper.mapToDTO(user, UserDTO.class);
             ProjectRole projectRole = user.getAddedToProjects().stream().filter(e -> e.getProject().getId().equals(id)).map(UserProject::getRole)
                     .findFirst().get();
@@ -64,11 +64,11 @@ public class UserManager {
     }
 
     public APIResponse getUsersNotAddedToProject(Long id) {
-        List<UserDetails> addedUsers = userRepository.findUsersAddedToTheProject(id);
-        List<UserDetails> allUsers = userRepository.findAll();
+        List<UserAccount> addedUsers = userRepository.findUsersAddedToTheProject(id);
+        List<UserAccount> allUsers = userRepository.findAll();
         List<Long> addedUsersId = addedUsers.stream().map(u -> u.getId()).toList();
 
-        List<UserDetails> notAddedUsers = allUsers.stream().filter(e -> !addedUsersId.contains(e.getId()))
+        List<UserAccount> notAddedUsers = allUsers.stream().filter(e -> !addedUsersId.contains(e.getId()))
                 .toList();
 
         List<ItemDTO> collect = notAddedUsers.stream()
@@ -79,7 +79,7 @@ public class UserManager {
     }
 
     public APIResponse getUsers() {
-        List<UserDetails> users = userRepository.findAll();
+        List<UserAccount> users = userRepository.findAll();
         List<ItemDTO> collect = users.stream()
                 .map(user -> mapper.mapToDTO(user, UserDTO.class))
                 .collect(Collectors.toList());
@@ -88,11 +88,11 @@ public class UserManager {
     }
 
     public void addUserToTheProject(Long projectId, Long userId, ProjectRole projectRole) {
-        Optional<UserDetails> userOpt = userRepository.findById(userId);
+        Optional<UserAccount> userOpt = userRepository.findById(userId);
         Optional<Project> projectOpt = projectRepository.findById(projectId);
         validate(projectOpt, userOpt);
 
-        UserDetails user = userOpt.get();
+        UserAccount user = userOpt.get();
         Project project = projectOpt.get();
 
         UserProject userProject = new UserProject();
@@ -103,7 +103,7 @@ public class UserManager {
         userProjectRepository.save(userProject);
     }
 
-    private void validate(Optional<Project> project, Optional<UserDetails> user) {
+    private void validate(Optional<Project> project, Optional<UserAccount> user) {
         if (user.isEmpty()) {
             throw new ValidationException("User does not exist!");
         }

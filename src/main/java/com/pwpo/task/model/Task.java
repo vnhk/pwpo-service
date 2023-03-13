@@ -13,7 +13,7 @@ import com.pwpo.common.serializer.ToEnumDisplayNameSerializer;
 import com.pwpo.project.model.Project;
 import com.pwpo.task.enums.TaskType;
 import com.pwpo.task.timelog.TimeLog;
-import com.pwpo.user.UserDetails;
+import com.pwpo.user.UserAccount;
 import lombok.*;
 
 import javax.persistence.*;
@@ -45,7 +45,7 @@ public class Task extends BaseEntity {
 
     @ManyToOne
     @JsonDeserialize(using = FromUserIdDeserializer.class)
-    private UserDetails assignee;
+    private UserAccount assignee;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -72,10 +72,10 @@ public class Task extends BaseEntity {
     @ManyToOne
     @JsonDeserialize(using = FromUserIdDeserializer.class)
     @NotNull
-    private UserDetails owner;
+    private UserAccount owner;
 
     @ManyToOne
-    private UserDetails createdBy;
+    private UserAccount createdBy;
 
     @Max(value = Constants.ESTIMATION_MAX)
     @Min(value = Constants.ESTIMATION_MIN)

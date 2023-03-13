@@ -8,9 +8,12 @@ import com.pwpo.task.model.Task;
 import com.pwpo.task.timelog.TimeLog;
 import com.pwpo.user.model.UserProject;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -19,10 +22,20 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class UserDetails extends BaseEntity {
+public class UserAccount extends BaseEntity {
     @Column(unique = true)
     private String nick;
     private String fullName;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String password;
+    @ElementCollection(targetClass = AccountRole.class, fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "account_role")
+    @Column(name = "role")
+    @Fetch(FetchMode.SUBSELECT)
+    private Set<AccountRole> roles;
     @JsonIgnore
     @OneToMany(mappedBy = "owner")
     private List<Project> ownedProjects;

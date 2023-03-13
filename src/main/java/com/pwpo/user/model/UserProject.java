@@ -5,7 +5,7 @@ import com.pwpo.common.model.db.BaseEntity;
 import com.pwpo.common.serializer.ToEnumDisplayNameSerializer;
 import com.pwpo.project.model.Project;
 import com.pwpo.user.ProjectRole;
-import com.pwpo.user.UserDetails;
+import com.pwpo.user.UserAccount;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,7 +19,7 @@ import javax.persistence.*;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class UserProject extends BaseEntity {
     @ManyToOne
-    private UserDetails user;
+    private UserAccount user;
     @ManyToOne
     private Project project;
     @Enumerated(EnumType.STRING)

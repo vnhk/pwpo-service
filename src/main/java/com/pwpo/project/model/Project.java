@@ -9,12 +9,11 @@ import com.pwpo.common.model.Constants;
 import com.pwpo.common.model.db.BaseEntity;
 import com.pwpo.common.serializer.ToEnumDisplayNameSerializer;
 import com.pwpo.task.model.Task;
-import com.pwpo.user.UserDetails;
+import com.pwpo.user.UserAccount;
 import com.pwpo.user.model.UserProject;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
@@ -54,12 +53,12 @@ public class Project extends BaseEntity {
     @ManyToOne
     @JsonDeserialize(using = FromUserIdDeserializer.class)
     @NotNull
-    private UserDetails owner;
+    private UserAccount owner;
 
     @ManyToOne
     @JsonDeserialize(using = FromUserIdDeserializer.class)
 //    @NotNull until auth
-    private UserDetails createdBy;
+    private UserAccount createdBy;
 
     @OneToMany(mappedBy = "project")
     @JsonIgnore

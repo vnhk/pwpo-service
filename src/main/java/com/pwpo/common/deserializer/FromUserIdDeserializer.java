@@ -4,19 +4,19 @@ import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.pwpo.user.UserDetails;
+import com.pwpo.user.UserAccount;
 
 import java.io.IOException;
 
-public class FromUserIdDeserializer extends JsonDeserializer<UserDetails> {
+public class FromUserIdDeserializer extends JsonDeserializer<UserAccount> {
 
     @Override
-    public UserDetails deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JacksonException {
+    public UserAccount deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JacksonException {
         long id = jsonParser.getValueAsLong();
 
-        UserDetails userDetails = new UserDetails();
-        userDetails.setId(id);
+        UserAccount userAccount = new UserAccount();
+        userAccount.setId(id);
 
-        return userDetails;
+        return userAccount;
     }
 }

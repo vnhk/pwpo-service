@@ -9,7 +9,7 @@ import com.pwpo.common.model.edit.Editable;
 import com.pwpo.common.validator.EditProcess;
 import com.pwpo.common.validator.EntityValidator;
 import com.pwpo.common.validator.SaveProcess;
-import com.pwpo.user.UserDetails;
+import com.pwpo.user.UserAccount;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
@@ -140,15 +140,15 @@ public class BaseRepositoryImpl<T extends BaseEntity, ID extends Serializable> e
     }
 
     private void setEditor(BaseHistoryEntity history) {
-        UserDetails loggedUser = getLoggedUser();
+        UserAccount loggedUser = getLoggedUser();
         history.setEditor(loggedUser);
         //NULLPOINTER get Edited is null need to find userDetails with entitymanager!!!
         loggedUser.getEdited().add(history);
     }
 
-    private UserDetails getLoggedUser() {
+    private UserAccount getLoggedUser() {
         //should be logged user, for now hardcoded user with Id = 1;
-        return entityManager.find(UserDetails.class, 1L);
+        return entityManager.find(UserAccount.class, 1L);
     }
 
     private Object getVal(Object entity, Field entityField, Field historyField) throws IllegalAccessException, NoSuchFieldException {
