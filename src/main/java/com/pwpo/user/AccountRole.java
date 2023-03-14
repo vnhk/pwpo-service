@@ -1,5 +1,5 @@
 package com.pwpo.user;
 
 public enum AccountRole {
-    USER, ADMIN
+    ROLE_USER, ROLE_ADMIN, ROLE_MANAGER
 }

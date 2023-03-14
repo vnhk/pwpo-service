@@ -11,6 +11,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -52,6 +53,8 @@ public class AuthenticationController {
                 responseMap.put("message", "Logged In");
                 responseMap.put("token", token);
                 responseMap.put("expiresIn", jwtTokenUtil.getExpirationDateFromToken(token));
+                responseMap.put("username", userDetails.getUsername());
+                responseMap.put("roles", userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority));
                 return ResponseEntity.ok(responseMap);
             } else {
                 responseMap.put("error", true);
@@ -89,7 +92,7 @@ public class AuthenticationController {
         user.setFullName(firstName + " " + lastName);
         user.setEmail(email);
         user.setPassword(new BCryptPasswordEncoder().encode(password));
-        user.setRoles(Collections.singleton(AccountRole.USER));
+        user.setRoles(Collections.singleton(AccountRole.ROLE_USER));
         user.setNick(userName);
         String token = jwtTokenUtil.generateToken(user);
         userRepository.save(user);

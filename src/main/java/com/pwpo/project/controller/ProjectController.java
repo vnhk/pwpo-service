@@ -15,6 +15,10 @@ import com.pwpo.user.UserManager;
 import com.pwpo.user.dto.UserProjectDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreFilter;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -35,6 +39,7 @@ public class ProjectController extends BaseEntityController<Project, Long> {
     }
 
     @GetMapping
+    @PostAuthorize("hasRole('MANAGER') or @projectPermissionEvaluator.filter(returnObject.getBody())")
     public ResponseEntity<APIResponse> getProjectsPrimary(SearchQueryOption options) {
         return new ResponseEntity<>(projectManager.getProjects(options, ProjectPrimaryResponseDTO.class), HttpStatus.OK);
     }
@@ -44,7 +49,9 @@ public class ProjectController extends BaseEntityController<Project, Long> {
         return super.exist(id);
     }
 
+    //Only user added to the project can see details and all managers
     @GetMapping(path = "/project")
+    @PreAuthorize("(hasRole('USER') && @projectPermissionEvaluator.hasAccessToProject(#id)) or hasRole('MANAGER')")
     public ResponseEntity<APIResponse> getProject(Long id, String dto) throws ClassNotFoundException {
         return new ResponseEntity<>(projectManager.getProjectById(id, (Class<? extends ItemDTO>) Class.forName(dto)), HttpStatus.OK);
     }
