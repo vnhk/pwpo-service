@@ -9,6 +9,7 @@ import com.pwpo.task.dto.history.TaskHistoryDetailsResponseDTO;
 import com.pwpo.task.model.TaskHistory;
 import com.pwpo.task.service.TaskHistoryManager;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,17 +21,20 @@ public class TaskHistoryController extends BaseHistoryEntityController<TaskHisto
     }
 
     @GetMapping
-    public ResponseEntity<APIResponse> getProjectHistory(@PathVariable Long taskId, SearchQueryOption options) {
+    @PreAuthorize("(hasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#taskId)) or hasRole('MANAGER')")
+    public ResponseEntity<APIResponse> getTaskHistory(@PathVariable Long taskId, SearchQueryOption options) {
         return super.getHistory(taskId, options);
     }
 
     @GetMapping("/{historyId}")
-    public ResponseEntity<APIResponse> getProjectHistoryDetails(@PathVariable Long taskId, @PathVariable Long historyId) {
+    @PreAuthorize("(hasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#taskId)) or hasRole('MANAGER')")
+    public ResponseEntity<APIResponse> getTaskHistoryDetails(@PathVariable Long taskId, @PathVariable Long historyId) {
         return super.getHistoryDetails(taskId, historyId);
     }
 
     @GetMapping("/{historyId}/compare")
-    public ResponseEntity<APIResponse> compareProjectWithHistory(@PathVariable Long taskId, @PathVariable Long historyId) {
+    @PreAuthorize("(hasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#taskId)) or hasRole('MANAGER')")
+    public ResponseEntity<APIResponse> compareTaskWithHistory(@PathVariable Long taskId, @PathVariable Long historyId) {
         return super.compareWithHistory(taskId, historyId);
     }
 

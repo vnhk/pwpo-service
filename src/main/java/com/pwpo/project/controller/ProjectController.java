@@ -38,7 +38,7 @@ public class ProjectController extends BaseEntityController<Project, Long> {
     }
 
     @GetMapping
-    @PostAuthorize("hasRole('MANAGER') or @projectPermissionEvaluator.filter(returnObject.getBody())")
+    @PostAuthorize("hasRole('MANAGER') or @permissionEvaluator.filter(returnObject.getBody())")
     public ResponseEntity<APIResponse> getProjectsPrimary(SearchQueryOption options) {
         return new ResponseEntity<>(projectManager.getProjects(options, ProjectPrimaryResponseDTO.class), HttpStatus.OK);
     }
