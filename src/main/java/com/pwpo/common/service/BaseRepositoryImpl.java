@@ -14,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.io.Serializable;
@@ -26,6 +29,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
+@Transactional
 public class BaseRepositoryImpl<T extends BaseEntity, ID extends Serializable> extends SimpleJpaRepository<T, ID> implements BaseRepository<T, ID> {
     private final EntityManager entityManager;
     private final EntityValidator validator;
@@ -67,7 +71,6 @@ public class BaseRepositoryImpl<T extends BaseEntity, ID extends Serializable> e
     private <S extends T> S edit(BaseEntity entity, BaseHistoryEntity history) {
         validator.validate(entity, EditProcess.class);
         saveHistory(history);
-
         return super.save((S) entity);
     }
 
@@ -147,8 +150,11 @@ public class BaseRepositoryImpl<T extends BaseEntity, ID extends Serializable> e
     }
 
     private UserAccount getLoggedUser() {
-        //should be logged user, for now hardcoded user with Id = 1;
-        return entityManager.find(UserAccount.class, 1L);
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return (UserAccount) entityManager.createQuery("SELECT u FROM UserAccount u where u.nick = :username ")
+                .setParameter("username", principal.getUsername())
+                .getSingleResult();
     }
 
     private Object getVal(Object entity, Field entityField, Field historyField) throws IllegalAccessException, NoSuchFieldException {

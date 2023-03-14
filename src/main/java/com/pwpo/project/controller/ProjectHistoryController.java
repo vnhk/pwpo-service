@@ -8,6 +8,7 @@ import com.pwpo.project.dto.history.ProjectHistoryDetailsResponseDTO;
 import com.pwpo.common.model.dto.HistoryReponseDTO;
 import com.pwpo.project.model.ProjectHistory;
 import com.pwpo.project.service.ProjectHistoryManager;
+import com.pwpo.security.methodsecurity.ReadAccessProject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,16 +21,19 @@ public class ProjectHistoryController extends BaseHistoryEntityController<Projec
     }
 
     @GetMapping
+    @ReadAccessProject
     public ResponseEntity<APIResponse> getProjectHistory(@PathVariable Long projectId, SearchQueryOption options) {
         return super.getHistory(projectId, options);
     }
 
     @GetMapping("/{historyId}")
+    @ReadAccessProject
     public ResponseEntity<APIResponse> getProjectHistoryDetails(@PathVariable Long projectId, @PathVariable Long historyId) {
         return super.getHistoryDetails(projectId, historyId);
     }
 
     @GetMapping("/{historyId}/compare")
+    @ReadAccessProject
     public ResponseEntity<APIResponse> compareProjectWithHistory(@PathVariable Long projectId, @PathVariable Long historyId) {
         return super.compareWithHistory(projectId, historyId);
     }

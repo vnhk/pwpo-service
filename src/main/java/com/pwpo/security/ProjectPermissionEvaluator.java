@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProjectPermissionEvaluator {
 
-    private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
 
     public boolean hasAccessToProject(Long projectId) {

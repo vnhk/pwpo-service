@@ -10,7 +10,7 @@ import java.util.Locale;
 
 @SpringBootApplication
 @EnableJpaRepositories(repositoryBaseClass = BaseRepositoryImpl.class)
-@EnableMethodSecurity(prePostEnabled = true,  securedEnabled = true,  jsr250Enabled = true)
+@EnableMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true, proxyTargetClass = true)
 public class PwpoServiceApplication {
 
     static {

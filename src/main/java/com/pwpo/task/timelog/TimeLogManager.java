@@ -1,18 +1,20 @@
 package com.pwpo.task.timelog;
 
 import com.pwpo.common.exception.ValidationException;
+import com.pwpo.common.model.APIResponse;
+import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.common.search.SearchQueryOption;
 import com.pwpo.common.service.ItemMapper;
 import com.pwpo.project.model.Project;
-import com.pwpo.task.model.Task;
 import com.pwpo.task.TaskRepository;
+import com.pwpo.task.model.Task;
 import com.pwpo.user.UserRepository;
-import com.pwpo.common.model.APIResponse;
-import com.pwpo.common.model.dto.ItemDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -59,9 +61,8 @@ public class TimeLogManager {
         return Sort.by("date").descending();
     }
 
-    // TODO: 08.10.2022 user id is logged user id (is always logged user), EACH user should be prevented to log time for another account!
     public void createTimeLog(Long taskId, TimeLogRequest timeLogRequest) {
-        Long userId = 1L;//hardcoded logged user
+        Long userId = getLoggedUserId();
         validate(taskId, userId, timeLogRequest);
         setLoggedTime(timeLogRequest);
 
@@ -74,6 +75,11 @@ public class TimeLogManager {
         timeLog.setDate(timeLogRequest.getDate());
 
         timeLogRepository.save(timeLog);
+    }
+
+    private Long getLoggedUserId() {
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userRepository.findByNick(principal.getUsername()).get().getId();
     }
 
     private void setLoggedTime(TimeLogRequest body) {
@@ -91,7 +97,7 @@ public class TimeLogManager {
 
         Project project = taskOptional.get().getProject();
 
-        if (project.getAddedToProjects().stream().noneMatch(e -> e.getId().equals(userId))) {
+        if (project.getAddedToProjects().stream().noneMatch(e -> e.getUser().getId().equals(userId))) {
             throw new ValidationException("userId", "User with given id does not have access to the project!");
         }
 

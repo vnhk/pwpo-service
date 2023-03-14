@@ -16,11 +16,13 @@ import com.pwpo.common.validator.EntitySaveIntegrityValidation;
 import com.pwpo.project.model.Project;
 import com.pwpo.project.repository.ProjectRepository;
 import com.pwpo.task.TaskRepository;
-import com.pwpo.task.dto.TaskPrimaryResponseDTO;
-import com.pwpo.task.dto.TaskRequestDTO;
 import com.pwpo.task.model.EstimableDTO;
 import com.pwpo.task.model.Task;
+import com.pwpo.user.UserAccount;
+import com.pwpo.user.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -36,13 +38,16 @@ public class TaskManager extends BaseService<Task, Long> {
     private final TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
     private final SearchService searchService;
+    private final UserRepository userRepository;
 
-    public TaskManager(ItemMapper mapper, TaskRepository taskRepository, ProjectRepository projectRepository, SearchService searchService, List<? extends EntitySaveIntegrityValidation<Task>> validations) {
+    public TaskManager(ItemMapper mapper, TaskRepository taskRepository, ProjectRepository projectRepository,
+                       SearchService searchService, List<? extends EntitySaveIntegrityValidation<Task>> validations, UserRepository userRepository) {
         super(taskRepository, mapper, validations);
         this.mapper = mapper;
         this.taskRepository = taskRepository;
         this.projectRepository = projectRepository;
         this.searchService = searchService;
+        this.userRepository = userRepository;
     }
 
     public APIResponse getTasksByProjectId(String id, SearchQueryOption options, Class<? extends ItemDTO> dtoClass) {
@@ -78,6 +83,12 @@ public class TaskManager extends BaseService<Task, Long> {
         Project project = task.getProject();
         task.setCreated(LocalDateTime.now());
         task.setNumber(generateNumber(project));
+
+
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<UserAccount> byNick = userRepository.findByNick(principal.getUsername());
+
+        task.setCreatedBy(byNick.get());
     }
 
     @Override

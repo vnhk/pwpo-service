@@ -14,7 +14,11 @@ import com.pwpo.common.validator.EntitySaveIntegrityValidation;
 import com.pwpo.project.dto.EditProjectRequestDTO;
 import com.pwpo.project.model.Project;
 import com.pwpo.project.repository.ProjectRepository;
+import com.pwpo.user.UserAccount;
+import com.pwpo.user.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,13 +30,16 @@ import java.util.Optional;
 public class ProjectManager extends BaseService<Project, Long> {
     private final ItemMapper mapper;
     private final ProjectRepository projectRepository;
+    private final UserRepository userRepository;
     private final SearchService searchService;
 
-    public ProjectManager(ProjectRepository repository, ItemMapper mapper, SearchService searchService, List<? extends EntitySaveIntegrityValidation<Project>> validations) {
+    public ProjectManager(ProjectRepository repository, ItemMapper mapper, SearchService searchService,
+                          List<? extends EntitySaveIntegrityValidation<Project>> validations, UserRepository userRepository) {
         super(repository, mapper, validations);
         this.projectRepository = repository;
         this.mapper = mapper;
         this.searchService = searchService;
+        this.userRepository = userRepository;
     }
 
     public APIResponse getProjects(SearchQueryOption options, Class<? extends ItemDTO> dtoClass) {
@@ -80,6 +87,11 @@ public class ProjectManager extends BaseService<Project, Long> {
     protected void preSave(Project project) {
         project.setStatus(Status.NEW);
         project.setCreated(LocalDateTime.now());
+
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<UserAccount> byNick = userRepository.findByNick(principal.getUsername());
+
+        project.setCreatedBy(byNick.get());
     }
 
     @Override

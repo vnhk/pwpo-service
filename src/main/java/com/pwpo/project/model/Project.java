@@ -53,6 +53,7 @@ public class Project extends BaseEntity {
     @ManyToOne
     @JsonDeserialize(using = FromUserIdDeserializer.class)
     @NotNull
+    //owner is just information who to connect with about the project
     private UserAccount owner;
 
     @ManyToOne
