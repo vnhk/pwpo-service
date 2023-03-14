@@ -13,6 +13,10 @@ import com.pwpo.common.model.dto.HistoryReponseDTO;
 import com.pwpo.common.search.model.SortDirection;
 import io.cucumber.datatable.DataTable;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.lang.reflect.Field;
@@ -157,5 +161,15 @@ public class CommonStepsImplementation {
             }
             assertThat(value).isEqualTo(res.substring(0, res.length() - 1));
         }
+    }
+
+    public void loginWithRoles(String username, String roles) {
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        for (String role : roles.split(",")) {
+            authorities.add(new SimpleGrantedAuthority(role));
+        }
+        User principal = new User(username, "testPassword", authorities);
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(principal, null, authorities);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }

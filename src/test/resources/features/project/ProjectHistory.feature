@@ -1,6 +1,7 @@
 Feature: Project History tests
 
   Scenario: the client wants to check history of the project
+    Given the "joedoe" user with roles: "ROLE_MANAGER" is logged
     When the client wants to check history of the project with id = 4
     Then the client receives APIResponse
       | allFound | currentPage | currentFound |
@@ -10,6 +11,7 @@ Feature: Project History tests
       | 1  | joedoe | 2022-11-12T14:21:51 |
 
   Scenario: the client wants to check history details of the project
+    Given the "joedoe" user with roles: "ROLE_MANAGER" is logged
     When the client checks history details with id = 1 of the project with id = 4
     Then the client receives APIResponse
       | allFound | currentPage | currentFound |
@@ -19,6 +21,7 @@ Feature: Project History tests
       | 1  | Monitoring | MONPR     | Project monitoring | New    | description | joedoe | joedoe |
 
   Scenario: the client wants to compare project history version with latest version
+    Given the "joedoe" user with roles: "ROLE_MANAGER" is logged
     When the client compare history with id = 1 with latest project version with id = 4
     Then the client receives APIResponse
       | allFound | currentPage | currentFound |
