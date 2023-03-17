@@ -77,7 +77,7 @@ public class SearchService {
         return new SearchResponse(resultList, resultList.size(), page, allFound);
     }
 
-    public SearchResponse search(SearchRequest searchRequest, SearchQueryOption options) {
+    public SearchResponse search(SearchRequest searchRequest, SearchQueryOption options) throws NoSuchFieldException {
         validateOptions(options);
         Class<? extends BaseEntity> entityToFind = getEntityToFind(options);
 
@@ -158,7 +158,7 @@ public class SearchService {
         }
     }
 
-    private Predicate buildMainPredicate(SearchRequest searchRequest, Root<? extends BaseEntity> root, Class<? extends BaseEntity> entityToFind) {
+    private Predicate buildMainPredicate(SearchRequest searchRequest, Root<? extends BaseEntity> root, Class<? extends BaseEntity> entityToFind) throws NoSuchFieldException {
         Map<String, Predicate> groupPredicate = new HashMap<>();
 
         int actualGroup = 1;
@@ -174,7 +174,8 @@ public class SearchService {
                     Criterion queryCriterion = searchRequest.criteria.stream().filter(criterion -> criterion.id.equals(queryId))
                             .findFirst().get();
 
-                    SearchCriteria entityCriterion = new SearchCriteria(queryCriterion.type + "." + queryCriterion.attr, null, queryCriterion.value);
+                    String field = queryCriterion.type + "." + queryCriterion.attr;
+                    SearchCriteria entityCriterion = new SearchCriteria(field, null, getValue(queryCriterion.value, field, entityToFind));
 
                     Predicate predicate = null;
                     switch (queryCriterion.operator) {
@@ -468,6 +469,24 @@ public class SearchService {
         }
 
         return value;
+    }
+
+    private Object getValue(Object value, String field, Class<? extends BaseEntity> entityToFind) throws NoSuchFieldException {
+        String[] subObjects = field.split("\\.");
+        String fst = subObjects[0];
+        int i = 1;
+        if (fst.equalsIgnoreCase(entityToFind.getSimpleName())) {
+            fst = subObjects[1];
+            i = 2;
+        }
+
+        Field declaredField = entityToFind.getDeclaredField(fst);
+
+        for (; i < subObjects.length; i++) {
+            declaredField = getDeclaredField(subObjects[i], declaredField, entityToFind);
+        }
+
+        return getValue(value, declaredField);
     }
 
     private void setValueAsArray(SearchCriteria entityCriterion, Field field) {

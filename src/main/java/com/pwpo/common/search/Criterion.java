@@ -5,5 +5,5 @@ public class Criterion {
     public String type;
     public String attr;
     public String operator;
-    public String value;
+    public Object value;
 }

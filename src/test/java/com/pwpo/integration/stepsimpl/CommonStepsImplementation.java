@@ -118,9 +118,9 @@ public class CommonStepsImplementation {
                     value = Integer.valueOf((String) value);
                 } else if (type.isEnum()) {
                     DataEnum[] enumConstants = (DataEnum[]) type.getEnumConstants();
-                    String displayName = (String) value;
+                    String passedName = (String) value;
                     value = Arrays.stream(enumConstants)
-                            .filter(e -> e.getDisplayName().equals(displayName))
+                            .filter(e -> e.getDisplayName().equals(passedName) || e.getInternalName().equals(passedName))
                             .findFirst()
                             .orElseThrow(() -> new RuntimeException("Enum value for DTO should be set with display name!"));
                 } else if (type.equals(LocalDate.class)) {
