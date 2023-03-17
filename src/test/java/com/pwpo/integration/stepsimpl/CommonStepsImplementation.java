@@ -100,8 +100,12 @@ public class CommonStepsImplementation {
     }
 
     public <T> T buildDTO(DataTable dataTable, Class<T> dtoClass) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        return buildDTO(dataTable, dtoClass, 0);
+    }
+
+    private <T> T buildDTO(DataTable dataTable, Class<T> dtoClass, int i) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         T dto = dtoClass.getDeclaredConstructor().newInstance();
-        Map<String, String> data = dataTable.asMaps().get(0);
+        Map<String, String> data = dataTable.asMaps().get(i);
         for (Field dtoField : dtoClass.getDeclaredFields()) {
             String dtoFieldName = dtoField.getName();
             Object value = data.get(dtoFieldName);
@@ -121,6 +125,9 @@ public class CommonStepsImplementation {
                             .orElseThrow(() -> new RuntimeException("Enum value for DTO should be set with display name!"));
                 } else if (type.equals(LocalDate.class)) {
                     value = LocalDate.parse((String) value);
+                } else if (type.equals(List.class)) {
+                    String[] values = ((String) value).split(",");
+                    value = Arrays.stream(values).toList();
                 }
 
                 dtoField.setAccessible(true);
@@ -129,6 +136,14 @@ public class CommonStepsImplementation {
             }
         }
         return dto;
+    }
+
+    public <T> List<T> buildListDTO(DataTable dataTable, Class<T> dtoClass) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        List<T> res = new ArrayList<>();
+        for (int i = 0; i < dataTable.asMaps().size(); i++) {
+            res.add(buildDTO(dataTable, dtoClass, i));
+        }
+        return res;
     }
 
     public void performCheckComparisonDetails(DataTable dataTable) throws Exception {

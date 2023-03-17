@@ -1,9 +1,10 @@
 package com.pwpo.common.search;
 
-import com.pwpo.common.search.model.SearchResponse;
-import com.pwpo.common.service.ItemMapper;
 import com.pwpo.common.model.APIResponse;
 import com.pwpo.common.model.dto.ItemDTO;
+import com.pwpo.common.search.model.SearchResponse;
+import com.pwpo.common.search.model.SortDirection;
+import com.pwpo.common.service.ItemMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,5 +35,15 @@ public class SearchController {
         // TODO: 30.09.2022 implement
 
         return new ResponseEntity<>(null, HttpStatus.OK);
+    }
+
+    @PostMapping
+    //filter result by result type, for user clear passwords!!
+    public ResponseEntity<APIResponse> search(@RequestBody SearchRequest searchRequest) throws NoSuchFieldException, ClassNotFoundException {
+        SearchQueryOption defaultOptions = new SearchQueryOption(SortDirection.ASC, "id", 1, 1000, searchRequest.resultType);
+        SearchResponse search = searchService.search(searchRequest, defaultOptions);
+        APIResponse apiResponse = mapper.mapToAPIResponse(search, ItemMapper.getDefaultDTO(defaultOptions.getEntityToFind()));
+
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 }

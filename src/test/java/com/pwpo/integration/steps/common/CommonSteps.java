@@ -5,6 +5,9 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+
+import java.lang.reflect.InvocationTargetException;
 
 public class CommonSteps extends BaseCucumberStep {
     public CommonStepsImplementation commonStepsImplementation = new CommonStepsImplementation(mockMvc);

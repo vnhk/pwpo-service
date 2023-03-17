@@ -6,6 +6,9 @@ import com.pwpo.common.model.APIResponse;
 import com.pwpo.common.model.db.Persistable;
 import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.common.search.model.SearchResponse;
+import com.pwpo.project.dto.ProjectPrimaryResponseDTO;
+import com.pwpo.task.dto.TaskPrimaryResponseDTO;
+import com.pwpo.user.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,18 @@ import java.util.List;
 @Slf4j
 public class ItemMapper {
     private final ObjectMapper mapper;
+
+    public static Class<? extends ItemDTO> getDefaultDTO(String cl) {
+        if (cl.contains("project")) {
+            return ProjectPrimaryResponseDTO.class;
+        } else if (cl.contains("task")) {
+            return TaskPrimaryResponseDTO.class;
+        } else if (cl.contains("user")) {
+            return UserDTO.class;
+        }
+
+        return null;
+    }
 
     public ItemDTO mapToDTO(Persistable item, Class<? extends ItemDTO> dtoClass) {
         try {

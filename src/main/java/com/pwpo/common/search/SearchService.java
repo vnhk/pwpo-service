@@ -2,6 +2,9 @@ package com.pwpo.common.search;
 
 import com.pwpo.common.model.db.BaseEntity;
 import com.pwpo.common.search.model.*;
+import com.pwpo.project.model.Project;
+import com.pwpo.task.model.Task;
+import com.pwpo.user.UserAccount;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.internal.util.StringHelper;
@@ -74,6 +77,34 @@ public class SearchService {
         return new SearchResponse(resultList, resultList.size(), page, allFound);
     }
 
+    public SearchResponse search(SearchRequest searchRequest, SearchQueryOption options) {
+        validateOptions(options);
+        Class<? extends BaseEntity> entityToFind = getEntityToFind(options);
+
+        SortDirection sortDirection = options.getSortDirection();
+        String sortField = options.getSortField();
+        Integer page = options.getPage();
+        Integer pageSize = options.getPageSize();
+
+        CriteriaQuery<? extends BaseEntity> criteriaQuery = criteriaBuilder.createQuery(entityToFind);
+        Root<? extends BaseEntity> root = criteriaQuery.from(entityToFind);
+
+        if (searchRequest != null) {
+            criteriaQuery.where(buildMainPredicate(searchRequest, root, entityToFind));
+        }
+
+        criteriaQuery.orderBy(new OrderImpl(SearchOperationsHelper.getExpression(root, sortField), isAscendingSortDirection(sortDirection), nullFirst));
+
+        TypedQuery<? extends BaseEntity> resultQuery = entityManager.createQuery(criteriaQuery);
+        Integer allFound = getHowManyItemsExist(criteriaQuery, root);
+
+        resultQuery.setFirstResult(pageSize * (page - 1));
+        resultQuery.setMaxResults(pageSize);
+        List<? extends BaseEntity> resultList = resultQuery.getResultList();
+
+        return new SearchResponse(resultList, resultList.size(), page, allFound);
+    }
+
     private void validateOptions(SearchQueryOption options) {
         throwIfNullOrEmpty(options.getPage(), "page");
         throwIfNullOrEmpty(options.getPageSize(), "pageSize");
@@ -87,7 +118,15 @@ public class SearchService {
         }
     }
 
-    private Class<? extends BaseEntity> getEntityToFind(SearchQueryOption options) {
+    public Class<? extends BaseEntity> getEntityToFind(SearchQueryOption options) {
+        if (options.getEntityToFind().contains("project")) {
+            return Project.class;
+        } else if (options.getEntityToFind().contains("task")) {
+            return Task.class;
+        } else if (options.getEntityToFind().contains("user")) {
+            return UserAccount.class;
+        }
+
         try {
             return (Class<? extends BaseEntity>) Class.forName(options.getEntityToFind());
         } catch (ClassNotFoundException e) {
@@ -117,6 +156,52 @@ public class SearchService {
             log.info("Query contains multiple sub queries.");
             return buildPredicate(query, root, entityToFind, operators);
         }
+    }
+
+    private Predicate buildMainPredicate(SearchRequest searchRequest, Root<? extends BaseEntity> root, Class<? extends BaseEntity> entityToFind) {
+        Map<String, Predicate> groupPredicate = new HashMap<>();
+
+        int actualGroup = 1;
+        Optional<Group> groupOpt = searchRequest.groups.stream().filter(g -> g.id.equals("G1"))
+                .findFirst();
+        do {
+            Group group = groupOpt.get();
+            List<Predicate> predicatesForGroup = new ArrayList<>();
+            for (String queryId : group.queries) {
+                if (groupPredicate.containsKey(queryId)) {
+                    predicatesForGroup.add(groupPredicate.get(queryId));
+                } else {
+                    Criterion queryCriterion = searchRequest.criteria.stream().filter(criterion -> criterion.id.equals(queryId))
+                            .findFirst().get();
+
+                    SearchCriteria entityCriterion = new SearchCriteria(queryCriterion.type + "." + queryCriterion.attr, null, queryCriterion.value);
+
+                    Predicate predicate = null;
+                    switch (queryCriterion.operator) {
+                        case "equals" -> predicate = SearchOperationsHelper.equal(root, criteriaBuilder, entityCriterion);
+                        case "contains" -> predicate = SearchOperationsHelper.like(root, criteriaBuilder, entityCriterion);
+                        case "notEquals" -> predicate = SearchOperationsHelper.notEqual(root, criteriaBuilder, entityCriterion);
+                        case "notContains" -> predicate = SearchOperationsHelper.notLike(root, criteriaBuilder, entityCriterion);
+                        default -> log.error("NULL PREDICATE, INVALID OPERATOR!!!");
+                    }
+                    predicatesForGroup.add(predicate);
+                }
+
+                if (group.operator.equals("AND")) {
+                    groupPredicate.put(group.id, criteriaBuilder.and(predicatesForGroup.toArray(Predicate[]::new)));
+                } else if (group.operator.equals("OR")) {
+                    groupPredicate.put(group.id, criteriaBuilder.or(predicatesForGroup.toArray(Predicate[]::new)));
+                }
+            }
+            actualGroup++;
+            int finalActualGroup = actualGroup;
+            groupOpt = searchRequest.groups.stream().filter(g -> g.id.equals("G" + finalActualGroup))
+                    .findFirst();
+        } while (groupOpt.isPresent());
+
+        return groupPredicate.get("G" + (actualGroup - 1));
+//        groupPredicate;
+//  na koniec wszystkei beda w group predicate i wystarczy wziac ten predicate dla ostatniej grupy!!!! czyli jak jest g1,G2 i G3, to wynikowy predicate jest w G3
     }
 
     private Predicate buildPredicate(String queryWithOneSubQuery, Root<? extends BaseEntity> root, Class<? extends BaseEntity> entityToFind) {

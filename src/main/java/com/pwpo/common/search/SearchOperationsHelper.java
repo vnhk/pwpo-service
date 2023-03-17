@@ -1,7 +1,8 @@
 package com.pwpo.common.search;
 
-import com.pwpo.common.search.model.SearchCriteria;
 import com.pwpo.common.model.db.BaseEntity;
+import com.pwpo.common.search.model.SearchCriteria;
+import org.hibernate.query.criteria.internal.path.RootImpl;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Path;
@@ -29,9 +30,16 @@ public class SearchOperationsHelper {
 
     public static Path<String> getExpression(Root<? extends BaseEntity> root, String field) {
         String[] subObjects = field.split("\\.");
-        Path<String> objectPath = root.get(subObjects[0]);
+        String fst = subObjects[0];
+        int i = 1;
+        if (fst.equalsIgnoreCase(((RootImpl) root).getEntityType().getName())) {
+            fst = subObjects[1];
+            i = 2;
+        }
 
-        for (int i = 1; i < subObjects.length; i++) {
+        Path<String> objectPath = root.get(fst);
+
+        for (; i < subObjects.length; i++) {
             objectPath = objectPath.get(subObjects[i]);
         }
 

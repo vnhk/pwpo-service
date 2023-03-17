@@ -43,7 +43,7 @@ public class ProjectManager extends BaseService<Project, Long> {
     }
 
     public APIResponse getProjects(SearchQueryOption options, Class<? extends ItemDTO> dtoClass) {
-        SearchResponse searchResult = searchService.search(null, options);
+        SearchResponse searchResult = searchService.search("", options);
         return mapper.mapToAPIResponse(searchResult, dtoClass);
     }
 

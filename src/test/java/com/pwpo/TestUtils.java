@@ -75,13 +75,13 @@ public class TestUtils {
         return newCollection;
     }
 
-    public static RequestBuilder buildPostRequest(String url, ItemDTO item, ObjectMapper mapper) throws JsonProcessingException {
+    public static RequestBuilder buildPostRequest(String url, Object item, ObjectMapper mapper) throws JsonProcessingException {
         return MockMvcRequestBuilders.post(url)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(item));
     }
 
-    public static RequestBuilder buildPutRequest(String url, ItemDTO item, ObjectMapper mapper) throws JsonProcessingException {
+    public static RequestBuilder buildPutRequest(String url, Object item, ObjectMapper mapper) throws JsonProcessingException {
         return MockMvcRequestBuilders.put(url)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(item));
