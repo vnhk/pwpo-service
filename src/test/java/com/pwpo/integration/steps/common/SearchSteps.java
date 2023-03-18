@@ -1,5 +1,6 @@
 package com.pwpo.integration.steps.common;
 
+import com.pwpo.integration.IntegrationDataHolder;
 import com.pwpo.integration.stepsimpl.SearchStepsImplementation;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Before;
@@ -20,6 +21,7 @@ public class SearchSteps extends BaseCucumberStep {
     public void setUp() {
         searchStepsImplementation = new SearchStepsImplementation(mockMvc);
         commonSteps.commonStepsImplementation = searchStepsImplementation;
+        IntegrationDataHolder.clean();
     }
 
     @When("the client wants to search for {string} with criteria")

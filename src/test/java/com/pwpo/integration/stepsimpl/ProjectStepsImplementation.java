@@ -14,11 +14,14 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.pwpo.integration.IntegrationDataHolder.apiResponse;
 import static com.pwpo.integration.IntegrationDataHolder.mvcResult;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 public class ProjectStepsImplementation extends CommonStepsImplementation {
 
@@ -122,5 +125,28 @@ public class ProjectStepsImplementation extends CommonStepsImplementation {
         mvcResult(mockMvc.perform(MockMvcRequestBuilders.get("/projects/" + projectId + "/history/" + historyId + "/compare"))
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andReturn());
+    }
+
+    public void performReceiveApiResponseWithProject(DataTable dataTable) throws Exception {
+        APIResponse<ProjectPrimaryResponseDTO> detailsResp
+                = TestUtils.convertAPIResponse(mvcResult().getResponse(), ProjectPrimaryResponseDTO.class, mapper);
+
+        List<ProjectPrimaryResponseDTO> items = detailsResp.getItems();
+        List<Map<String, String>> data = dataTable.asMaps();
+        for (Map<String, String> p : data) {
+            String id = p.get("id");
+            Optional<ProjectPrimaryResponseDTO> first = items.stream().filter(e -> e.getId().equals(Long.parseLong(id))).findFirst();
+            if (first.isEmpty()) {
+                fail("Project with id = " + id + " not found in API Response");
+            } else {
+                ProjectPrimaryResponseDTO projectPrimaryResponseDTO = first.get();
+                assertThat(p.get("name")).isEqualTo(projectPrimaryResponseDTO.getName());
+                assertThat(p.get("owner")).isEqualTo(projectPrimaryResponseDTO.getOwner().getId().toString());
+                assertThat(p.get("status")).isEqualTo(projectPrimaryResponseDTO.getStatus());
+                assertThat(p.get("summary")).isEqualTo(projectPrimaryResponseDTO.getSummary());
+                assertThat(p.get("shortForm")).isEqualTo(projectPrimaryResponseDTO.getShortForm());
+            }
+        }
+
     }
 }

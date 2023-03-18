@@ -119,11 +119,11 @@ public class SearchService {
     }
 
     public Class<? extends BaseEntity> getEntityToFind(SearchQueryOption options) {
-        if (options.getEntityToFind().contains("project")) {
+        if (options.getEntityToFind().equals("project")) {
             return Project.class;
-        } else if (options.getEntityToFind().contains("task")) {
+        } else if (options.getEntityToFind().equals("task")) {
             return Task.class;
-        } else if (options.getEntityToFind().contains("user")) {
+        } else if (options.getEntityToFind().equals("user")) {
             return UserAccount.class;
         }
 
@@ -180,9 +180,9 @@ public class SearchService {
                     Predicate predicate = null;
                     switch (queryCriterion.operator) {
                         case "equals" -> predicate = SearchOperationsHelper.equal(root, criteriaBuilder, entityCriterion);
-                        case "contains" -> predicate = SearchOperationsHelper.like(root, criteriaBuilder, entityCriterion);
+                        case "contains" -> predicate = SearchOperationsHelper.contains(root, criteriaBuilder, entityCriterion);
                         case "notEquals" -> predicate = SearchOperationsHelper.notEqual(root, criteriaBuilder, entityCriterion);
-                        case "notContains" -> predicate = SearchOperationsHelper.notLike(root, criteriaBuilder, entityCriterion);
+                        case "notContains" -> predicate = SearchOperationsHelper.notContains(root, criteriaBuilder, entityCriterion);
                         default -> log.error("NULL PREDICATE, INVALID OPERATOR!!!");
                     }
                     predicatesForGroup.add(predicate);

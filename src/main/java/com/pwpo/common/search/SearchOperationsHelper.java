@@ -50,4 +50,14 @@ public class SearchOperationsHelper {
     public static Predicate in(Root<? extends BaseEntity> root, SearchCriteria entityCriterion) {
         return getExpression(root, entityCriterion.getField()).in(Arrays.asList(entityCriterion.getValue()));
     }
+
+    public static Predicate contains(Root<? extends BaseEntity> root, CriteriaBuilder criteriaBuilder, SearchCriteria entityCriterion) {
+        entityCriterion.setValue("%" + entityCriterion.getValue() + "%");
+        return like(root, criteriaBuilder, entityCriterion);
+    }
+
+    public static Predicate notContains(Root<? extends BaseEntity> root, CriteriaBuilder criteriaBuilder, SearchCriteria entityCriterion) {
+        entityCriterion.setValue("%" + entityCriterion.getValue() + "%");
+        return notLike(root, criteriaBuilder, entityCriterion);
+    }
 }

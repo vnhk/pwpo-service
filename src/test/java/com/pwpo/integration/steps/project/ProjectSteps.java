@@ -5,6 +5,7 @@ import com.pwpo.integration.steps.common.CommonSteps;
 import com.pwpo.integration.stepsimpl.ProjectStepsImplementation;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Before;
+import io.cucumber.java.DataTableType;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
@@ -56,6 +57,12 @@ public class ProjectSteps extends BaseCucumberStep {
     public void theClientReceivesEditedProject(DataTable dataTable) throws Exception {
         projectCucumberOperations.performReceiveEditedProject(dataTable);
     }
+
+    @And("the client receives api response with projects")
+    public void theClientReceivesApiResponseWithProject(DataTable dataTable) throws Exception {
+        projectCucumberOperations.performReceiveApiResponseWithProject(dataTable);
+    }
+
 
     @When("the client wants to check history of the project with id = {long}")
     public void theClientWantsToCheckHistoryOfTheProjectWithId(Long projectId) throws Exception {
