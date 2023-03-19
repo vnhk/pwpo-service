@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-@PreAuthorize("(hasRole('USER') && @permissionEvaluator.hasAccessToProject(#id)) or hasRole('MANAGER')")
+@PreAuthorize("(@permissionEvaluator.activatedAndHasRole('USER') && @permissionEvaluator.hasAccessToProject(#id)) or @permissionEvaluator.activatedAndHasRole('MANAGER')")
 public @interface ReadAccessProject {
 }

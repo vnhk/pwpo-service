@@ -27,19 +27,19 @@ public class TaskController extends BaseEntityController<Task, Long> {
     }
 
     @GetMapping(path = "/task")
-    @PreAuthorize("(hasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#id)) or hasRole('MANAGER')")
+    @PreAuthorize("(@permissionEvaluator.activatedAndHasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#id)) or @permissionEvaluator.activatedAndHasRole('MANAGER')")
     public ResponseEntity<APIResponse> getTaskById(String id, String dto) throws ClassNotFoundException {
         return new ResponseEntity<>(taskManager.getTaskById(id, (Class<? extends ItemDTO>) Class.forName(dto)), HttpStatus.OK);
     }
 
     @PostMapping
-    @PreAuthorize("(hasRole('USER') && @permissionEvaluator.hasAccessToProject(#body.project)) or hasRole('MANAGER')")
+    @PreAuthorize("(@permissionEvaluator.activatedAndHasRole('USER') && @permissionEvaluator.hasAccessToProject(#body.project)) or @permissionEvaluator.activatedAndHasRole('MANAGER')")
     public ResponseEntity<APIResponse> createTask(@Valid @RequestBody TaskRequestDTO body) {
         return new ResponseEntity<>(taskManager.create(body, TaskPrimaryResponseDTO.class), HttpStatus.OK);
     }
 
     @PutMapping
-    @PreAuthorize("(hasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#body.id)) or hasRole('MANAGER')")
+    @PreAuthorize("(@permissionEvaluator.activatedAndHasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#body.id)) or @permissionEvaluator.activatedAndHasRole('MANAGER')")
     public ResponseEntity<APIResponse> edit(@Valid @RequestBody EditTaskRequestDTO<Long> body) {
         return super.edit(body);
     }

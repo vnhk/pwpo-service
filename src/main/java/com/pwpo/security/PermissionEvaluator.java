@@ -4,6 +4,7 @@ import com.pwpo.common.model.APIResponse;
 import com.pwpo.project.dto.ProjectPrimaryResponseDTO;
 import com.pwpo.project.model.Project;
 import com.pwpo.task.TaskRepository;
+import com.pwpo.task.dto.TaskPrimaryResponseDTO;
 import com.pwpo.task.model.Task;
 import com.pwpo.user.UserAccount;
 import com.pwpo.user.UserRepository;
@@ -24,6 +25,12 @@ public class PermissionEvaluator {
 
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
+
+    public boolean activatedAndHasRole(String role) {
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return principal.getAuthorities().stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_" + role));
+    }
 
     public boolean hasAccessToProject(Long projectId) {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -55,7 +62,7 @@ public class PermissionEvaluator {
                 .collect(Collectors.toList()).contains(principal.getUsername());
     }
 
-    public boolean filter(APIResponse apiResponse) {
+    public boolean filterProjects(APIResponse apiResponse) {
         List toRemove = new ArrayList();
         List projects = apiResponse.getItems();
 
@@ -74,4 +81,34 @@ public class PermissionEvaluator {
         return true;
     }
 
+    public boolean filterSearch(APIResponse apiResponse, String entityToFind) {
+        if (entityToFind.equals("project")) {
+            return filterProjects(apiResponse);
+        } else if (entityToFind.equals("task")) {
+            return filterTasks(apiResponse);
+        } else if (entityToFind.equals("user")) {
+            return true;
+        }
+
+        return true;
+    }
+
+    private boolean filterTasks(APIResponse apiResponse) {
+        List toRemove = new ArrayList();
+        List tasks = apiResponse.getItems();
+
+        for (Object obj : tasks) {
+            TaskPrimaryResponseDTO taskPrimaryResponseDTO = ((TaskPrimaryResponseDTO) obj);
+            Long id = taskPrimaryResponseDTO.getId();
+            if (!hasAccessToProjectTask(id)) {
+                toRemove.add(obj);
+            }
+        }
+
+        tasks.removeAll(toRemove);
+        apiResponse.setCurrentFound(tasks.size());
+        apiResponse.setAllFound(tasks.size());
+
+        return true;
+    }
 }

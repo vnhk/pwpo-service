@@ -18,7 +18,6 @@ public class UserController {
     private final UserManager userManager;
 
     @GetMapping
-    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<APIResponse> getUsers() {
         return new ResponseEntity<>(userManager.getUsers(), HttpStatus.OK);
     }

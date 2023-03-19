@@ -18,19 +18,19 @@ public class TimeLogController {
     private final TimeLogManager timeLogManager;
 
     @GetMapping
-    @PreAuthorize("(hasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#id)) or hasRole('MANAGER')")
+    @PreAuthorize("(@permissionEvaluator.activatedAndHasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#id)) or @permissionEvaluator.activatedAndHasRole('MANAGER')")
     public ResponseEntity<APIResponse> getTimeLogs(@PathVariable Long id, SearchQueryOption options) {
         return new ResponseEntity<>(timeLogManager.getTimeLogs(id, options), HttpStatus.OK);
     }
 
     @GetMapping("/logged-time")
-    @PreAuthorize("(hasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#id)) or hasRole('MANAGER')")
+    @PreAuthorize("(@permissionEvaluator.activatedAndHasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#id)) or @permissionEvaluator.activatedAndHasRole('MANAGER')")
     public ResponseEntity<Integer> getLoggedTimeForTask(@PathVariable Long id) {
         return new ResponseEntity<>(timeLogManager.getLoggedTime(id), HttpStatus.OK);
     }
 
     @PostMapping
-    @PreAuthorize("(hasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#id)) or hasRole('MANAGER')")
+    @PreAuthorize("(@permissionEvaluator.activatedAndHasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#id)) or @permissionEvaluator.activatedAndHasRole('MANAGER')")
     public ResponseEntity addTimeLogForTask(@PathVariable Long id, @RequestBody @Valid TimeLogRequest request) {
         timeLogManager.createTimeLog(id, request);
         return new ResponseEntity<>(HttpStatus.OK);

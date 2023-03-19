@@ -21,19 +21,19 @@ public class TaskHistoryController extends BaseHistoryEntityController<TaskHisto
     }
 
     @GetMapping
-    @PreAuthorize("(hasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#taskId)) or hasRole('MANAGER')")
+    @PreAuthorize("(@permissionEvaluator.activatedAndHasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#taskId)) or @permissionEvaluator.activatedAndHasRole('MANAGER')")
     public ResponseEntity<APIResponse> getTaskHistory(@PathVariable Long taskId, SearchQueryOption options) {
         return super.getHistory(taskId, options);
     }
 
     @GetMapping("/{historyId}")
-    @PreAuthorize("(hasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#taskId)) or hasRole('MANAGER')")
+    @PreAuthorize("(@permissionEvaluator.activatedAndHasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#taskId)) or @permissionEvaluator.activatedAndHasRole('MANAGER')")
     public ResponseEntity<APIResponse> getTaskHistoryDetails(@PathVariable Long taskId, @PathVariable Long historyId) {
         return super.getHistoryDetails(taskId, historyId);
     }
 
     @GetMapping("/{historyId}/compare")
-    @PreAuthorize("(hasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#taskId)) or hasRole('MANAGER')")
+    @PreAuthorize("(@permissionEvaluator.activatedAndHasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#taskId)) or @permissionEvaluator.activatedAndHasRole('MANAGER')")
     public ResponseEntity<APIResponse> compareTaskWithHistory(@PathVariable Long taskId, @PathVariable Long historyId) {
         return super.compareWithHistory(taskId, historyId);
     }
