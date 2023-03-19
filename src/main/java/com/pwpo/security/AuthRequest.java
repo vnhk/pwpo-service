@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Getter
@@ -13,11 +14,16 @@ import java.util.Set;
 @AllArgsConstructor
 public class AuthRequest {
     @NotNull
+    @Size(max = 30)
     private String username;
     @NotNull
+    @Size(max = 50)
     private String password;
+    @Size(max = 50)
     private String email;
+    @Size(max = 50)
     private String firstName;
+    @Size(max = 50)
     private String lastName;
     private Set<AccountRole> roles;
 }
