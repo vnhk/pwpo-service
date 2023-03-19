@@ -28,6 +28,30 @@ VALUES (5, '2022-10-12',
         'Project that is used for testing application', 'Project for tests', 'TEST', 'IN_PROGRESS', 'Project', 1, 1,
         '2022-10-10');
 
+INSERT INTO PROJECT (ID, CREATED, DESCRIPTION, NAME, SHORT_FORM, STATUS, SUMMARY, CREATED_BY_ID, OWNER_ID,
+                     UPDATED)
+VALUES (6, '2022-10-12',
+        'Project that is used for search', 'Search project 1', 'SEARCH1', 'NEW', 'Search', 1, 1,
+        '2022-10-10');
+
+INSERT INTO PROJECT (ID, CREATED, DESCRIPTION, NAME, SHORT_FORM, STATUS, SUMMARY, CREATED_BY_ID, OWNER_ID,
+                     UPDATED)
+VALUES (7, '2022-10-12',
+        'Project that is used for test', 'Search project 2', 'SEARCH2', 'IN_PROGRESS', 'Search', 1, 1,
+        '2022-10-10');
+
+INSERT INTO PROJECT (ID, CREATED, DESCRIPTION, NAME, SHORT_FORM, STATUS, SUMMARY, CREATED_BY_ID, OWNER_ID,
+                     UPDATED)
+VALUES (8, '2022-10-12',
+        'Project that is used for edit', 'Search project 3', 'SEARCH3', 'NEW', 'Search test', 1, 2,
+        '2022-10-10');
+
+INSERT INTO PROJECT (ID, CREATED, DESCRIPTION, NAME, SHORT_FORM, STATUS, SUMMARY, CREATED_BY_ID, OWNER_ID,
+                     UPDATED)
+VALUES (9, '2022-10-12',
+        'Project that is used for edit', 'Search test project 4', 'SEARCH4', 'NEW', 'Search', 1, 2,
+        '2022-10-10');
+
 INSERT INTO USER_PROJECT (ID, PROJECT_ID, USER_ID, ROLE, CREATED, UPDATED)
 VALUES (1, 1, 1, 'DEVELOPER', '2022-10-12', '2022-10-10');
 

@@ -132,6 +132,8 @@ public class ProjectStepsImplementation extends CommonStepsImplementation {
                 = TestUtils.convertAPIResponse(mvcResult().getResponse(), ProjectPrimaryResponseDTO.class, mapper);
 
         List<ProjectPrimaryResponseDTO> items = detailsResp.getItems();
+        assertThat(items).withFailMessage("Amount of items in dataTable is not the same as in the response!")
+                .hasSize(dataTable.asMaps().size());
         List<Map<String, String>> data = dataTable.asMaps();
         for (Map<String, String> p : data) {
             String id = p.get("id");

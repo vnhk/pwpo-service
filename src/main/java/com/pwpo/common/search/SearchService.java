@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.internal.util.StringHelper;
 import org.hibernate.query.criteria.internal.OrderImpl;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -24,6 +26,7 @@ import java.util.*;
 
 @Service
 @Slf4j
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class SearchService {
     private static final Boolean nullFirst = false;
     @PersistenceContext
@@ -50,6 +53,7 @@ public class SearchService {
     }
 
     public SearchResponse search(String query, SearchQueryOption options) {
+        init();
         validateOptions(options);
         Class<? extends BaseEntity> entityToFind = getEntityToFind(options);
 
@@ -78,6 +82,7 @@ public class SearchService {
     }
 
     public SearchResponse search(SearchRequest searchRequest, SearchQueryOption options) throws NoSuchFieldException {
+        init();
         validateOptions(options);
         Class<? extends BaseEntity> entityToFind = getEntityToFind(options);
 

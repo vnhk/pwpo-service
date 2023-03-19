@@ -1,5 +1,6 @@
 package com.pwpo.integration.steps.common;
 
+import com.pwpo.integration.IntegrationDataHolder;
 import com.pwpo.integration.stepsimpl.CommonStepsImplementation;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
@@ -11,6 +12,7 @@ public class CommonSteps extends BaseCucumberStep {
 
     @Given("the {string} user with roles: {string} is logged")
     public void loginWithRoles(String username, String roles) {
+        IntegrationDataHolder.clean();
         commonStepsImplementation.loginWithRoles(username, roles);
     }
 

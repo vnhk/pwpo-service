@@ -5,7 +5,7 @@ Feature: Project controller endpoint tests
     When the client wants to receive all the projects
     Then the client receives APIResponse
       | allFound | currentPage | currentFound |
-      | 5        | 1           | 5            |
+      | 9        | 1           | 9            |
 
   Scenario: the client wants to get project with given id
     Given the "joedoe" user with roles: "ROLE_MANAGER" is logged
