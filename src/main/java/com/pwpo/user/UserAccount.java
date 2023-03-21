@@ -25,9 +25,9 @@ import java.util.Set;
 public class UserAccount extends BaseEntity {
     @Column(unique = true)
     private String nick;
-    private String fullName;
     private String firstName;
     private String lastName;
+    @Column(unique = true)
     private String email;
     private String password;
     @ElementCollection(targetClass = AccountRole.class, fetch = FetchType.EAGER)

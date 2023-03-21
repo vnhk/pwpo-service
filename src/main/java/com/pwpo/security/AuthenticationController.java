@@ -94,7 +94,6 @@ public class AuthenticationController {
         String userName = authRequest.getUsername();
         user.setFirstName(firstName);
         user.setLastName(lastName);
-        user.setFullName(firstName + " " + lastName);
         user.setEmail(email);
         user.setPassword(new BCryptPasswordEncoder().encode(password));
         user.setRoles(authRequest.getRoles());

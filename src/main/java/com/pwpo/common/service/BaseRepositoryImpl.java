@@ -68,6 +68,12 @@ public class BaseRepositoryImpl<T extends BaseEntity, ID extends Serializable> e
         }
     }
 
+    @Override
+    public <S extends T> S edit(S entity) {
+        validator.validate(entity, EditProcess.class);
+        return super.save(entity);
+    }
+
     private <S extends T> S edit(BaseEntity entity, BaseHistoryEntity history) {
         validator.validate(entity, EditProcess.class);
         saveHistory(history);

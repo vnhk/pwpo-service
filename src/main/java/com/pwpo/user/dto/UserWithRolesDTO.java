@@ -12,11 +12,11 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @Setter
-public class UserDTO implements ItemDTO {
+public class UserWithRolesDTO implements ItemDTO {
     private Long id;
     private String nick;
     private String firstName;
     private String lastName;
     private String email;
-    private String projectRole;
+    private List<String> roles;
 }

@@ -32,6 +32,13 @@ public class PermissionEvaluator {
         return principal.getAuthorities().stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_" + role));
     }
 
+    public boolean activatedAndHasAnyRole() {
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return principal.getAuthorities().stream().anyMatch(grantedAuthority -> !grantedAuthority.getAuthority().equals("ROLE_NOT_ACTIVATED"));
+    }
+
+
     public boolean hasAccessToProject(Long projectId) {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<UserAccount> usersAddedToTheProject = userRepository.findUsersAddedToTheProject(projectId);

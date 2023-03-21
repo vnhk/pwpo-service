@@ -1,14 +1,15 @@
 package com.pwpo.user;
 
 import com.pwpo.common.exception.ValidationException;
+import com.pwpo.common.model.APIResponse;
+import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.common.search.SearchQueryOption;
 import com.pwpo.common.search.model.SortDirection;
 import com.pwpo.common.service.ItemMapper;
 import com.pwpo.project.model.Project;
 import com.pwpo.project.repository.ProjectRepository;
 import com.pwpo.user.dto.UserDTO;
-import com.pwpo.common.model.APIResponse;
-import com.pwpo.common.model.dto.ItemDTO;
+import com.pwpo.user.dto.UserWithRolesDTO;
 import com.pwpo.user.model.UserProject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -87,6 +88,15 @@ public class UserManager {
         return new APIResponse(collect, collect.size(), 1, collect.size());
     }
 
+    public APIResponse getUsersWithRoles() {
+        List<UserAccount> users = userRepository.findAll();
+        List<ItemDTO> collect = users.stream()
+                .map(user -> mapper.mapToDTO(user, UserWithRolesDTO.class))
+                .collect(Collectors.toList());
+
+        return new APIResponse(collect, collect.size(), 1, collect.size());
+    }
+
     public void addUserToTheProject(Long projectId, Long userId, ProjectRole projectRole) {
         Optional<UserAccount> userOpt = userRepository.findById(userId);
         Optional<Project> projectOpt = projectRepository.findById(projectId);
@@ -118,4 +128,18 @@ public class UserManager {
         }
     }
 
+    public void editUser(UserDTO userDTO) {
+        Optional<UserAccount> byId = userRepository.findById(userDTO.getId());
+
+        if (byId.isEmpty()) {
+            throw new ValidationException("User does not exist!");
+        }
+
+        UserAccount userAccount = byId.get();
+        userAccount.setEmail(userDTO.getEmail());
+        userAccount.setFirstName(userDTO.getFirstName());
+        userAccount.setLastName(userDTO.getLastName());
+
+        userRepository.edit(userAccount);
+    }
 }
