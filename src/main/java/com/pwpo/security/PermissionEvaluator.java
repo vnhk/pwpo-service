@@ -38,7 +38,7 @@ public class PermissionEvaluator {
     public boolean activatedAndHasAnyRole() {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        return isNotDisabled(principal.getAuthorities()) && principal.getAuthorities().stream().anyMatch(grantedAuthority -> !grantedAuthority.getAuthority().equals("ROLE_NOT_ACTIVATED"));
+        return isNotDisabled(principal.getAuthorities()) && principal.getAuthorities().stream().noneMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_NOT_ACTIVATED"));
     }
 
     public boolean isNotDisabled(Collection<? extends GrantedAuthority> authorities) {
