@@ -6,15 +6,18 @@ import com.pwpo.project.model.Project;
 import com.pwpo.task.TaskRepository;
 import com.pwpo.task.dto.TaskPrimaryResponseDTO;
 import com.pwpo.task.model.Task;
+import com.pwpo.user.AccountRole;
 import com.pwpo.user.UserAccount;
 import com.pwpo.user.UserRepository;
 import com.pwpo.user.model.UserProject;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,13 +32,31 @@ public class PermissionEvaluator {
     public boolean activatedAndHasRole(String role) {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        return principal.getAuthorities().stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_" + role));
+        return activatedAndHasAnyRole() && principal.getAuthorities().stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_" + role));
     }
 
     public boolean activatedAndHasAnyRole() {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        return principal.getAuthorities().stream().anyMatch(grantedAuthority -> !grantedAuthority.getAuthority().equals("ROLE_NOT_ACTIVATED"));
+        return isNotDisabled(principal.getAuthorities()) && principal.getAuthorities().stream().anyMatch(grantedAuthority -> !grantedAuthority.getAuthority().equals("ROLE_NOT_ACTIVATED"));
+    }
+
+    public boolean isNotDisabled(Collection<? extends GrantedAuthority> authorities) {
+        return authorities.stream().noneMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_DISABLED"));
+    }
+
+
+    public boolean filterUsers(APIResponse apiResponse) {
+        List<UserAccount> accounts = apiResponse.getItems();
+        List<UserAccount> holder = new ArrayList<>();
+        for (UserAccount account : accounts) {
+            if (account.getRoles().contains(AccountRole.ROLE_DISABLED)) {
+                holder.add(account);
+            }
+        }
+
+        accounts.removeAll(holder);
+        return true;
     }
 
 

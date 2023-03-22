@@ -4,6 +4,7 @@ import com.pwpo.common.exception.ValidationException;
 import com.pwpo.user.AccountRole;
 import com.pwpo.user.UserAccount;
 import com.pwpo.user.UserRepository;
+import com.pwpo.user.dto.UserWithRolesDTO;
 import net.bytebuddy.utility.RandomString;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,13 +36,16 @@ public class AuthenticationController {
     final AuthenticationManager authenticationManager;
     final JwtUserDetailsService userDetailsService;
     final JwtTokenUtil jwtTokenUtil;
+    final PermissionEvaluator permissionEvaluator;
 
     public AuthenticationController(UserRepository userRepository, AuthenticationManager authenticationManager,
-                                    JwtUserDetailsService userDetailsService, JwtTokenUtil jwtTokenUtil) {
+                                    JwtUserDetailsService userDetailsService, JwtTokenUtil jwtTokenUtil,
+                                    PermissionEvaluator permissionEvaluator) {
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
         this.jwtTokenUtil = jwtTokenUtil;
+        this.permissionEvaluator = permissionEvaluator;
     }
 
     @PostMapping("/login")
@@ -52,6 +56,11 @@ public class AuthenticationController {
             if (auth.isAuthenticated()) {
                 logger.info("Logged In");
                 UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
+
+                if(!permissionEvaluator.isNotDisabled(userDetails.getAuthorities())) {
+                    throw new DisabledException("Disabled user.");
+                }
+
                 String token = jwtTokenUtil.generateToken(userDetails);
                 responseMap.put("error", false);
                 responseMap.put("message", "Logged In");
@@ -82,6 +91,26 @@ public class AuthenticationController {
         }
     }
 
+    @PostMapping("/reset-password")
+    @PreAuthorize("@permissionEvaluator.activatedAndHasRole('ADMIN')")
+    public ResponseEntity<?> saveUser(@RequestBody UserWithRolesDTO request) {
+        Map<String, Object> responseMap = new HashMap<>();
+        String password = generatePassword();
+
+        String nick = request.getNick();
+        UserAccount userAccount = userRepository.findByNick(nick).get();
+        userAccount.setPassword(new BCryptPasswordEncoder().encode(password));
+        userAccount.getRoles().add(AccountRole.ROLE_NOT_ACTIVATED);
+        String token = jwtTokenUtil.generateToken(userAccount);
+        userRepository.edit(userAccount);
+        responseMap.put("error", false);
+        responseMap.put("username", nick);
+        responseMap.put("message", "Password regenerated, change password after first login!");
+        responseMap.put("token", token);
+        responseMap.put("password", password);
+        return ResponseEntity.ok(responseMap);
+    }
+
     @PostMapping("/register")
     @PreAuthorize("@permissionEvaluator.activatedAndHasRole('ADMIN')")
     public ResponseEntity<?> saveUser(@RequestBody AuthRequest authRequest) {
@@ -105,12 +134,13 @@ public class AuthenticationController {
         responseMap.put("username", userName);
         responseMap.put("message", "Account created successfully, change password after first login!");
         responseMap.put("token", token);
+        responseMap.put("password", password);
         return ResponseEntity.ok(responseMap);
     }
 
-    @PostMapping("/first-change-password")
+    @PostMapping("/change-reset-password")
     @PreAuthorize("@permissionEvaluator.activatedAndHasRole('NOT_ACTIVATED')")
-    public ResponseEntity<?> firstChangePassword(@RequestBody AuthRequest authRequest) {
+    public ResponseEntity<?> changeResetPassword(@RequestBody AuthRequest authRequest) {
         Map<String, Object> responseMap = new HashMap<>();
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = principal.getUsername();
@@ -123,7 +153,7 @@ public class AuthenticationController {
         loggedUserData.getRoles().remove(AccountRole.ROLE_NOT_ACTIVATED);
         loggedUserData.setPassword(encodedPassword);
 
-        userRepository.save(loggedUserData);
+        userRepository.edit(loggedUserData);
 
         responseMap.put("error", false);
         responseMap.put("username", username);
@@ -133,6 +163,6 @@ public class AuthenticationController {
     }
 
     private String generatePassword() {
-        return RandomString.hashOf(1000);
+        return RandomString.make(10);
     }
 }

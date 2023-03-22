@@ -28,10 +28,23 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
     @GetMapping("/users")
     @PreAuthorize("@permissionEvaluator.activatedAndHasAnyRole()")
     public ResponseEntity<APIResponse> getUsers() {
         return new ResponseEntity<>(userManager.getUsers(), HttpStatus.OK);
+    }
+
+    @PostMapping("/admin/users/disable/{id}")
+    @PreAuthorize("@permissionEvaluator.activatedAndHasRole('ADMIN')")
+    public ResponseEntity disable(@PathVariable Long id) {
+        userManager.disable(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/admin/users/enable/{id}")
+    @PreAuthorize("@permissionEvaluator.activatedAndHasRole('ADMIN')")
+    public ResponseEntity enable(@PathVariable Long id) {
+        userManager.enable(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

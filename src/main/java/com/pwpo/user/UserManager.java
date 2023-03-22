@@ -13,7 +13,6 @@ import com.pwpo.user.dto.UserWithRolesDTO;
 import com.pwpo.user.model.UserProject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -33,9 +32,12 @@ public class UserManager {
     private final UserProjectRepository userProjectRepository;
 
     public APIResponse getUsersAddedToProject(Long id, SearchQueryOption options) {
-        PageRequest of = PageRequest.of(options.getPage() - 1, options.getPageSize(), getSortBy(options));
+        PageRequest of = PageRequest.of(options.getPage() - 1, 2000, getSortBy(options));
 
-        Page<UserAccount> users = userRepository.findUsersAddedToTheProject(id, of);
+        List<UserAccount> users = userRepository.findUsersAddedToTheProject(id, of).stream()
+                .filter(userAccount -> !userAccount.getRoles().contains(AccountRole.ROLE_DISABLED))
+                .collect(Collectors.toList());
+
         List<ItemDTO> result = new ArrayList<>();
         for (UserAccount user : users) {
             UserDTO itemDTO = (UserDTO) mapper.mapToDTO(user, UserDTO.class);
@@ -46,7 +48,7 @@ public class UserManager {
             result.add(itemDTO);
         }
 
-        return new APIResponse(result, result.size(), options.getPage(), Math.toIntExact(users.getTotalElements()));
+        return new APIResponse(result, result.size(), options.getPage(), result.size());
     }
 
     private Sort getSortBy(SearchQueryOption options) {
@@ -70,6 +72,7 @@ public class UserManager {
         List<Long> addedUsersId = addedUsers.stream().map(u -> u.getId()).toList();
 
         List<UserAccount> notAddedUsers = allUsers.stream().filter(e -> !addedUsersId.contains(e.getId()))
+                .filter(userAccount -> !userAccount.getRoles().contains(AccountRole.ROLE_DISABLED))
                 .toList();
 
         List<ItemDTO> collect = notAddedUsers.stream()
@@ -80,8 +83,9 @@ public class UserManager {
     }
 
     public APIResponse getUsers() {
-        List<UserAccount> users = userRepository.findAll();
+        List<UserAccount> users = userRepository.findAll(Sort.by("nick").ascending());
         List<ItemDTO> collect = users.stream()
+                .filter(userAccount -> !userAccount.getRoles().contains(AccountRole.ROLE_DISABLED))
                 .map(user -> mapper.mapToDTO(user, UserDTO.class))
                 .collect(Collectors.toList());
 
@@ -89,7 +93,7 @@ public class UserManager {
     }
 
     public APIResponse getUsersWithRoles() {
-        List<UserAccount> users = userRepository.findAll();
+        List<UserAccount> users = userRepository.findAll(Sort.by("nick").ascending());
         List<ItemDTO> collect = users.stream()
                 .map(user -> mapper.mapToDTO(user, UserWithRolesDTO.class))
                 .collect(Collectors.toList());
@@ -140,6 +144,22 @@ public class UserManager {
         userAccount.setFirstName(userDTO.getFirstName());
         userAccount.setLastName(userDTO.getLastName());
 
+        userRepository.edit(userAccount);
+    }
+
+    public void delete(Long id) {
+        userRepository.deleteById(id);
+    }
+
+    public void disable(Long id) {
+        UserAccount userAccount = userRepository.findById(id).get();
+        userAccount.getRoles().add(AccountRole.ROLE_DISABLED);
+        userRepository.edit(userAccount);
+    }
+
+    public void enable(Long id) {
+        UserAccount userAccount = userRepository.findById(id).get();
+        userAccount.getRoles().remove(AccountRole.ROLE_DISABLED);
         userRepository.edit(userAccount);
     }
 }
