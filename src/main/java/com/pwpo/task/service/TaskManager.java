@@ -16,6 +16,7 @@ import com.pwpo.common.validator.EntitySaveIntegrityValidation;
 import com.pwpo.project.model.Project;
 import com.pwpo.project.repository.ProjectRepository;
 import com.pwpo.task.TaskRepository;
+import com.pwpo.task.dto.EditTaskRequestDTO;
 import com.pwpo.task.model.EstimableDTO;
 import com.pwpo.task.model.Task;
 import com.pwpo.user.UserAccount;
@@ -150,5 +151,55 @@ public class TaskManager extends BaseService<Task, Long> {
         }
 
         throw new RuntimeException("Could not generate task number. To many tasks added to the project!");
+    }
+
+    public void assignTask(Long id) {
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserAccount userAccount = userRepository.findByNick(principal.getUsername()).get();
+
+        Optional<Task> taskOptional = taskRepository.findById(id);
+        if (taskOptional.isEmpty()) {
+            throw new NotFoundException("Could not find task!");
+        }
+
+        Task task = taskOptional.get();
+        task.setAssignee(userAccount);
+
+        taskRepository.edit(adaptTaskToEditable(task));
+    }
+
+    private EditTaskRequestDTO<Long> adaptTaskToEditable(Task task) {
+        EditTaskRequestDTO editTaskRequestDTO = new EditTaskRequestDTO();
+        editTaskRequestDTO.setId(task.getId());
+        editTaskRequestDTO.setAssignee(task.getAssignee().getId());
+        editTaskRequestDTO.setEstimation(task.getEstimation());
+        editTaskRequestDTO.setStatus(task.getStatus());
+        editTaskRequestDTO.setDescription(task.getDescription());
+        editTaskRequestDTO.setDueDate(task.getDueDate());
+        editTaskRequestDTO.setOwner(task.getOwner().getId());
+        editTaskRequestDTO.setPriority(task.getPriority());
+        editTaskRequestDTO.setSummary(task.getSummary());
+        editTaskRequestDTO.setType(task.getType());
+
+
+        return editTaskRequestDTO;
+    }
+
+    public void changeStatus(EditTaskRequestDTO<Long> editTaskRequestDTO) {
+
+        Optional<Task> taskOptional = taskRepository.findById(editTaskRequestDTO.getId());
+        if (taskOptional.isEmpty()) {
+            throw new NotFoundException("Could not find task!");
+        }
+
+        Task task = taskOptional.get();
+
+        if (editTaskRequestDTO.getStatus().equals(task.getStatus())) {
+            return;
+        }
+
+        task.setStatus(editTaskRequestDTO.getStatus());
+
+        taskRepository.edit(adaptTaskToEditable(task));
     }
 }

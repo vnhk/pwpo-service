@@ -144,7 +144,7 @@ public class UserManager {
         userAccount.setFirstName(userDTO.getFirstName());
         userAccount.setLastName(userDTO.getLastName());
 
-        userRepository.edit(userAccount);
+        userRepository.editWithoutHistory(userAccount);
     }
 
     public void delete(Long id) {
@@ -154,12 +154,12 @@ public class UserManager {
     public void disable(Long id) {
         UserAccount userAccount = userRepository.findById(id).get();
         userAccount.getRoles().add(AccountRole.ROLE_DISABLED);
-        userRepository.edit(userAccount);
+        userRepository.editWithoutHistory(userAccount);
     }
 
     public void enable(Long id) {
         UserAccount userAccount = userRepository.findById(id).get();
         userAccount.getRoles().remove(AccountRole.ROLE_DISABLED);
-        userRepository.edit(userAccount);
+        userRepository.editWithoutHistory(userAccount);
     }
 }

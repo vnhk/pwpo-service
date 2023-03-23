@@ -69,7 +69,7 @@ public class BaseRepositoryImpl<T extends BaseEntity, ID extends Serializable> e
     }
 
     @Override
-    public <S extends T> S edit(S entity) {
+    public <S extends T> S editWithoutHistory(S entity) {
         validator.validate(entity, EditProcess.class);
         return super.save(entity);
     }
@@ -144,14 +144,12 @@ public class BaseRepositoryImpl<T extends BaseEntity, ID extends Serializable> e
     }
 
     private void setTargetEntity(BaseHistoryEntity history, BaseEntity entity) {
-        //addOneToManyConnection
         history.buildTargetEntityConnection(entity);
     }
 
     private void setEditor(BaseHistoryEntity history) {
         UserAccount loggedUser = getLoggedUser();
         history.setEditor(loggedUser);
-        //NULLPOINTER get Edited is null need to find userDetails with entitymanager!!!
         loggedUser.getEdited().add(history);
     }
 

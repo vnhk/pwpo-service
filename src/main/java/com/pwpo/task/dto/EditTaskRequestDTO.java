@@ -2,7 +2,6 @@ package com.pwpo.task.dto;
 
 import com.pwpo.common.enums.Priority;
 import com.pwpo.common.enums.Status;
-import com.pwpo.common.model.Constants;
 import com.pwpo.common.model.db.BaseHistoryEntity;
 import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.common.model.edit.Editable;
@@ -12,7 +11,7 @@ import com.pwpo.task.model.TaskHistory;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
 

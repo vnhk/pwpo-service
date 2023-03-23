@@ -38,6 +38,21 @@ public class TaskController extends BaseEntityController<Task, Long> {
         return new ResponseEntity<>(taskManager.create(body, TaskPrimaryResponseDTO.class), HttpStatus.OK);
     }
 
+    @PutMapping("/{id}/assign")
+    @PreAuthorize("(@permissionEvaluator.activatedAndHasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#id)) or @permissionEvaluator.activatedAndHasRole('MANAGER')")
+    public ResponseEntity assignTask(@PathVariable Long id) {
+        taskManager.assignTask(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/status")
+    @PreAuthorize("(@permissionEvaluator.activatedAndHasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#body.id)) or @permissionEvaluator.activatedAndHasRole('MANAGER')")
+    public ResponseEntity changeStatus(@RequestBody EditTaskRequestDTO<Long> body) {
+        taskManager.changeStatus(body);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
     @PutMapping
     @PreAuthorize("(@permissionEvaluator.activatedAndHasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#body.id)) or @permissionEvaluator.activatedAndHasRole('MANAGER')")
     public ResponseEntity<APIResponse> edit(@Valid @RequestBody EditTaskRequestDTO<Long> body) {

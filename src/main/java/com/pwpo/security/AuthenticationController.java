@@ -102,7 +102,7 @@ public class AuthenticationController {
         userAccount.setPassword(new BCryptPasswordEncoder().encode(password));
         userAccount.getRoles().add(AccountRole.ROLE_NOT_ACTIVATED);
         String token = jwtTokenUtil.generateToken(userAccount);
-        userRepository.edit(userAccount);
+        userRepository.editWithoutHistory(userAccount);
         responseMap.put("error", false);
         responseMap.put("username", nick);
         responseMap.put("message", "Password regenerated, change password after first login!");
@@ -153,7 +153,7 @@ public class AuthenticationController {
         loggedUserData.getRoles().remove(AccountRole.ROLE_NOT_ACTIVATED);
         loggedUserData.setPassword(encodedPassword);
 
-        userRepository.edit(loggedUserData);
+        userRepository.editWithoutHistory(loggedUserData);
 
         responseMap.put("error", false);
         responseMap.put("username", username);
