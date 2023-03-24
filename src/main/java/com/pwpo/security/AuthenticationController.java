@@ -144,17 +144,16 @@ public class AuthenticationController {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = principal.getUsername();
         UserAccount loggedUserData = userRepository.findByNick(username).get();
-        String encodedOldPassword = new BCryptPasswordEncoder().encode(changePasswordRequest.getOldPassword());
-        String encodedNewPassword = new BCryptPasswordEncoder().encode(changePasswordRequest.getNewPassword());
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        String encodedNewPassword = bCryptPasswordEncoder.encode(changePasswordRequest.getNewPassword());
 
-        if (!loggedUserData.getPassword().equals(encodedOldPassword)) {
+        if (!bCryptPasswordEncoder.matches(changePasswordRequest.getOldPassword(), loggedUserData.getPassword())) {
             throw new ValidationException("password", "Old password is not correct!");
         }
 
         if (changePasswordRequest.getOldPassword().equals(changePasswordRequest.getNewPassword())) {
             throw new ValidationException("password", "New password must be different!");
         }
-
 
         loggedUserData.getRoles().remove(AccountRole.ROLE_NOT_ACTIVATED);
         loggedUserData.setPassword(encodedNewPassword);
