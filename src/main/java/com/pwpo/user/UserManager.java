@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -161,5 +163,15 @@ public class UserManager {
         UserAccount userAccount = userRepository.findById(id).get();
         userAccount.getRoles().remove(AccountRole.ROLE_DISABLED);
         userRepository.editWithoutHistory(userAccount);
+    }
+
+    public UserWithRolesDTO getLoggedUserDetails() {
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = principal.getUsername();
+        UserAccount userAccount = userRepository.findByNick(username).get();
+
+        UserWithRolesDTO itemDTO = (UserWithRolesDTO) mapper.mapToDTO(userAccount, UserWithRolesDTO.class);
+
+        return itemDTO;
     }
 }

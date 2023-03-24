@@ -57,7 +57,7 @@ public class AuthenticationController {
                 logger.info("Logged In");
                 UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
 
-                if(!permissionEvaluator.isNotDisabled(userDetails.getAuthorities())) {
+                if (!permissionEvaluator.isNotDisabled(userDetails.getAuthorities())) {
                     throw new DisabledException("Disabled user.");
                 }
 
@@ -138,20 +138,26 @@ public class AuthenticationController {
         return ResponseEntity.ok(responseMap);
     }
 
-    @PostMapping("/change-reset-password")
-    @PreAuthorize("@permissionEvaluator.activatedAndHasRole('NOT_ACTIVATED')")
-    public ResponseEntity<?> changeResetPassword(@RequestBody AuthRequest authRequest) {
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changeResetPassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
         Map<String, Object> responseMap = new HashMap<>();
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = principal.getUsername();
         UserAccount loggedUserData = userRepository.findByNick(username).get();
-        String encodedPassword = new BCryptPasswordEncoder().encode(authRequest.getPassword());
-        if (!loggedUserData.getPassword().equals(encodedPassword)) {
-            throw new ValidationException("password", "Password must not be the same!");
+        String encodedOldPassword = new BCryptPasswordEncoder().encode(changePasswordRequest.getOldPassword());
+        String encodedNewPassword = new BCryptPasswordEncoder().encode(changePasswordRequest.getNewPassword());
+
+        if (!loggedUserData.getPassword().equals(encodedOldPassword)) {
+            throw new ValidationException("password", "Old password is not correct!");
         }
 
+        if (changePasswordRequest.getOldPassword().equals(changePasswordRequest.getNewPassword())) {
+            throw new ValidationException("password", "New password must be different!");
+        }
+
+
         loggedUserData.getRoles().remove(AccountRole.ROLE_NOT_ACTIVATED);
-        loggedUserData.setPassword(encodedPassword);
+        loggedUserData.setPassword(encodedNewPassword);
 
         userRepository.editWithoutHistory(loggedUserData);
 

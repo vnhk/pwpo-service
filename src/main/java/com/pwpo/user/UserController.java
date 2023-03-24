@@ -2,6 +2,7 @@ package com.pwpo.user;
 
 import com.pwpo.common.model.APIResponse;
 import com.pwpo.user.dto.UserDTO;
+import com.pwpo.user.dto.UserWithRolesDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,11 @@ public class UserController {
     @PreAuthorize("@permissionEvaluator.activatedAndHasAnyRole()")
     public ResponseEntity<APIResponse> getUsers() {
         return new ResponseEntity<>(userManager.getUsers(), HttpStatus.OK);
+    }
+
+    @GetMapping("/users/logged/details")
+    public ResponseEntity<UserWithRolesDTO> getLoggedUserDetails() {
+        return new ResponseEntity<>(userManager.getLoggedUserDetails(), HttpStatus.OK);
     }
 
     @PostMapping("/admin/users/disable/{id}")

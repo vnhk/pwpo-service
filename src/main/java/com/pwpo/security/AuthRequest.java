@@ -14,16 +14,20 @@ import java.util.Set;
 @AllArgsConstructor
 public class AuthRequest {
     @NotNull
-    @Size(max = 30)
+    @Size(max = 30, min = 3)
     private String username;
+
     @NotNull
-    @Size(max = 50)
+    @Size(max = 50, min = 3)
     private String password;
-    @Size(max = 50)
+
+    @Size(max = 50, min = 3)
     private String email;
-    @Size(max = 50)
+
+    @Size(max = 50, min = 3)
     private String firstName;
-    @Size(max = 50)
+
+    @Size(max = 50, min = 3)
     private String lastName;
     private Set<AccountRole> roles;
 }
