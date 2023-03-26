@@ -6,6 +6,7 @@ import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.task.dto.EditTaskRequestDTO;
 import com.pwpo.task.dto.TaskPrimaryResponseDTO;
 import com.pwpo.task.dto.TaskRequestDTO;
+import com.pwpo.task.dto.TaskTagDTO;
 import com.pwpo.task.model.Task;
 import com.pwpo.task.service.TaskManager;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/tasks")
@@ -30,6 +32,12 @@ public class TaskController extends BaseEntityController<Task, Long> {
     @PreAuthorize("(@permissionEvaluator.activatedAndHasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#id)) or @permissionEvaluator.activatedAndHasRole('MANAGER')")
     public ResponseEntity<APIResponse> getTaskById(String id, String dto) throws ClassNotFoundException {
         return new ResponseEntity<>(taskManager.getTaskById(id, (Class<? extends ItemDTO>) Class.forName(dto)), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/{taskId}/tags")
+    @PreAuthorize("(@permissionEvaluator.activatedAndHasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#taskId)) or @permissionEvaluator.activatedAndHasRole('MANAGER')")
+    public ResponseEntity<List<String>> getTags(@PathVariable Long taskId) {
+        return new ResponseEntity<>(taskManager.getTags(taskId), HttpStatus.OK);
     }
 
     @PostMapping
@@ -50,6 +58,13 @@ public class TaskController extends BaseEntityController<Task, Long> {
     public ResponseEntity changeStatus(@RequestBody EditTaskRequestDTO<Long> body) {
         taskManager.changeStatus(body);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping
+    @PreAuthorize("(@permissionEvaluator.activatedAndHasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#tags.id)) or @permissionEvaluator.activatedAndHasRole('MANAGER')")
+    public ResponseEntity saveTags(@Valid @RequestBody TaskTagDTO tags) {
+        taskManager.replaceTags(tags);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 

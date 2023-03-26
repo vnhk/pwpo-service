@@ -23,6 +23,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 
 @Getter
@@ -93,6 +94,9 @@ public class Task extends BaseEntity {
     @OneToMany(mappedBy = "task")
     @JsonIgnore
     private List<TaskHistory> history;
+
+    @ManyToMany(mappedBy = "tasks")
+    private Set<Tag> tags;
 
     @Override
     @JsonIgnore

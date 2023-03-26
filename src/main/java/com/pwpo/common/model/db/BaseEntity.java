@@ -32,7 +32,6 @@ public abstract class BaseEntity implements Persistable, Serializable {
     protected LocalDateTime created;
 
     public List<? extends Persistable> getHistoryEntities() {
-        //change to abstract!!
         return new ArrayList<>();
     }
 }
