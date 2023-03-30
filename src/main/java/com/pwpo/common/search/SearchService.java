@@ -197,6 +197,9 @@ public class SearchService {
                     groupPredicate.put(group.id, criteriaBuilder.and(predicatesForGroup.toArray(Predicate[]::new)));
                 } else if (group.operator.equals("OR")) {
                     groupPredicate.put(group.id, criteriaBuilder.or(predicatesForGroup.toArray(Predicate[]::new)));
+                } else {
+                    log.warn("Empty operator, default is AND!");
+                    groupPredicate.put(group.id, criteriaBuilder.and(predicatesForGroup.toArray(Predicate[]::new)));
                 }
             }
             actualGroup++;
