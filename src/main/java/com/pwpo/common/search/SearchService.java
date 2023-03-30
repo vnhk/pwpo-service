@@ -5,6 +5,7 @@ import com.pwpo.common.search.model.*;
 import com.pwpo.project.model.Project;
 import com.pwpo.task.model.Task;
 import com.pwpo.user.UserAccount;
+import com.pwpo.user.model.UserProject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.internal.util.StringHelper;
@@ -23,6 +24,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -179,18 +181,39 @@ public class SearchService {
                     Criterion queryCriterion = searchRequest.criteria.stream().filter(criterion -> criterion.id.equals(queryId))
                             .findFirst().get();
 
-                    String field = queryCriterion.type + "." + queryCriterion.attr;
-                    SearchCriteria entityCriterion = new SearchCriteria(field, null, getValue(queryCriterion.value, field, entityToFind));
+                    if (queryCriterion.type.startsWith("[") && queryCriterion.type.endsWith("]")) {
+                        Criterion newCriterion = new Criterion();
+                        newCriterion.value = queryCriterion.value;
+                        newCriterion.id = queryCriterion.id;
+                        newCriterion.operator = queryCriterion.operator;
+                        newCriterion.attr = queryCriterion.attr;
+                        List<Project> projects = null;
+                        if (queryCriterion.type.equals("[addedToProjects]")) {
+                            CriteriaQuery<UserProject> userProjectQuery = criteriaBuilder.createQuery(UserProject.class);
+                            Root<UserProject> rootUserProject = userProjectQuery.from(UserProject.class);
+                            newCriterion.type = "user";
 
-                    Predicate predicate = null;
-                    switch (queryCriterion.operator) {
-                        case "equals" -> predicate = SearchOperationsHelper.equal(root, criteriaBuilder, entityCriterion);
-                        case "contains" -> predicate = SearchOperationsHelper.contains(root, criteriaBuilder, entityCriterion);
-                        case "notEquals" -> predicate = SearchOperationsHelper.notEqual(root, criteriaBuilder, entityCriterion);
-                        case "notContains" -> predicate = SearchOperationsHelper.notContains(root, criteriaBuilder, entityCriterion);
-                        default -> log.error("NULL PREDICATE, INVALID OPERATOR!!!");
+                            Predicate predicate = buildPredicateForNotCollection(rootUserProject, UserProject.class, newCriterion);
+                            userProjectQuery.where(predicate);
+                            List<UserProject> resultList = entityManager.createQuery(userProjectQuery).getResultList();
+                            projects = resultList.stream().map(UserProject::getProject).collect(Collectors.toList());
+                        } else if (queryCriterion.type.equals("[tasks]")) {
+                            CriteriaQuery<Task> projectTaskQuery = criteriaBuilder.createQuery(Task.class);
+                            Root<Task> rootTask = projectTaskQuery.from(Task.class);
+                            newCriterion.type = "task";
+
+                            Predicate predicate = buildPredicateForNotCollection(rootTask, Task.class, newCriterion);
+                            projectTaskQuery.where(predicate);
+                            List<Task> resultList = entityManager.createQuery(projectTaskQuery).getResultList();
+                            projects = resultList.stream().map(Task::getProject).collect(Collectors.toList());
+                        }
+
+                        Predicate addedToProjects = root.in(projects);
+                        predicatesForGroup.add(addedToProjects);
+                    } else {
+                        Predicate predicate = buildPredicateForNotCollection(root, entityToFind, queryCriterion);
+                        predicatesForGroup.add(predicate);
                     }
-                    predicatesForGroup.add(predicate);
                 }
 
                 if (group.operator.equals("AND")) {
@@ -211,6 +234,21 @@ public class SearchService {
         return groupPredicate.get("G" + (actualGroup - 1));
 //        groupPredicate;
 //  na koniec wszystkei beda w group predicate i wystarczy wziac ten predicate dla ostatniej grupy!!!! czyli jak jest g1,G2 i G3, to wynikowy predicate jest w G3
+    }
+
+    private Predicate buildPredicateForNotCollection(Root<? extends BaseEntity> root, Class<? extends BaseEntity> entityToFind, Criterion queryCriterion) throws NoSuchFieldException {
+        String field = queryCriterion.type + "." + queryCriterion.attr;
+        SearchCriteria entityCriterion = new SearchCriteria(field, null, getValue(queryCriterion.value, field, entityToFind));
+
+        Predicate predicate = null;
+        switch (queryCriterion.operator) {
+            case "equals" -> predicate = SearchOperationsHelper.equal(root, criteriaBuilder, entityCriterion);
+            case "contains" -> predicate = SearchOperationsHelper.contains(root, criteriaBuilder, entityCriterion);
+            case "notEquals" -> predicate = SearchOperationsHelper.notEqual(root, criteriaBuilder, entityCriterion);
+            case "notContains" -> predicate = SearchOperationsHelper.notContains(root, criteriaBuilder, entityCriterion);
+            default -> log.error("NULL PREDICATE, INVALID OPERATOR!!!");
+        }
+        return predicate;
     }
 
     private Predicate buildPredicate(String queryWithOneSubQuery, Root<? extends BaseEntity> root, Class<? extends BaseEntity> entityToFind) {
