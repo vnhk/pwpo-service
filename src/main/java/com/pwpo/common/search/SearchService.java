@@ -94,7 +94,7 @@ public class SearchService {
         CriteriaQuery<? extends BaseEntity> criteriaQuery = criteriaBuilder.createQuery(entityToFind);
         Root<? extends BaseEntity> root = criteriaQuery.from(entityToFind);
 
-        if (searchRequest != null) {
+        if (searchRequest != null && searchRequest.groups != null && searchRequest.groups.size() > 0) {
             criteriaQuery.where(buildMainPredicate(searchRequest, root, entityToFind));
         }
 

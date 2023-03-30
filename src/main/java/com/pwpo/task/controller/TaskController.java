@@ -60,7 +60,7 @@ public class TaskController extends BaseEntityController<Task, Long> {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/tags")
     @PreAuthorize("(@permissionEvaluator.activatedAndHasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#tags.id)) or @permissionEvaluator.activatedAndHasRole('MANAGER')")
     public ResponseEntity saveTags(@Valid @RequestBody TaskTagDTO tags) {
         taskManager.replaceTags(tags);
