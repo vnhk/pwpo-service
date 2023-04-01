@@ -13,8 +13,6 @@ import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.common.search.SearchQueryOption;
 import com.pwpo.common.search.SearchService;
 import com.pwpo.common.search.model.SearchResponse;
-import com.pwpo.task.dto.history.TaskHistoryDetailsResponseDTO;
-import com.pwpo.task.model.Task;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -43,14 +41,15 @@ public abstract class BaseHistoryService<T extends Persistable, ID extends Seria
 
     public APIResponse getHistoryDetails(ID entityId, ID historyId, Class<? extends ItemDTO> dto) {
         BaseHistoryEntity history = getHistoryEntity(entityId, historyId);
-        Task task = (Task) history.getTargetEntity();
 
         APIResponse<? extends ItemDTO> apiResponse = mapper.mapToAPIResponse(history, dto);
-        TaskHistoryDetailsResponseDTO taskHistoryDetailsResponse = (TaskHistoryDetailsResponseDTO) apiResponse.getItems().get(0);
-        taskHistoryDetailsResponse.setNumber(task.getNumber());
+
+        updateWithAttributesFromBaseEntity(history, apiResponse);
 
         return apiResponse;
     }
+
+    protected abstract void updateWithAttributesFromBaseEntity(BaseHistoryEntity history, APIResponse<? extends ItemDTO> apiResponse);
 
     public APIResponse compare(ID entityId, ID historyId) {
         try {

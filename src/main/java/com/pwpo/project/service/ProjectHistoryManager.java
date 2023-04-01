@@ -1,7 +1,9 @@
 package com.pwpo.project.service;
 
+import com.pwpo.common.model.APIResponse;
 import com.pwpo.common.model.QueryFormat;
 import com.pwpo.common.model.db.BaseHistoryEntity;
+import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.common.search.SearchService;
 import com.pwpo.common.service.BaseHistoryService;
 import com.pwpo.common.diff.DiffService;
@@ -21,6 +23,11 @@ public class ProjectHistoryManager extends BaseHistoryService<ProjectHistory, Lo
     public ProjectHistoryManager(ItemMapper mapper, SearchService searchService, DiffService diffService, ProjectHistoryRepository repository) {
         super(mapper, searchService, diffService);
         this.projectHistoryRepository = repository;
+    }
+
+    @Override
+    protected void updateWithAttributesFromBaseEntity(BaseHistoryEntity history, APIResponse<? extends ItemDTO> apiResponse) {
+
     }
 
     @Override
