@@ -18,7 +18,7 @@ public class GoalRisk implements Persistable {
     @SequenceGenerator(name = Constants.GOAL_RISK_SEQUENCE, initialValue = Constants.DB_SEQUENCE_INIT)
     private Long id;
 
-    @Length(min = 5, max = 100)
+    @Length(min = 5, max = 500)
     private String value;
     @Size(min = 1, max = 5)
     private Integer priority;
