@@ -73,6 +73,10 @@ public class Project extends BaseEntity {
     @JsonIgnore
     private List<ProjectHistory> history;
 
+    @OneToMany(mappedBy = "project")
+    @JsonIgnore
+    private List<GoalRisk> goalRisk;
+
     @Override
     @JsonIgnore
     public List getHistoryEntities() {

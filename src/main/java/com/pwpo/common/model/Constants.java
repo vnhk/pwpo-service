@@ -4,6 +4,7 @@ public class Constants {
     public static final int DESCRIPTION_MAX = 15000;
     public static final int SUMMARY_MAX = 150;
     public static final String DB_SEQUENCE = "seq_db";
+    public static final String GOAL_RISK_SEQUENCE = "seq_gr_db";
     public static final int DB_SEQUENCE_INIT = 100;
     public static final int NAME_MAX = 35;
     public static final int NUMBER_MAX = 15;
