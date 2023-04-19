@@ -22,7 +22,8 @@ public class GoalRisk implements Persistable {
     private String value;
     @Size(min = 1, max = 5)
     private Integer priority;
-
+    @Enumerated(EnumType.STRING)
+    private GoalRiskType type;
     @ManyToOne
     private Project project;
 }
