@@ -97,69 +97,69 @@ VALUES (12, '2023-02-02',
         2, 2, 5, '2023-02-02');
 
 -- RISKS
-INSERT INTO GOAL_RISK (ID, VALUE, PRIORITY, TYPE, PROJECT_ID)
+INSERT INTO GOAL_RISK (ID, CONTENT, PRIORITY, TYPE, PROJECT_ID)
 VALUES ( 1
        , 'Technical Complexity: As the application is built using modern web technologies, it is possible that the development team may face technical challenges that could delay the project or affect its quality.'
        , 4, 'RISK',5);
-INSERT INTO GOAL_RISK (ID, VALUE, PRIORITY, TYPE, PROJECT_ID)
+INSERT INTO GOAL_RISK (ID, CONTENT, PRIORITY, TYPE, PROJECT_ID)
 VALUES ( 2
        , 'Security Risks: TaskMgmt stores sensitive data such as user login credentials and task details, making it important to ensure that the application is secure and protected against potential threats such as hacking attempts and data breaches.'
        , 1, 'RISK',5);
-INSERT INTO GOAL_RISK (ID, VALUE, PRIORITY, TYPE, PROJECT_ID)
+INSERT INTO GOAL_RISK (ID, CONTENT, PRIORITY, TYPE, PROJECT_ID)
 VALUES ( 3
        , 'Integration Challenges: Integrating TaskMgmt with other systems and services may pose challenges, particularly if those systems use different APIs or protocols.'
        , 4, 'RISK',5);
-INSERT INTO GOAL_RISK (ID, VALUE, PRIORITY, TYPE, PROJECT_ID)
+INSERT INTO GOAL_RISK (ID, CONTENT, PRIORITY, TYPE, PROJECT_ID)
 VALUES ( 4
        , 'Performance Issues: As the application is designed to handle large volumes of data, it is essential that it is optimized for performance to ensure that it can deliver fast and responsive performance even under heavy loads.'
        , 4, 'RISK',5);
-INSERT INTO GOAL_RISK (ID, VALUE, PRIORITY, TYPE, PROJECT_ID)
+INSERT INTO GOAL_RISK (ID, CONTENT, PRIORITY, TYPE, PROJECT_ID)
 VALUES ( 5
        , 'User Adoption: User adoption is a critical factor for the success of any software application, and it is possible that TaskMgmt may face challenges in gaining user adoption due to the competitive nature of the task management market or due to a lack of user awareness or training.'
        , 4, 'RISK',5);
-INSERT INTO GOAL_RISK (ID, VALUE, PRIORITY, TYPE, PROJECT_ID)
+INSERT INTO GOAL_RISK (ID, CONTENT, PRIORITY, TYPE, PROJECT_ID)
 VALUES ( 6
        , 'Budget and Resource Constraints: Developing and maintaining a complex application such as TaskMgmt requires significant financial and human resources, and it is possible that budget and resource constraints may affect the project''s timeline and quality.'
        , 5, 'RISK',5);
 
 -- GOALS
-INSERT INTO GOAL_RISK (ID, VALUE, PRIORITY, TYPE, PROJECT_ID)
+INSERT INTO GOAL_RISK (ID, CONTENT, PRIORITY, TYPE, PROJECT_ID)
 VALUES ( 7
        , 'Develop a high-quality and scalable application that meets the needs of individual and team task management.'
        , 3, 'GOAL',5);
-INSERT INTO GOAL_RISK (ID, VALUE, PRIORITY, TYPE, PROJECT_ID)
+INSERT INTO GOAL_RISK (ID, CONTENT, PRIORITY, TYPE, PROJECT_ID)
 VALUES ( 8
        , 'Ensure that TaskMgmt is secure and protected against potential threats, with appropriate measures such as data encryption, authentication, and access controls.'
        , 3, 'GOAL',5);
-INSERT INTO GOAL_RISK (ID, VALUE, PRIORITY, TYPE, PROJECT_ID)
+INSERT INTO GOAL_RISK (ID, CONTENT, PRIORITY, TYPE, PROJECT_ID)
 VALUES ( 9
        , 'Provide seamless integration with other systems and services, using open and standard APIs and protocols.'
        , 5, 'GOAL',5);
-INSERT INTO GOAL_RISK (ID, VALUE, PRIORITY, TYPE, PROJECT_ID)
+INSERT INTO GOAL_RISK (ID, CONTENT, PRIORITY, TYPE, PROJECT_ID)
 VALUES ( 10
        , 'Optimize TaskMgmt for performance and scalability, with efficient algorithms, caching, and load balancing.'
        , 3, 'GOAL',5);
-INSERT INTO GOAL_RISK (ID, VALUE, PRIORITY, TYPE, PROJECT_ID)
+INSERT INTO GOAL_RISK (ID, CONTENT, PRIORITY, TYPE, PROJECT_ID)
 VALUES ( 11
        , 'Increase user adoption by providing a user-friendly and intuitive interface, with onboarding tutorials and user documentation.'
        , 4, 'GOAL',5);
-INSERT INTO GOAL_RISK (ID, VALUE, PRIORITY, TYPE, PROJECT_ID)
+INSERT INTO GOAL_RISK (ID, CONTENT, PRIORITY, TYPE, PROJECT_ID)
 VALUES ( 12
        , 'Provide regular updates and maintenance to ensure that TaskMgmt remains up-to-date with the latest web technologies and security patches.'
        , 5, 'GOAL',5);
-INSERT INTO GOAL_RISK (ID, VALUE, PRIORITY, TYPE, PROJECT_ID)
+INSERT INTO GOAL_RISK (ID, CONTENT, PRIORITY, TYPE, PROJECT_ID)
 VALUES ( 13
        , 'Foster collaboration and communication among team members, using real-time updates, comments, and file attachments.'
        , 4, 'GOAL',5);
-INSERT INTO GOAL_RISK (ID, VALUE, PRIORITY, TYPE, PROJECT_ID)
+INSERT INTO GOAL_RISK (ID, CONTENT, PRIORITY, TYPE, PROJECT_ID)
 VALUES ( 14
        , 'Provide insightful reporting and analytics features, with customizable metrics and data visualizations.'
        , 5, 'GOAL',5);
-INSERT INTO GOAL_RISK (ID, VALUE, PRIORITY, TYPE, PROJECT_ID)
+INSERT INTO GOAL_RISK (ID, CONTENT, PRIORITY, TYPE, PROJECT_ID)
 VALUES ( 15
        , 'Improve team productivity by providing features such as task assignment and tracking, deadline management, and progress monitoring.'
        , 2, 'GOAL',5);
-INSERT INTO GOAL_RISK (ID, VALUE, PRIORITY, TYPE, PROJECT_ID)
+INSERT INTO GOAL_RISK (ID, CONTENT, PRIORITY, TYPE, PROJECT_ID)
 VALUES ( 16
        , 'Manage project resources effectively, by ensuring that the development team has adequate budget and resources, and by tracking project milestones and risks.'
        , 5, 'GOAL',5);

@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 public class ProjectGoalRiskDTO implements ItemDTO {
     private final Long id;
-    private final String value;
+    private final String content;
     private final GoalRiskType type;
     private final Integer priority;
 }

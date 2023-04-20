@@ -175,7 +175,7 @@ public class ProjectManager extends BaseService<Project, Long> {
             }
 
             goalToEdit.get().setPriority(projectGoalRiskDTO.getPriority());
-            goalToEdit.get().setValue(projectGoalRiskDTO.getValue());
+            goalToEdit.get().setContent(projectGoalRiskDTO.getContent());
             goalRiskRepository.save(goalToEdit.get());
         } else {
             throw new RuntimeException("Could not find project!");

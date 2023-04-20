@@ -19,7 +19,7 @@ public class GoalRisk implements Persistable {
     private Long id;
 
     @Length(min = 5, max = 500)
-    private String value;
+    private String content;
     @Size(min = 1, max = 5)
     private Integer priority;
     @Enumerated(EnumType.STRING)
