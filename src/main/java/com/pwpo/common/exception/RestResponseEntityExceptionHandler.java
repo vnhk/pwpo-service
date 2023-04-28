@@ -34,8 +34,8 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ExceptionHandler(value = {NotFoundException.class})
     protected ResponseEntity<List<ApiError>> handleValidationException(NotFoundException ex) {
-        List<ApiError> r = Collections.singletonList(new ApiError(null, ExceptionCode.NOT_FOUND, ex.getMessage()));
-        return new ResponseEntity<>(r, HttpStatus.BAD_REQUEST);
+        ApiError error = new ApiError(null, ExceptionCode.NOT_FOUND, ex.getMessage());
+        return new ResponseEntity<>(Collections.singletonList(error), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = {ConstraintViolationException.class})
