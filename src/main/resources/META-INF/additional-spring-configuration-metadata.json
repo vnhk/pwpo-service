@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "attachment.service.file.storage.url",
+      "type": "java.lang.String",
+      "description": "Property that hold path for attachments."
+    }
+  ]
+}

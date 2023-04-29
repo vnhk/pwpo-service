@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.pwpo.common.deserializer.FromUserIdDeserializer;
 import com.pwpo.common.enums.Status;
+import com.pwpo.common.model.AttachmentHandler;
 import com.pwpo.common.model.Constants;
-import com.pwpo.common.model.db.BaseEntity;
 import com.pwpo.common.serializer.ToEnumDisplayNameSerializer;
 import com.pwpo.task.model.Task;
 import com.pwpo.user.UserAccount;
@@ -25,7 +25,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class Project extends BaseEntity {
+public class Project extends AttachmentHandler {
     @Size(min = 1, max = Constants.SUMMARY_MAX)
     @NotNull
     @Column(length = Constants.SUMMARY_MAX)
@@ -53,12 +53,10 @@ public class Project extends BaseEntity {
     @ManyToOne
     @JsonDeserialize(using = FromUserIdDeserializer.class)
     @NotNull
-    //owner is just information who to connect with about the project
     private UserAccount owner;
 
     @ManyToOne
     @JsonDeserialize(using = FromUserIdDeserializer.class)
-//    @NotNull until auth
     private UserAccount createdBy;
 
     @OneToMany(mappedBy = "project")

@@ -7,6 +7,7 @@ public class Constants {
     public static final String GOAL_RISK_SEQUENCE = "seq_gr_db";
     public static final int DB_SEQUENCE_INIT = 100;
     public static final int NAME_MAX = 35;
+    public static final int ATTACHMENT_NAME_MAX = 55;
     public static final int NUMBER_MAX = 15;
     public static final int SHORT_FORM_MAX = 15;
     public static final long ESTIMATION_MAX = 60 * 3600 + 60;

@@ -7,8 +7,8 @@ import com.pwpo.common.deserializer.FromProjectIdDeserializer;
 import com.pwpo.common.deserializer.FromUserIdDeserializer;
 import com.pwpo.common.enums.Priority;
 import com.pwpo.common.enums.Status;
+import com.pwpo.common.model.AttachmentHandler;
 import com.pwpo.common.model.Constants;
-import com.pwpo.common.model.db.BaseEntity;
 import com.pwpo.common.serializer.ToEnumDisplayNameSerializer;
 import com.pwpo.project.model.Project;
 import com.pwpo.task.enums.TaskType;
@@ -33,7 +33,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class Task extends BaseEntity {
+public class Task extends AttachmentHandler {
     @NotNull
     @Size(min = 1, max = Constants.NUMBER_MAX)
     @Column(unique = true, length = Constants.NUMBER_MAX)
