@@ -1,22 +1,26 @@
 package com.pwpo.common.service;
 
+import com.pwpo.common.model.APIResponse;
 import com.pwpo.common.model.AttachmentHandler;
 import com.pwpo.common.model.db.Attachment;
+import com.pwpo.common.model.dto.AttachmentDTO;
+import com.pwpo.common.model.dto.ItemDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,16 +28,17 @@ import java.util.Optional;
 @Slf4j
 public class AttachmentService {
     private final AttachmentRepository attachmentRepository;
+    private final ItemMapper mapper;
     @Value("${attachment.service.file.storage.url}")
     private String FOLDER;
 
-    public void download(Long holderId, Long attachmentId, HttpServletResponse response) throws IOException {
-        ServletOutputStream outputStream = response.getOutputStream();
+    public UrlResource download(Long holderId, Long attachmentId) throws IOException {
         Path file = getFile(holderId, attachmentId);
-        Files.copy(file, outputStream);
+        return new UrlResource(file.toUri());
     }
 
-    public void upload(MultipartFile file, Long holderId) throws IOException {
+
+    public APIResponse upload(MultipartFile file, Long holderId) throws IOException {
         Optional<Attachment> byNameAndEntityId = attachmentRepository.findByNameAndEntityId(file.getOriginalFilename(), holderId);
         if (byNameAndEntityId.isPresent()) {
             throw new RuntimeException("Attachment with given name already exists!");
@@ -42,8 +47,11 @@ public class AttachmentService {
         AttachmentHandler entity = new AttachmentHandler();
         entity.setId(holderId);
         attachment.setEntity(entity);
+        attachment.setName(file.getOriginalFilename());
         attachment = attachmentRepository.save(attachment);
         store(file, holderId, attachment.getId());
+
+        return mapper.mapToAPIResponse(attachment, AttachmentDTO.class);
     }
 
     private Path getFile(Long holderId, Long attachmentId) {
@@ -80,6 +88,8 @@ public class AttachmentService {
         String tempFileName = fileName;
         boolean fileExist = isFileWithTheName(fileName, holderId, attachmentId);
         int i = 1;
+        //files are saved in directory with attachmentId as a name, so it should not be any files with the same name there
+        //so fileExist wont be true
         while (fileExist) {
             tempFileName = fileName.substring(0, fileName.indexOf(extension) - 1) + "(" + i++ + ")." + extension;
             fileExist = isFileWithTheName(tempFileName, holderId, attachmentId);
@@ -90,5 +100,19 @@ public class AttachmentService {
 
     private boolean isFileWithTheName(String fileName, Long holderId, Long attachmentId) {
         return new File(getDestination(holderId, attachmentId, fileName)).exists();
+    }
+
+    public APIResponse getAllAttachments(Long holderId) {
+        List<ItemDTO> items = new ArrayList<>();
+        List<Attachment> attachments = attachmentRepository.findByEntityId(holderId);
+        for (Attachment attachment : attachments) {
+            ItemDTO itemDTO = mapper.mapToDTO(attachment, AttachmentDTO.class);
+            items.add(itemDTO);
+        }
+        return new APIResponse(items, items.size(), 0, items.size());
+    }
+
+    public Attachment getAttachment(Long attachmentId) {
+        return attachmentRepository.findById(attachmentId).get();
     }
 }
