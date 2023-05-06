@@ -50,6 +50,17 @@ Feature: Project controller endpoint tests
     Given the client wants to edit project with id = 1
     When the client sets following project values
       | name           | description        | shortForm | summary        | owner | status |
+      | Edited Project | Edited description | EDITED    | Edited summary | 2     | New    |
+    Then the client receives "success" status
+    And the client receives edited Project
+      | id | name           | shortForm | summary        | owner | status |
+      | 1  | Edited Project | EDITED    | Edited summary | 2     | New    |
+
+  Scenario: the client wants to edit existing project 2
+    Given the "joedoe" user with roles: "ROLE_MANAGER" is logged
+    Given the client wants to edit project with id = 1
+    When the client sets following project values
+      | name           | description        | shortForm | summary        | owner | status |
       | Edited Project | edited description | EDITED    | edited summary | 2     | New    |
     Then the client receives 200 status
     And the client receives edited Project

@@ -15,12 +15,9 @@ import com.pwpo.common.service.ItemMapper;
 import com.pwpo.common.validator.EntitySaveIntegrityValidation;
 import com.pwpo.project.model.Project;
 import com.pwpo.project.repository.ProjectRepository;
-import com.pwpo.task.TagRepository;
 import com.pwpo.task.TaskRepository;
 import com.pwpo.task.dto.EditTaskRequestDTO;
-import com.pwpo.task.dto.TaskTagDTO;
 import com.pwpo.task.model.EstimableDTO;
-import com.pwpo.task.model.Tag;
 import com.pwpo.task.model.Task;
 import com.pwpo.user.UserAccount;
 import com.pwpo.user.UserRepository;
@@ -30,8 +27,9 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 
 @Service
 @Slf4j
@@ -42,18 +40,16 @@ public class TaskManager extends BaseService<Task, Long> {
     private final ProjectRepository projectRepository;
     private final SearchService searchService;
     private final UserRepository userRepository;
-    private final TagRepository tagRepository;
 
     public TaskManager(ItemMapper mapper, TaskRepository taskRepository, ProjectRepository projectRepository,
                        SearchService searchService, List<? extends EntitySaveIntegrityValidation<Task>> validations,
-                       UserRepository userRepository, TagRepository tagRepository) {
+                       UserRepository userRepository) {
         super(taskRepository, mapper, validations);
         this.mapper = mapper;
         this.taskRepository = taskRepository;
         this.projectRepository = projectRepository;
         this.searchService = searchService;
         this.userRepository = userRepository;
-        this.tagRepository = tagRepository;
     }
 
     public APIResponse getTasksByProjectId(String id, SearchQueryOption options, Class<? extends ItemDTO> dtoClass) {
@@ -206,36 +202,5 @@ public class TaskManager extends BaseService<Task, Long> {
         task.setStatus(editTaskRequestDTO.getStatus());
 
         taskRepository.edit(adaptTaskToEditable(task));
-    }
-
-    public void replaceTags(TaskTagDTO tags) {
-        Optional<Task> taskOptional = taskRepository.findById(tags.getId());
-
-        if (taskOptional.isEmpty()) {
-            throw new NotFoundException("Could not find task!");
-        }
-
-        Task task = taskOptional.get();
-        Set<Tag> tagsToAdd = new HashSet<>();
-        for (String tag : tags.getNames()) {
-            Optional<Tag> tagOptional = tagRepository.findByName(tag);
-            if (tagOptional.isEmpty()) {
-                throw new NotFoundException("Could not find tag!");
-            }
-            tagsToAdd.add(tagOptional.get());
-        }
-
-        task.setTags(tagsToAdd);
-        taskRepository.editWithoutHistory(task);
-    }
-
-    public List<String> getTags(Long taskId) {
-        Optional<Task> taskOptional = taskRepository.findById(taskId);
-
-        if (taskOptional.isEmpty()) {
-            throw new NotFoundException("Could not find task!");
-        }
-
-        return taskOptional.get().getTags().stream().map(Tag::getName).collect(Collectors.toList());
     }
 }

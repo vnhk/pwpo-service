@@ -45,4 +45,10 @@ public class AttachmentController {
         return new ResponseEntity(attachmentService.upload(file, holderId), HttpStatus.OK);
     }
 
+    @DeleteMapping(path = "/attachment/{id}")
+    public ResponseEntity delete(@PathVariable Long id, @PathVariable Long holderId) throws IOException {
+        attachmentService.delete(id, holderId);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
 }

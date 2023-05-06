@@ -14,7 +14,11 @@ public class FlywayDevConfiguration {
 
     @Autowired
     public FlywayDevConfiguration(DataSource dataSource) throws SQLException {
-        dataSource.getConnection().prepareStatement("DELETE FROM flyway_schema_history").execute();
+        try {
+            dataSource.getConnection().prepareStatement("DELETE FROM flyway_schema_history").execute();
+        } catch (Exception ignored) {
+
+        }
 
         Flyway.configure().locations("db/dev")
                 .baselineOnMigrate(true)

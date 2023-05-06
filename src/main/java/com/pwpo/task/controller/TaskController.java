@@ -6,7 +6,6 @@ import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.task.dto.EditTaskRequestDTO;
 import com.pwpo.task.dto.TaskPrimaryResponseDTO;
 import com.pwpo.task.dto.TaskRequestDTO;
-import com.pwpo.task.dto.TaskTagDTO;
 import com.pwpo.task.model.Task;
 import com.pwpo.task.service.TaskManager;
 import org.springframework.http.HttpStatus;
@@ -34,12 +33,6 @@ public class TaskController extends BaseEntityController<Task, Long> {
         return new ResponseEntity<>(taskManager.getTaskById(id, (Class<? extends ItemDTO>) Class.forName(dto)), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/{taskId}/tags")
-    @PreAuthorize("(@permissionEvaluator.activatedAndHasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#taskId)) or @permissionEvaluator.activatedAndHasRole('MANAGER')")
-    public ResponseEntity<List<String>> getTags(@PathVariable Long taskId) {
-        return new ResponseEntity<>(taskManager.getTags(taskId), HttpStatus.OK);
-    }
-
     @PostMapping
     @PreAuthorize("(@permissionEvaluator.activatedAndHasRole('USER') && @permissionEvaluator.hasAccessToProject(#body.project)) or @permissionEvaluator.activatedAndHasRole('MANAGER')")
     public ResponseEntity<APIResponse> createTask(@Valid @RequestBody TaskRequestDTO body) {
@@ -59,14 +52,6 @@ public class TaskController extends BaseEntityController<Task, Long> {
         taskManager.changeStatus(body);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-    @PostMapping("/tags")
-    @PreAuthorize("(@permissionEvaluator.activatedAndHasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#tags.id)) or @permissionEvaluator.activatedAndHasRole('MANAGER')")
-    public ResponseEntity saveTags(@Valid @RequestBody TaskTagDTO tags) {
-        taskManager.replaceTags(tags);
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
 
     @PutMapping
     @PreAuthorize("(@permissionEvaluator.activatedAndHasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#body.id)) or @permissionEvaluator.activatedAndHasRole('MANAGER')")

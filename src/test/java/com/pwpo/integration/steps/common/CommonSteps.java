@@ -26,6 +26,17 @@ public class CommonSteps extends BaseCucumberStep {
         commonStepsImplementation.clientReceivesStatus(status);
     }
 
+    @Then("the client receives {string} status")
+    public void theClientReceivesStatus(String status) {
+        int intStatus = switch (status) {
+            case "success" -> 200;
+            case "error" -> 400;
+            default -> 0;
+        };
+
+        commonStepsImplementation.clientReceivesStatus(intStatus);
+    }
+
     @And("the client receives bad request details")
     public void theClientReceivesBadRequestDetails(DataTable dataTable) throws Exception {
         commonStepsImplementation.clientReceivesBadRequestDetails(dataTable);

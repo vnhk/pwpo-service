@@ -66,7 +66,11 @@ public class AttachmentService {
     }
 
     private String getDestination(Long holderId, Long attachmentId, String filename) {
-        return FOLDER + File.separator + holderId + File.separator + attachmentId + File.separator + filename;
+        return getDestinationDir(holderId, attachmentId) + File.separator + filename;
+    }
+
+    private String getDestinationDir(Long holderId, Long attachmentId) {
+        return FOLDER + File.separator + holderId + File.separator + attachmentId;
     }
 
     private String store(MultipartFile file, Long holderId, Long attachmentId) {
@@ -114,5 +118,21 @@ public class AttachmentService {
 
     public Attachment getAttachment(Long attachmentId) {
         return attachmentRepository.findById(attachmentId).get();
+    }
+
+    public void delete(Long attachmentId, Long holderId) {
+        Optional<Attachment> byId = attachmentRepository.findById(attachmentId);
+        if (byId.isEmpty()) {
+            throw new RuntimeException("Given attachment does not exist!");
+        }
+        String destination = getDestination(holderId, attachmentId, byId.get().getName());
+        String destinationDir = getDestinationDir(holderId, attachmentId);
+        File file = new File(destination);
+        File dir = new File(destinationDir);
+        if (!file.delete() || !dir.delete()) {
+            throw new RuntimeException("File cannot be deleted!");
+        }
+
+        attachmentRepository.deleteById(attachmentId);
     }
 }
