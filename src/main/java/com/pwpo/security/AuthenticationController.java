@@ -75,10 +75,9 @@ public class AuthenticationController {
                 return ResponseEntity.status(401).body(responseMap);
             }
         } catch (DisabledException e) {
-            e.printStackTrace();
             responseMap.put("error", true);
             responseMap.put("message", "User is disabled");
-            return ResponseEntity.status(500).body(responseMap);
+            return ResponseEntity.status(401).body(responseMap);
         } catch (BadCredentialsException e) {
             responseMap.put("error", true);
             responseMap.put("message", "Invalid Credentials");
