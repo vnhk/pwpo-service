@@ -22,5 +22,5 @@ public class TaskSecondaryResponseDTO implements ItemDTO {
     private final LocalDateTime created;
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
-    private final LocalDateTime modified;
+    private final LocalDateTime updated;
 }
