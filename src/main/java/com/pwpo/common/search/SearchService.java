@@ -245,7 +245,8 @@ public class SearchService {
             case "equals" -> predicate = SearchOperationsHelper.equal(root, criteriaBuilder, entityCriterion);
             case "contains" -> predicate = SearchOperationsHelper.contains(root, criteriaBuilder, entityCriterion);
             case "notEquals" -> predicate = SearchOperationsHelper.notEqual(root, criteriaBuilder, entityCriterion);
-            case "notContains" -> predicate = SearchOperationsHelper.notContains(root, criteriaBuilder, entityCriterion);
+            case "notContains" ->
+                    predicate = SearchOperationsHelper.notContains(root, criteriaBuilder, entityCriterion);
             default -> log.error("NULL PREDICATE, INVALID OPERATOR!!!");
         }
         return predicate;
@@ -487,7 +488,8 @@ public class SearchService {
         switch (entityCriterion.getOperation()) {
             case EQUALS_OPERATION -> result = SearchOperationsHelper.equal(root, criteriaBuilder, entityCriterion);
             case LIKE_OPERATION -> result = SearchOperationsHelper.like(root, criteriaBuilder, entityCriterion);
-            case NOT_EQUALS_OPERATION -> result = SearchOperationsHelper.notEqual(root, criteriaBuilder, entityCriterion);
+            case NOT_EQUALS_OPERATION ->
+                    result = SearchOperationsHelper.notEqual(root, criteriaBuilder, entityCriterion);
             case NOT_LIKE_OPERATION -> result = SearchOperationsHelper.notLike(root, criteriaBuilder, entityCriterion);
             default -> throw new IllegalArgumentException("Invalid SearchCriteria operation!");
         }
@@ -499,7 +501,11 @@ public class SearchService {
         try {
             return field.getType().getDeclaredField(fieldName);
         } catch (NoSuchFieldException e) {
-            return entity.getSuperclass().getDeclaredField(fieldName);
+            try {
+                return entity.getSuperclass().getDeclaredField(fieldName);
+            } catch (NoSuchFieldException x) {
+                return entity.getSuperclass().getSuperclass().getDeclaredField(fieldName);
+            }
         }
     }
 
