@@ -1,6 +1,6 @@
 INSERT INTO PROJECT (ID, CREATED, NAME, DESCRIPTION, SHORT_FORM, STATUS, SUMMARY, CREATED_BY_ID, OWNER_ID, UPDATED)
 VALUES (6, '2023-05-01', 'Smart Navigation', 'A mobile app car navigation system', 'SN', 'IN_PROGRESS',
-        'Developing a navigation app for drivers to easily navigate while on the road', 3, 4, '2023-05-14');
+        'Developing a navigation app for drivers to easily navigate while on the road', 3, 2, '2023-05-14');
 
 INSERT INTO TASK (ID, CREATED, DESCRIPTION, DUE_DATE, ESTIMATION, NUMBER,
                   PRIORITY, STATUS, SUMMARY, TYPE, ASSIGNEE_ID,
