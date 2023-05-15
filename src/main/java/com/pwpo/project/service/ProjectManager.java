@@ -18,8 +18,11 @@ import com.pwpo.project.model.GoalRisk;
 import com.pwpo.project.model.Project;
 import com.pwpo.project.repository.GoalRiskRepository;
 import com.pwpo.project.repository.ProjectRepository;
+import com.pwpo.user.AccountRole;
+import com.pwpo.user.ProjectRole;
 import com.pwpo.user.UserAccount;
 import com.pwpo.user.UserRepository;
+import com.pwpo.user.model.UserProject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -85,31 +88,19 @@ public class ProjectManager extends BaseService<Project, Long> {
         }
     }
 
-//    private void validate(ProjectRequestDTO body) {
-//        List<Project> projects = new ArrayList<>();
-//        Iterable<Project> iterable = projectRepository.findAll();
-//        iterable.forEach(projects::add);
-//
-//        if (projects.size() >= MAX_PROJECTS) {
-//            throw new ValidationException("The project limit has been exceeded!");
-//        }
-//
-//        if (projectRepository.findByName(body.getName()).isPresent()) {
-//            throw new ValidationException("name", "Project with the given name already exists!");
-//        }
-//
-//        if (projectRepository.findByShortForm(body.getShortForm()).isPresent()) {
-//            throw new ValidationException("shortForm", "Project with the given short form already exists!");
-//        }
-//    }
-
     private boolean isTheSameProject(EditProjectRequestDTO<Long> body, Optional<Project> opt) {
         return !opt.get().getId().equals(body.getEntityId());
     }
 
     @Override
     protected void postSave(Project project) {
-
+        UserAccount owner = project.getOwner();
+        UserProject userProject = new UserProject();
+        userProject.setUser(owner);
+        userProject.setRole(ProjectRole.PRODUCT_OWNER);
+        userProject.setProject(project);
+        project.getAddedToProjects().add(userProject);
+        projectRepository.editWithoutHistory(project);
     }
 
     @Override

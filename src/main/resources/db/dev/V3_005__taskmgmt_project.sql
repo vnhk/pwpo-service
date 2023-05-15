@@ -15,6 +15,8 @@ In conclusion, TaskMgmt is a modern, scalable, and feature-rich task management 
         'T-MGMT', 'NEW', 'Technical description about TaskMgmt application.', 1, 1,
         '2023-02-02');
 
+INSERT INTO USER_PROJECT (ID, PROJECT_ID, USER_ID, ROLE, CREATED, UPDATED)
+VALUES (55, 5, 1, 'PRODUCT_OWNER', '2023-02-02', '2023-02-02');
 
 INSERT INTO TASK (ID, CREATED, DESCRIPTION,
                   DUE_DATE, ESTIMATION, NUMBER,

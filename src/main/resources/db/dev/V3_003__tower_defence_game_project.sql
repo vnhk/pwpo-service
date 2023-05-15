@@ -5,6 +5,8 @@ VALUES (3, '2023-01-01', 'TowerFence',
         'TowerFence is a challenging and engaging tower defense game that combines strategy and resource management', 6,
         2, NOW());
 
+INSERT INTO USER_PROJECT (ID, PROJECT_ID, USER_ID, ROLE, CREATED, UPDATED)
+VALUES (300, 3, 2, 'PRODUCT_OWNER', '2023-01-01', '2023-01-01');
 
 INSERT INTO TASK (ID, CREATED, DESCRIPTION, DUE_DATE, ESTIMATION, NUMBER, PRIORITY, STATUS, SUMMARY, TYPE, ASSIGNEE_ID,
                   CREATED_BY_ID, OWNER_ID, PROJECT_ID, UPDATED)

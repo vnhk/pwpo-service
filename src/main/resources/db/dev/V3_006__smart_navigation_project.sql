@@ -2,6 +2,9 @@ INSERT INTO PROJECT (ID, CREATED, NAME, DESCRIPTION, SHORT_FORM, STATUS, SUMMARY
 VALUES (6, '2023-05-01', 'Smart Navigation', 'A mobile app car navigation system', 'SN', 'IN_PROGRESS',
         'Developing a navigation app for drivers to easily navigate while on the road', 3, 2, '2023-05-14');
 
+INSERT INTO USER_PROJECT (ID, PROJECT_ID, USER_ID, ROLE, CREATED, UPDATED)
+VALUES (101, 6, 2, 'PRODUCT_OWNER', '2023-05-01', '2023-05-01');
+
 INSERT INTO TASK (ID, CREATED, DESCRIPTION, DUE_DATE, ESTIMATION, NUMBER,
                   PRIORITY, STATUS, SUMMARY, TYPE, ASSIGNEE_ID,
                   CREATED_BY_ID, OWNER_ID, PROJECT_ID, UPDATED)

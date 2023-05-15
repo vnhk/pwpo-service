@@ -16,6 +16,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -63,9 +64,9 @@ public class Project extends AttachmentHandler {
     @JsonIgnore
     private List<Task> tasks;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<UserProject> addedToProjects;
+    private List<UserProject> addedToProjects = new ArrayList<>();
 
     @OneToMany(mappedBy = "project")
     @JsonIgnore
