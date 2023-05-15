@@ -4,6 +4,7 @@ import com.pwpo.common.model.APIResponse;
 import com.pwpo.common.search.SearchQueryOption;
 import com.pwpo.project.dto.ProjectPrimaryResponseDTO;
 import com.pwpo.project.model.Project;
+import com.pwpo.project.repository.ProjectRepository;
 import com.pwpo.task.TaskRepository;
 import com.pwpo.task.dto.TaskPrimaryResponseDTO;
 import com.pwpo.task.model.Task;
@@ -29,6 +30,11 @@ public class PermissionEvaluator {
 
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
+    private final ProjectRepository projectRepository;
+
+    public boolean writeAccessProject() {
+        return activatedAndHasRole("MANAGER");
+    }
 
     public boolean activatedAndHasRole(String role) {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -152,5 +158,33 @@ public class PermissionEvaluator {
         apiResponse.setAllFound(tasks.size());
 
         return true;
+    }
+
+    public boolean readAttachmentAccess(Long holderId) {
+        boolean projectAttachment = projectRepository.findById(holderId).isPresent();
+        boolean taskAttachment = taskRepository.findById(holderId).isPresent();
+        if (projectAttachment) {
+            return readAccessProject(holderId);
+        } else if (taskAttachment) {
+            return readAccessProject(holderId);
+        } else {
+            return false;
+        }
+    }
+
+    public boolean writeAttachmentAccess(Long holderId) {
+        boolean projectAttachment = projectRepository.findById(holderId).isPresent();
+        boolean taskAttachment = taskRepository.findById(holderId).isPresent();
+        if (projectAttachment) {
+            return writeAccessProject();
+        } else if (taskAttachment) {
+            return readAccessProject(holderId);
+        } else {
+            return false;
+        }
+    }
+
+    public boolean readAccessProject(Long projectId) {
+        return (activatedAndHasRole("USER") && hasAccessToProject(projectId)) || writeAccessProject();
     }
 }
