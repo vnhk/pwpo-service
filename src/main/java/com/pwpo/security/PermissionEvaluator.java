@@ -1,6 +1,7 @@
 package com.pwpo.security;
 
 import com.pwpo.common.model.APIResponse;
+import com.pwpo.common.search.SearchQueryOption;
 import com.pwpo.project.dto.ProjectPrimaryResponseDTO;
 import com.pwpo.project.model.Project;
 import com.pwpo.task.TaskRepository;
@@ -105,6 +106,19 @@ public class PermissionEvaluator {
         projects.removeAll(toRemove);
         apiResponse.setCurrentFound(projects.size());
         apiResponse.setAllFound(projects.size());
+
+        return true;
+    }
+
+    public boolean filterSearch(APIResponse apiResponse, SearchQueryOption options) {
+        String entityToFind = options.getEntityToFind().toLowerCase();
+        if (entityToFind.endsWith("project")) {
+            return filterProjects(apiResponse);
+        } else if (entityToFind.endsWith("task")) {
+            return filterTasks(apiResponse);
+        } else if (entityToFind.endsWith("user")) {
+            return true;
+        }
 
         return true;
     }

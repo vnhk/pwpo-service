@@ -20,6 +20,7 @@ public class SearchController {
     private final ItemMapper mapper;
 
     @GetMapping()
+    @PostAuthorize("@permissionEvaluator.activatedAndHasRole('MANAGER') or @permissionEvaluator.filterSearch(returnObject.getBody(), #options)")
     public ResponseEntity<APIResponse> search(@RequestParam(required = false) String query,
                                               @RequestParam(required = true) String dto,
                                               SearchQueryOption options) throws NoSuchFieldException, ClassNotFoundException {
