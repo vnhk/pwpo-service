@@ -162,11 +162,12 @@ public class PermissionEvaluator {
 
     public boolean readAttachmentAccess(Long holderId) {
         boolean projectAttachment = projectRepository.findById(holderId).isPresent();
-        boolean taskAttachment = taskRepository.findById(holderId).isPresent();
+        Optional<Task> task = taskRepository.findById(holderId);
+        boolean taskAttachment = task.isPresent();
         if (projectAttachment) {
             return readAccessProject(holderId);
         } else if (taskAttachment) {
-            return readAccessProject(holderId);
+            return readAccessProject(task.get().getProject().getId());
         } else {
             return false;
         }
@@ -174,11 +175,12 @@ public class PermissionEvaluator {
 
     public boolean writeAttachmentAccess(Long holderId) {
         boolean projectAttachment = projectRepository.findById(holderId).isPresent();
-        boolean taskAttachment = taskRepository.findById(holderId).isPresent();
+        Optional<Task> task = taskRepository.findById(holderId);
+        boolean taskAttachment = task.isPresent();
         if (projectAttachment) {
             return writeAccessProject();
         } else if (taskAttachment) {
-            return readAccessProject(holderId);
+            return readAccessProject(task.get().getProject().getId());
         } else {
             return false;
         }
