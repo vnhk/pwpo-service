@@ -1,29 +1,34 @@
 package com.pwpo.project.model;
 
 import com.pwpo.common.model.Constants;
+import com.pwpo.common.model.db.BaseEntity;
 import com.pwpo.common.model.db.Persistable;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Getter
 @Setter
+@Builder
 @Entity
-public class GoalRisk implements Persistable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = Constants.GOAL_RISK_SEQUENCE)
-    @SequenceGenerator(name = Constants.GOAL_RISK_SEQUENCE, initialValue = Constants.DB_SEQUENCE_INIT)
-    private Long id;
-
+@NoArgsConstructor
+@AllArgsConstructor
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public class GoalRisk extends BaseEntity {
     @Length(min = 5, max = 500)
     private String content;
-    @Size(min = 1, max = 5)
+    @Min(1)
+    @Max(5)
     private Integer priority;
     @Enumerated(EnumType.STRING)
+    @NotNull
     private GoalRiskType type;
     @ManyToOne
+    @NotNull
     private Project project;
 }

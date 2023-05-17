@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping(path = "/projects/{id}/goals-and-risks")
+@RequestMapping(path = "/projects/{projectId}/goals-and-risks")
 @CrossOrigin(origins = "http://localhost:4200")
 public class ProjectGoalRiskController {
     private final ProjectManager projectManager;
@@ -24,28 +24,21 @@ public class ProjectGoalRiskController {
 
     @GetMapping
     @ReadAccessProject
-    public ResponseEntity<APIResponse> getAll(@PathVariable Long id, SortDirection sortDirection) {
-        return new ResponseEntity<>(projectManager.getGoalsAndRisks(id, sortDirection), HttpStatus.OK);
+    public ResponseEntity<APIResponse> getAll(@PathVariable Long projectId, SortDirection sortDirection) {
+        return new ResponseEntity<>(projectManager.getGoalsAndRisks(projectId, sortDirection), HttpStatus.OK);
     }
 
     @PostMapping
     @WriteAccessProject
-    public ResponseEntity addOne(@PathVariable Long id, @Valid @RequestBody ProjectGoalRiskDTO projectGoalRiskDTO) {
-        projectManager.addGoalRisk(id, projectGoalRiskDTO);
+    public ResponseEntity saveOne(@PathVariable Long projectId, @Valid @RequestBody ProjectGoalRiskDTO projectGoalRiskDTO) {
+        projectManager.saveGoalRisk(projectId, projectGoalRiskDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping
+    @DeleteMapping("/{id}")
     @WriteAccessProject
-    public ResponseEntity<APIResponse> editOne(@PathVariable Long id, @Valid @RequestBody ProjectGoalRiskDTO projectGoalRiskDTO) {
-        projectManager.editGoalRisk(id, projectGoalRiskDTO);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @DeleteMapping
-    @WriteAccessProject
-    public ResponseEntity<APIResponse> edit(@PathVariable Long id, @Valid @RequestBody ProjectGoalRiskDTO projectGoalRiskDTO) {
-        projectManager.removeGoalRisk(id, projectGoalRiskDTO);
+    public ResponseEntity delete(@PathVariable Long projectId, @PathVariable Long id) {
+        projectManager.removeGoalRisk(projectId, id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

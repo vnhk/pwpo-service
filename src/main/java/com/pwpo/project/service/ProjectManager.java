@@ -18,7 +18,6 @@ import com.pwpo.project.model.GoalRisk;
 import com.pwpo.project.model.Project;
 import com.pwpo.project.repository.GoalRiskRepository;
 import com.pwpo.project.repository.ProjectRepository;
-import com.pwpo.user.AccountRole;
 import com.pwpo.user.ProjectRole;
 import com.pwpo.user.UserAccount;
 import com.pwpo.user.UserRepository;
@@ -141,44 +140,37 @@ public class ProjectManager extends BaseService<Project, Long> {
         }
     }
 
-    public void addGoalRisk(Long id, ProjectGoalRiskDTO projectGoalRiskDTO) {
+    public void saveGoalRisk(Long id, ProjectGoalRiskDTO projectGoalRiskDTO) {
         Optional<Project> project = projectRepository.findById(id);
         if (project.isPresent()) {
             GoalRisk goalRisk = mapper.mapToObj(projectGoalRiskDTO, GoalRisk.class);
-            goalRisk.setProject(project.get());
-            goalRisk = goalRiskRepository.save(goalRisk);
-            project.get().getGoalRisk().add(goalRisk);
-        } else {
-            throw new RuntimeException("Could not find project!");
-        }
-    }
+            if (goalRisk.getId() == null) {
+                goalRisk.setProject(project.get());
+                goalRisk = goalRiskRepository.save(goalRisk);
+                project.get().getGoalRisk().add(goalRisk);
+            } else {
+                Optional<GoalRisk> goalToEdit = project.get().getGoalRisk().stream()
+                        .filter(e -> e.getId().equals(projectGoalRiskDTO.getId()))
+                        .findFirst();
 
-    public void editGoalRisk(Long id, ProjectGoalRiskDTO projectGoalRiskDTO) {
-        Optional<Project> project = projectRepository.findById(id);
-        if (project.isPresent()) {
+                if (goalToEdit.isEmpty()) {
+                    throw new RuntimeException("Goal or risk does not exist!");
+                }
 
-            Optional<GoalRisk> goalToEdit = project.get().getGoalRisk().stream()
-                    .filter(e -> e.getId().equals(projectGoalRiskDTO.getId()))
-                    .findFirst();
-
-            if (goalToEdit.isEmpty()) {
-                throw new RuntimeException("Goal or risk does not exist!");
+                goalRisk.setProject(project.get());
+                goalRiskRepository.editWithoutHistory(goalRisk);
             }
-
-            goalToEdit.get().setPriority(projectGoalRiskDTO.getPriority());
-            goalToEdit.get().setContent(projectGoalRiskDTO.getContent());
-            goalRiskRepository.save(goalToEdit.get());
         } else {
             throw new RuntimeException("Could not find project!");
         }
     }
 
-    public void removeGoalRisk(Long id, ProjectGoalRiskDTO projectGoalRiskDTO) {
-        Optional<Project> project = projectRepository.findById(id);
+    public void removeGoalRisk(Long projectId, Long goalRiskId) {
+        Optional<Project> project = projectRepository.findById(projectId);
         if (project.isPresent()) {
 
             Optional<GoalRisk> goalToRemove = project.get().getGoalRisk().stream()
-                    .filter(e -> e.getId().equals(projectGoalRiskDTO.getId()))
+                    .filter(e -> e.getId().equals(goalRiskId))
                     .findFirst();
 
             if (goalToRemove.isEmpty()) {
