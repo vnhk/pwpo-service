@@ -92,6 +92,13 @@ public class ProjectController extends BaseEntityController<Project, Long> {
         return new ResponseEntity<>(userManager.getUsersNotAddedToProject(id), HttpStatus.OK);
     }
 
+    @DeleteMapping(path = "/project/{projectId}/users/{id}")
+    @WriteAccessProject
+    public ResponseEntity removeUserFromProject(@PathVariable Long projectId, @PathVariable Long id) {
+        userManager.removeUserFromProject(projectId, id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @PostMapping(path = "/project/{id}/users")
     @WriteAccessProject
     public ResponseEntity addUserToTheProject(@PathVariable Long id, @Valid @RequestBody UserProjectDTO userProject) {

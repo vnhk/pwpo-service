@@ -111,12 +111,19 @@ public class UserManager {
         UserAccount user = userOpt.get();
         Project project = projectOpt.get();
 
-        UserProject userProject = new UserProject();
-        userProject.setUser(user);
-        userProject.setProject(project);
-        userProject.setRole(projectRole);
-
-        userProjectRepository.save(userProject);
+        Optional<UserProject> byUserAndProject = userProjectRepository.findByUserAndProject(user, project);
+        UserProject userProject;
+        if (byUserAndProject.isEmpty()) {
+            userProject = new UserProject();
+            userProject.setUser(user);
+            userProject.setProject(project);
+            userProject.setRole(projectRole);
+            userProjectRepository.save(userProject);
+        } else {
+            userProject = byUserAndProject.get();
+            userProject.setRole(projectRole);
+            userProjectRepository.editWithoutHistory(userProject);
+        }
     }
 
     private void validate(Optional<Project> project, Optional<UserAccount> user) {
@@ -126,11 +133,6 @@ public class UserManager {
 
         if (project.isEmpty()) {
             throw new ValidationException("Project does not exist!");
-        }
-
-        if (userRepository.findUsersAddedToTheProject(project.get().getId()).stream()
-                .anyMatch(u -> u.getId().equals(user.get().getId()))) {
-            throw new ValidationException("User has been already added to the project!");
         }
     }
 
@@ -173,5 +175,27 @@ public class UserManager {
         UserWithRolesDTO itemDTO = (UserWithRolesDTO) mapper.mapToDTO(userAccount, UserWithRolesDTO.class);
 
         return itemDTO;
+    }
+
+    public void removeUserFromProject(Long projectId, Long id) {
+        Optional<Project> projectOpt = projectRepository.findById(projectId);
+        if (projectOpt.isEmpty()) {
+            throw new ValidationException("Project does not exist!");
+        }
+
+        int size = projectOpt.get().getAddedToProjects().size();
+
+        if (size < 2) {
+            throw new ValidationException("At least one user should be added to the project!");
+        }
+
+        Optional<UserProject> user = projectOpt.get().getAddedToProjects().stream().filter(e -> e.getUser().getId().equals(id))
+                .findFirst();
+
+        if (user.isEmpty()) {
+            throw new ValidationException("User is not added to the project!");
+        }
+
+        userProjectRepository.delete(user.get());
     }
 }
