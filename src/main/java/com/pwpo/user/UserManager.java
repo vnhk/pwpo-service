@@ -204,4 +204,16 @@ public class UserManager {
 
         userProjectRepository.delete(user.get());
     }
+
+    public void editUserRoles(UserDTO userDTO) {
+        Optional<UserAccount> byId = userRepository.findById(userDTO.getId());
+
+        if (byId.isEmpty()) {
+            throw new ValidationException("User does not exist!");
+        }
+
+        UserAccount userAccount = byId.get();
+        userAccount.setRoles(userDTO.getRoles());
+        userRepository.editWithoutHistory(userAccount);
+    }
 }

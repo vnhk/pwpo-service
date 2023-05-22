@@ -29,6 +29,13 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PutMapping("/admin/users/roles")
+    @PreAuthorize("@permissionEvaluator.activatedAndHasRole('ADMIN')")
+    public ResponseEntity editUserRoles(@RequestBody UserDTO userDTO) {
+        userManager.editUserRoles(userDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @GetMapping("/users")
     @PreAuthorize("@permissionEvaluator.activatedAndHasAnyRole()")
     public ResponseEntity<APIResponse> getUsers() {
