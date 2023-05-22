@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
@@ -102,7 +103,6 @@ public class AuthenticationController {
         userAccount.getRoles().add(AccountRole.ROLE_NOT_ACTIVATED);
         String token = jwtTokenUtil.generateToken(userAccount);
         userRepository.editWithoutHistory(userAccount);
-        responseMap.put("error", false);
         responseMap.put("username", nick);
         responseMap.put("message", "Password regenerated, change password after first login!");
         responseMap.put("token", token);
@@ -124,12 +124,14 @@ public class AuthenticationController {
         user.setLastName(lastName);
         user.setEmail(email);
         user.setPassword(new BCryptPasswordEncoder().encode(password));
-        user.setRoles(authRequest.getRoles());
+        user.getRoles().add(authRequest.getRole());
         user.getRoles().add(AccountRole.ROLE_NOT_ACTIVATED);
         user.setNick(userName);
+
+        validateRegister(user);
+
         String token = jwtTokenUtil.generateToken(user);
         userRepository.save(user);
-        responseMap.put("error", false);
         responseMap.put("username", userName);
         responseMap.put("message", "Account created successfully, change password after first login!");
         responseMap.put("token", token);
@@ -168,5 +170,24 @@ public class AuthenticationController {
 
     private String generatePassword() {
         return RandomString.make(10);
+    }
+
+
+    private void validateRegister(UserAccount user) {
+        if (user.getRoles().size() < 2) {
+            throw new ValidationException("role", "Role is required!");
+        }
+
+        Optional<UserAccount> byNick = userRepository.findByNick(user.getNick());
+
+        if (byNick.isPresent()) {
+            throw new ValidationException("username", "User with given nick already exists!");
+        }
+
+        Optional<UserAccount> byEmail = userRepository.findByEmail(user.getEmail());
+
+        if (byEmail.isPresent()) {
+            throw new ValidationException("email", "User with given email already exists!");
+        }
     }
 }

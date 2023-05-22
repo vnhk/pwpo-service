@@ -143,6 +143,12 @@ public class UserManager {
             throw new ValidationException("User does not exist!");
         }
 
+        Optional<UserAccount> byEmail = userRepository.findByEmail(userDTO.getEmail());
+
+        if (byEmail.isPresent() && !userDTO.getEmail().equals(byId.get().getEmail())) {
+            throw new ValidationException("email", "User with given email already exists!");
+        }
+
         UserAccount userAccount = byId.get();
         userAccount.setEmail(userDTO.getEmail());
         userAccount.setFirstName(userDTO.getFirstName());

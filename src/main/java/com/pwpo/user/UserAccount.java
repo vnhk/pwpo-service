@@ -12,6 +12,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -35,7 +36,7 @@ public class UserAccount extends BaseEntity {
     @CollectionTable(name = "account_role")
     @Column(name = "role")
     @Fetch(FetchMode.SUBSELECT)
-    private Set<AccountRole> roles;
+    private Set<AccountRole> roles = new HashSet<>();
     @JsonIgnore
     @OneToMany(mappedBy = "owner")
     private List<Project> ownedProjects;

@@ -20,4 +20,6 @@ public interface UserRepository extends BaseRepository<UserAccount, Long> {
     List<UserAccount> findUsersAddedToTheProject(Long projectId);
 
     Optional<UserAccount> findByNick(String nick);
+
+    Optional<UserAccount> findByEmail(String email);
 }

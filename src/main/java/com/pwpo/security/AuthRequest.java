@@ -14,7 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class AuthRequest {
     @NotNull
-    @Size(max = 30, min = 3)
+    @Size(max = 50, min = 3)
     private String username;
 
     @NotNull
@@ -29,5 +29,5 @@ public class AuthRequest {
 
     @Size(max = 50, min = 3)
     private String lastName;
-    private Set<AccountRole> roles;
+    private AccountRole role;
 }
