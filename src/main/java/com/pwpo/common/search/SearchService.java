@@ -130,7 +130,7 @@ public class SearchService {
             return Project.class;
         } else if (options.getEntityToFind().equals("task")) {
             return Task.class;
-        } else if (options.getEntityToFind().equals("user")) {
+        } else if (options.getEntityToFind().equals("userAccount")) {
             return UserAccount.class;
         }
 
