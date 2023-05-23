@@ -8,7 +8,9 @@ import com.pwpo.common.search.model.SortDirection;
 import com.pwpo.common.service.ItemMapper;
 import com.pwpo.project.model.Project;
 import com.pwpo.project.repository.ProjectRepository;
+import com.pwpo.user.dto.UserContactDTO;
 import com.pwpo.user.dto.UserDTO;
+import com.pwpo.user.dto.UserPersonalDataDTO;
 import com.pwpo.user.dto.UserWithRolesDTO;
 import com.pwpo.user.model.UserProject;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -174,10 +177,7 @@ public class UserManager {
     }
 
     public UserWithRolesDTO getLoggedUserDetails() {
-        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = principal.getUsername();
-        UserAccount userAccount = userRepository.findByNick(username).get();
-
+        UserAccount userAccount = getLoggedUser();
         UserWithRolesDTO itemDTO = (UserWithRolesDTO) mapper.mapToDTO(userAccount, UserWithRolesDTO.class);
 
         return itemDTO;
@@ -215,5 +215,32 @@ public class UserManager {
         UserAccount userAccount = byId.get();
         userAccount.setRoles(userDTO.getRoles());
         userRepository.editWithoutHistory(userAccount);
+    }
+
+    public void updateContactData(UserContactDTO userDTO) {
+        UserAccount loggedUser = getLoggedUser();
+
+        Optional<UserAccount> byEmail = userRepository.findByEmail(userDTO.getEmail());
+
+        if (byEmail.isPresent() && !Objects.equals(byEmail.get().getId(), loggedUser.getId())) {
+            throw new ValidationException("email", "User with given email already exists!");
+        }
+
+        loggedUser.setEmail(userDTO.getEmail());
+        userRepository.editWithoutHistory(loggedUser);
+    }
+
+    public void updatePersonalData(UserPersonalDataDTO userDTO) {
+        UserAccount loggedUser = getLoggedUser();
+
+        loggedUser.setFirstName(userDTO.getFirstName());
+        loggedUser.setLastName(userDTO.getLastName());
+        userRepository.editWithoutHistory(loggedUser);
+    }
+
+    private UserAccount getLoggedUser() {
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = principal.getUsername();
+        return userRepository.findByNick(username).get();
     }
 }

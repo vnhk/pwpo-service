@@ -1,7 +1,9 @@
 package com.pwpo.user;
 
 import com.pwpo.common.model.APIResponse;
+import com.pwpo.user.dto.UserContactDTO;
 import com.pwpo.user.dto.UserDTO;
+import com.pwpo.user.dto.UserPersonalDataDTO;
 import com.pwpo.user.dto.UserWithRolesDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,6 +35,18 @@ public class UserController {
     @PreAuthorize("@permissionEvaluator.activatedAndHasRole('ADMIN')")
     public ResponseEntity editUserRoles(@RequestBody UserDTO userDTO) {
         userManager.editUserRoles(userDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/update-personal-data")
+    public ResponseEntity updatePersonalData(@RequestBody UserPersonalDataDTO userDTO) {
+        userManager.updatePersonalData(userDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/update-contact-data")
+    public ResponseEntity updateContactData(@RequestBody UserContactDTO userDTO) {
+        userManager.updateContactData(userDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
