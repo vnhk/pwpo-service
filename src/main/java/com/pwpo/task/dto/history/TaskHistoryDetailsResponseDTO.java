@@ -22,7 +22,7 @@ public class TaskHistoryDetailsResponseDTO implements ItemDTO {
     private String priority;
     private Integer estimation;
     @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dueDate;
     private String type;
     private String description;
