@@ -2,6 +2,7 @@ package com.pwpo.task.dto.history;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.user.dto.UserDTO;
@@ -20,6 +21,8 @@ public class TaskHistoryDetailsResponseDTO implements ItemDTO {
     private String status;
     private String priority;
     private Integer estimation;
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private LocalDate dueDate;
     private String type;
     private String description;
