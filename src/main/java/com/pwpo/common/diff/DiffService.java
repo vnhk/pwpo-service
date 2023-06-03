@@ -15,6 +15,14 @@ public class DiffService {
     private final static String SPACE_REGEX = " ";
 
     public List<DiffWord> diff(String fst, String snd) {
+        if (fst == null && snd != null) {
+            return Arrays.asList(new DiffWord(snd, DiffType.ADDED));
+        } else if (fst != null && snd == null) {
+            return Arrays.asList(new DiffWord(fst, DiffType.REMOVED));
+        } else if (fst == null) {
+            return new ArrayList<>();
+        }
+
         String[] wordsFst = fst.split(SPACE_REGEX);
         String[] wordsSnd = snd.split(SPACE_REGEX);
 

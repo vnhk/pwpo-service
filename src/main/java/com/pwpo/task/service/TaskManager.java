@@ -172,7 +172,7 @@ public class TaskManager extends BaseService<Task, Long> {
     private EditTaskRequestDTO<Long> adaptTaskToEditable(Task task) {
         EditTaskRequestDTO editTaskRequestDTO = new EditTaskRequestDTO();
         editTaskRequestDTO.setId(task.getId());
-        editTaskRequestDTO.setAssignee(task.getAssignee().getId());
+        editTaskRequestDTO.setAssignee(task.getAssignee() == null ? null : task.getAssignee().getId());
         editTaskRequestDTO.setEstimation(task.getEstimation());
         editTaskRequestDTO.setStatus(task.getStatus());
         editTaskRequestDTO.setDescription(task.getDescription());

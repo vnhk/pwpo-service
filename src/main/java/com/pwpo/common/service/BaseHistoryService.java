@@ -115,7 +115,11 @@ public abstract class BaseHistoryService<T extends Persistable, ID extends Seria
      */
     private String getHistoryFieldValue(Field field, BaseHistoryEntity entity) throws IllegalAccessException {
         field.setAccessible(true);
-        String value = String.valueOf(field.get(entity));
+        Object obj = field.get(entity);
+        String value = null;
+        if (obj != null) {
+            value = String.valueOf(obj);
+        }
         field.setAccessible(false);
 
         return value;
