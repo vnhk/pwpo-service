@@ -71,7 +71,7 @@ public class TimeLogManager {
         timeLog.setComment(timeLogRequest.getComment());
         timeLog.setUser(userRepository.findById(userId).get());
         timeLog.setCreated(LocalDateTime.now());
-        timeLog.setDate(timeLogRequest.getDate());
+        timeLog.setDate(timeLogRequest.getDate().plusDays(1));
 
         timeLogRepository.save(timeLog);
     }
