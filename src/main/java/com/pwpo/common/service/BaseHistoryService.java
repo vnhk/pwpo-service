@@ -136,6 +136,9 @@ public abstract class BaseHistoryService<T extends Persistable, ID extends Seria
             for (String p : path.split("\\.")) {
                 field.setAccessible(true);
                 object = field.get(object);
+                if (object == null) {
+                    return null;
+                }
                 field.setAccessible(false);
                 field = object.getClass().getDeclaredField(p);
             }

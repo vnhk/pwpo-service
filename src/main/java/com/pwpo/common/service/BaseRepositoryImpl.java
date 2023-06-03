@@ -173,9 +173,12 @@ public class BaseRepositoryImpl<T extends BaseEntity, ID extends Serializable> e
                 entityField = entityField.getType().getDeclaredField(value);
             }
         }
-        entityField.setAccessible(true);
-        Object res = entityField.get(entity);
-        entityField.setAccessible(false);
+        Object res = null;
+        if(entity != null) {
+            entityField.setAccessible(true);
+            res = entityField.get(entity);
+            entityField.setAccessible(false);
+        }
 
         return res;
     }
