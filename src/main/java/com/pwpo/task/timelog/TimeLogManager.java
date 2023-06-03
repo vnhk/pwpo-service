@@ -5,7 +5,6 @@ import com.pwpo.common.model.APIResponse;
 import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.common.search.SearchQueryOption;
 import com.pwpo.common.service.ItemMapper;
-import com.pwpo.project.model.Project;
 import com.pwpo.task.TaskRepository;
 import com.pwpo.task.model.Task;
 import com.pwpo.user.UserRepository;
@@ -63,7 +62,7 @@ public class TimeLogManager {
 
     public void createTimeLog(Long taskId, TimeLogRequest timeLogRequest) {
         Long userId = getLoggedUserId();
-        validate(taskId, userId, timeLogRequest);
+        validate(taskId, timeLogRequest);
         setLoggedTime(timeLogRequest);
 
         TimeLog timeLog = new TimeLog();
@@ -88,17 +87,11 @@ public class TimeLogManager {
         }
     }
 
-    private void validate(Long taskId, Long userId, TimeLogRequest timeLogRequest) {
+    private void validate(Long taskId, TimeLogRequest timeLogRequest) {
         Optional<Task> taskOptional = taskRepository.findById(taskId);
 
         if (taskOptional.isEmpty()) {
             throw new ValidationException("taskId", "Task with given id does not exist!");
-        }
-
-        Project project = taskOptional.get().getProject();
-
-        if (project.getAddedToProjects().stream().noneMatch(e -> e.getUser().getId().equals(userId))) {
-            throw new ValidationException("userId", "User with given id does not have access to the project!");
         }
 
         if ((timeLogRequest.getTimeInMinutes() == null || timeLogRequest.getTimeInMinutes() == 0)
