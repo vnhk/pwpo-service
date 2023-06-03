@@ -202,6 +202,8 @@ public class UserManager {
             throw new ValidationException("User is not added to the project!");
         }
 
+        projectOpt.get().getAddedToProjects().remove(user.get());
+        user.get().getUser().getAddedToProjects().remove(user.get());
         userProjectRepository.delete(user.get());
     }
 
