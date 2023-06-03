@@ -23,7 +23,6 @@ public class UniqueProjectIntegrity implements EntitySaveIntegrityValidation<Pro
     public List<ApiError> validate(Project entity) {
         List<ApiError> res = new ArrayList<>();
 
-        // TODO: 06.10.2022 replace with count(*)
         if (projectRepository.findAll().size() >= MAX_PROJECTS) {
             res.add(new ApiError(ExceptionCode.GENERAL_VALIDATION, "The project limit has been exceeded!"));
         }

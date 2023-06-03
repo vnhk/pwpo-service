@@ -120,9 +120,6 @@ public class ProjectManager extends BaseService<Project, Long> {
 
     @Override
     protected void validateEditRequest(Optional<Project> orig, Editable<Long> body) {
-        // TODO: 09.10.2022 in newly created project and task with added users to the project (max Tester, joe Manager),
-        //  joe cannot log time - User does not have access to the project
-
         EditProjectRequestDTO<Long> request = (EditProjectRequestDTO<Long>) body;
 
         if (orig.isEmpty()) {
