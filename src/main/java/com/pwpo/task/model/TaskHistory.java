@@ -27,7 +27,7 @@ public class TaskHistory extends BaseHistoryEntity implements AbstractBaseHistor
     @JsonSerialize(using = ToEnumDisplayNameSerializer.class)
     @HistoryField(comparePath = "displayName")
     private TaskType type;
-    @HistoryField(savePath = "nick", comparePath = "nick")
+    @HistoryField(savePath = "assignee.nick", comparePath = "nick")
     private String assignee;
     @Enumerated(EnumType.STRING)
     @JsonSerialize(using = ToEnumDisplayNameSerializer.class)
@@ -44,7 +44,7 @@ public class TaskHistory extends BaseHistoryEntity implements AbstractBaseHistor
     @Column(length = Constants.DESCRIPTION_MAX)
     @HistoryField
     private String description;
-    @HistoryField(savePath = "nick", comparePath = "nick")
+    @HistoryField(savePath = "owner.nick", comparePath = "nick")
     private String owner;
     @HistoryField
     private Integer estimation;
