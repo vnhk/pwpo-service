@@ -1,7 +1,7 @@
 package com.pwpo.common.validator;
 
 import com.pwpo.common.exception.ApiError;
-import com.pwpo.common.model.db.Persistable;
+import com.bervan.history.model.Persistable;
 
 import java.util.List;
 

@@ -3,7 +3,7 @@ package com.pwpo.common.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pwpo.common.model.APIResponse;
-import com.pwpo.common.model.db.Persistable;
+import com.bervan.history.model.Persistable;
 import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.common.search.model.SearchResponse;
 import com.pwpo.project.dto.ProjectPrimaryResponseDTO;

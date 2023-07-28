@@ -6,7 +6,6 @@ import com.pwpo.common.model.db.BaseHistoryEntity;
 import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.common.search.SearchService;
 import com.pwpo.common.service.BaseHistoryService;
-import com.pwpo.common.diff.DiffService;
 import com.pwpo.common.service.ItemMapper;
 import com.pwpo.project.model.ProjectHistory;
 import com.pwpo.project.repository.ProjectHistoryRepository;
@@ -20,8 +19,8 @@ import java.util.Optional;
 public class ProjectHistoryManager extends BaseHistoryService<ProjectHistory, Long> {
     private final ProjectHistoryRepository projectHistoryRepository;
 
-    public ProjectHistoryManager(ItemMapper mapper, SearchService searchService, DiffService diffService, ProjectHistoryRepository repository) {
-        super(mapper, searchService, diffService);
+    public ProjectHistoryManager(ItemMapper mapper, SearchService searchService, ProjectHistoryRepository repository) {
+        super(mapper, searchService);
         this.projectHistoryRepository = repository;
     }
 

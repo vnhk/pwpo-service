@@ -6,7 +6,6 @@ import com.pwpo.common.model.db.BaseHistoryEntity;
 import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.common.search.SearchService;
 import com.pwpo.common.service.BaseHistoryService;
-import com.pwpo.common.diff.DiffService;
 import com.pwpo.common.service.ItemMapper;
 import com.pwpo.task.TaskHistoryRepository;
 import com.pwpo.task.dto.history.TaskHistoryDetailsResponseDTO;
@@ -22,14 +21,14 @@ import java.util.Optional;
 public class TaskHistoryManager extends BaseHistoryService<TaskHistory, Long> {
     private final TaskHistoryRepository taskHistoryRepository;
 
-    public TaskHistoryManager(ItemMapper mapper, SearchService searchService, DiffService diffService, TaskHistoryRepository repository) {
-        super(mapper, searchService, diffService);
+    public TaskHistoryManager(ItemMapper mapper, SearchService searchService, TaskHistoryRepository repository) {
+        super(mapper, searchService);
         this.taskHistoryRepository = repository;
     }
 
     @Override
     protected void updateWithAttributesFromBaseEntity(BaseHistoryEntity history, APIResponse<? extends ItemDTO> apiResponse) {
-        Task task = (Task) history.getTargetEntity();
+        Task task = (Task) history.getEntity();
         TaskHistoryDetailsResponseDTO taskHistoryDetailsResponse = (TaskHistoryDetailsResponseDTO) apiResponse.getItems().get(0);
         taskHistoryDetailsResponse.setNumber(task.getNumber());
     }

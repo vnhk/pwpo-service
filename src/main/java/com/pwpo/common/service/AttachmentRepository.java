@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public interface AttachmentRepository extends BaseRepository<Attachment, Long> {
+public interface AttachmentRepository extends PwpoBaseRepository<Attachment, Long> {
     Optional<Attachment> findByNameAndEntityId(String originalFilename, Long holderId);
 
     List<Attachment> findByEntityId(Long holderId);

@@ -1,5 +1,6 @@
 package com.pwpo.common.model.db;
 
+import com.bervan.history.model.AbstractBaseHistoryEntity;
 import com.pwpo.common.model.Constants;
 import com.pwpo.user.UserAccount;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Entity
-public class BaseHistoryEntity implements Persistable {
+public class BaseHistoryEntity implements AbstractBaseHistoryEntity<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = Constants.DB_SEQUENCE)
     @SequenceGenerator(name = Constants.DB_SEQUENCE, initialValue = Constants.DB_SEQUENCE_INIT)
@@ -21,11 +22,13 @@ public class BaseHistoryEntity implements Persistable {
     @ManyToOne
     protected UserAccount editor;
 
-    public void buildTargetEntityConnection(BaseEntity entity) {
-
+    @Override
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public BaseEntity getTargetEntity() {
-        return null;
+    @Override
+    public Long getId() {
+        return id;
     }
 }

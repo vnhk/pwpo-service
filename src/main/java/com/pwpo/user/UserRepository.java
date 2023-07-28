@@ -1,6 +1,6 @@
 package com.pwpo.user;
 
-import com.pwpo.common.service.BaseRepository;
+import com.pwpo.common.service.PwpoBaseRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public interface UserRepository extends BaseRepository<UserAccount, Long> {
+public interface UserRepository extends PwpoBaseRepository<UserAccount, Long> {
     @Query(value = "SELECT ud.* FROM User_Account as ud, User_Project as up WHERE ud.id = up.user_id AND up.project_id = ?1",
             nativeQuery = true,
             countQuery = "SELECT count(ud.*) FROM User_Account as ud, User_Project as up WHERE ud.id = up.user_id AND up.project_id = ?1")

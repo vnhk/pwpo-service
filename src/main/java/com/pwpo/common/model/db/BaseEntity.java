@@ -1,5 +1,6 @@
 package com.pwpo.common.model.db;
 
+import com.bervan.history.model.AbstractBaseEntity;
 import com.pwpo.common.model.Constants;
 import com.pwpo.common.validator.EditProcess;
 import com.pwpo.common.validator.SaveProcess;
@@ -13,13 +14,11 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
 @MappedSuperclass
-public abstract class BaseEntity implements Persistable, Serializable {
+public abstract class BaseEntity implements Serializable, AbstractBaseEntity<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = Constants.DB_SEQUENCE)
     @SequenceGenerator(name = Constants.DB_SEQUENCE, initialValue = Constants.DB_SEQUENCE_INIT)
@@ -31,7 +30,13 @@ public abstract class BaseEntity implements Persistable, Serializable {
     @CreationTimestamp
     protected LocalDateTime created;
 
-    public List<? extends Persistable> getHistoryEntities() {
-        return new ArrayList<>();
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Override
+    public Long getId() {
+        return id;
     }
 }

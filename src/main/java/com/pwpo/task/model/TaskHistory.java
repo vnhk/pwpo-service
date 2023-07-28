@@ -1,12 +1,13 @@
 package com.pwpo.task.model;
 
+import com.bervan.history.model.AbstractBaseHistoryEntity;
+import com.bervan.history.model.HistoryField;
+import com.bervan.history.model.HistoryOwnerEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.pwpo.common.enums.Priority;
 import com.pwpo.common.enums.Status;
 import com.pwpo.common.model.Constants;
-import com.pwpo.common.model.HistoryField;
-import com.pwpo.common.model.db.BaseEntity;
 import com.pwpo.common.model.db.BaseHistoryEntity;
 import com.pwpo.common.serializer.ToEnumDisplayNameSerializer;
 import com.pwpo.task.enums.TaskType;
@@ -21,7 +22,7 @@ import java.time.LocalDate;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class TaskHistory extends BaseHistoryEntity {
+public class TaskHistory extends BaseHistoryEntity implements AbstractBaseHistoryEntity<Long> {
     @Enumerated(EnumType.STRING)
     @JsonSerialize(using = ToEnumDisplayNameSerializer.class)
     @HistoryField(comparePath = "displayName")
@@ -49,18 +50,6 @@ public class TaskHistory extends BaseHistoryEntity {
     private Integer estimation;
     @ManyToOne
     @JsonIgnore
-    @HistoryField(comparable = false, isTargetEntity = true)
+    @HistoryOwnerEntity
     private Task task;
-
-    @Override
-    public void buildTargetEntityConnection(BaseEntity entity) {
-        this.task = (Task) entity;
-        task.getHistoryEntities().add(this);
-    }
-
-    @Override
-    @JsonIgnore
-    public BaseEntity getTargetEntity() {
-        return task;
-    }
 }

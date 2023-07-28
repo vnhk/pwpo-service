@@ -1,11 +1,11 @@
 package com.pwpo.task;
 
-import com.pwpo.common.service.BaseRepository;
+import com.pwpo.common.service.PwpoBaseRepository;
 import com.pwpo.task.model.Task;
 import org.springframework.data.jpa.repository.Query;
 
 
-public interface TaskRepository extends BaseRepository<Task, Long> {
+public interface TaskRepository extends PwpoBaseRepository<Task, Long> {
     @Query("SELECT type, count(project.id) from Task WHERE project.id = ?1 group by type")
     Object[] getTaskTypeChartData(Long projectId);
 

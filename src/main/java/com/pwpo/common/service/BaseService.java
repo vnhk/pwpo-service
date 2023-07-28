@@ -3,7 +3,7 @@ package com.pwpo.common.service;
 import com.pwpo.common.exception.ApiError;
 import com.pwpo.common.exception.IntegrityValidationException;
 import com.pwpo.common.model.APIResponse;
-import com.pwpo.common.model.db.Persistable;
+import com.bervan.history.model.Persistable;
 import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.common.model.edit.Editable;
 import com.pwpo.common.validator.EntitySaveIntegrityValidation;
@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 public abstract class BaseService<T extends Persistable, ID extends Serializable> {
-    private final BaseRepository<T, ID> repository;
+    private final PwpoBaseRepository<T, ID> repository;
     private final ItemMapper mapper;
     private final List<? extends EntitySaveIntegrityValidation<T>> validations;
 

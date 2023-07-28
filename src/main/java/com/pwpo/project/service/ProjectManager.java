@@ -99,7 +99,7 @@ public class ProjectManager extends BaseService<Project, Long> {
         userProject.setRole(ProjectRole.PRODUCT_OWNER);
         userProject.setProject(project);
         project.getAddedToProjects().add(userProject);
-        projectRepository.editWithoutHistory(project);
+        projectRepository.saveWithoutHistory(project);
     }
 
     @Override
@@ -155,7 +155,7 @@ public class ProjectManager extends BaseService<Project, Long> {
                 }
 
                 goalRisk.setProject(project.get());
-                goalRiskRepository.editWithoutHistory(goalRisk);
+                goalRiskRepository.saveWithoutHistory(goalRisk);
             }
         } else {
             throw new RuntimeException("Could not find project!");

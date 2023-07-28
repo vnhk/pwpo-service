@@ -5,7 +5,7 @@ import com.pwpo.TestUtils;
 import com.pwpo.common.enums.DataEnum;
 import com.pwpo.common.exception.ApiError;
 import com.pwpo.common.model.APIResponse;
-import com.pwpo.common.model.db.Persistable;
+import com.bervan.history.model.Persistable;
 import com.pwpo.common.model.diff.CompareResponseDTO;
 import com.pwpo.common.model.diff.DiffAttribute;
 import com.pwpo.common.model.diff.DiffWord;

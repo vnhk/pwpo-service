@@ -125,7 +125,7 @@ public class UserManager {
         } else {
             userProject = byUserAndProject.get();
             userProject.setRole(projectRole);
-            userProjectRepository.editWithoutHistory(userProject);
+            userProjectRepository.saveWithoutHistory(userProject);
         }
     }
 
@@ -157,7 +157,7 @@ public class UserManager {
         userAccount.setFirstName(userDTO.getFirstName());
         userAccount.setLastName(userDTO.getLastName());
 
-        userRepository.editWithoutHistory(userAccount);
+        userRepository.saveWithoutHistory(userAccount);
     }
 
     public void delete(Long id) {
@@ -167,13 +167,13 @@ public class UserManager {
     public void disable(Long id) {
         UserAccount userAccount = userRepository.findById(id).get();
         userAccount.getRoles().add(AccountRole.ROLE_DISABLED);
-        userRepository.editWithoutHistory(userAccount);
+        userRepository.saveWithoutHistory(userAccount);
     }
 
     public void enable(Long id) {
         UserAccount userAccount = userRepository.findById(id).get();
         userAccount.getRoles().remove(AccountRole.ROLE_DISABLED);
-        userRepository.editWithoutHistory(userAccount);
+        userRepository.saveWithoutHistory(userAccount);
     }
 
     public UserWithRolesDTO getLoggedUserDetails() {
@@ -216,7 +216,7 @@ public class UserManager {
 
         UserAccount userAccount = byId.get();
         userAccount.setRoles(userDTO.getRoles());
-        userRepository.editWithoutHistory(userAccount);
+        userRepository.saveWithoutHistory(userAccount);
     }
 
     public void updateContactData(UserContactDTO userDTO) {
@@ -229,7 +229,7 @@ public class UserManager {
         }
 
         loggedUser.setEmail(userDTO.getEmail());
-        userRepository.editWithoutHistory(loggedUser);
+        userRepository.saveWithoutHistory(loggedUser);
     }
 
     public void updatePersonalData(UserPersonalDataDTO userDTO) {
@@ -237,7 +237,7 @@ public class UserManager {
 
         loggedUser.setFirstName(userDTO.getFirstName());
         loggedUser.setLastName(userDTO.getLastName());
-        userRepository.editWithoutHistory(loggedUser);
+        userRepository.saveWithoutHistory(loggedUser);
     }
 
     private UserAccount getLoggedUser() {

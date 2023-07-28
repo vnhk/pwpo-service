@@ -1,6 +1,6 @@
 package com.pwpo.common.search.model;
 
-import com.pwpo.common.model.db.Persistable;
+import com.bervan.history.model.Persistable;;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

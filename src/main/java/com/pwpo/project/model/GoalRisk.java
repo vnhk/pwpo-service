@@ -2,7 +2,7 @@ package com.pwpo.project.model;
 
 import com.pwpo.common.model.Constants;
 import com.pwpo.common.model.db.BaseEntity;
-import com.pwpo.common.model.db.Persistable;
+import com.bervan.history.model.Persistable;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 

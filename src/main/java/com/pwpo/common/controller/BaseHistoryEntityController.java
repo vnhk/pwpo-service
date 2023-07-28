@@ -1,7 +1,7 @@
 package com.pwpo.common.controller;
 
 import com.pwpo.common.model.APIResponse;
-import com.pwpo.common.model.db.Persistable;
+import com.bervan.history.model.Persistable;
 import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.common.search.SearchQueryOption;
 import com.pwpo.common.service.BaseHistoryService;

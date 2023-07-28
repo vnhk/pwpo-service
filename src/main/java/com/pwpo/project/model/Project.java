@@ -1,5 +1,6 @@
 package com.pwpo.project.model;
 
+import com.bervan.history.model.HistoryCollection;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -70,15 +71,10 @@ public class Project extends AttachmentHandler {
 
     @OneToMany(mappedBy = "project")
     @JsonIgnore
-    private List<ProjectHistory> history;
+    private List<GoalRisk> goalRisk;
 
     @OneToMany(mappedBy = "project")
     @JsonIgnore
-    private List<GoalRisk> goalRisk;
-
-    @Override
-    @JsonIgnore
-    public List getHistoryEntities() {
-        return history;
-    }
+    @HistoryCollection(historyClass = ProjectHistory.class)
+    private List<ProjectHistory> history;
 }

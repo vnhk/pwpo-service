@@ -1,14 +1,14 @@
 package com.pwpo.common.service;
 
-import com.pwpo.common.diff.DiffService;
+import com.bervan.history.diff.model.DiffAttribute;
+import com.bervan.history.diff.service.DiffService;
+import com.bervan.history.model.AbstractBaseEntity;
+import com.bervan.history.model.HistoryField;
+import com.bervan.history.model.Persistable;
 import com.pwpo.common.exception.ValidationException;
 import com.pwpo.common.model.APIResponse;
-import com.pwpo.common.model.HistoryField;
-import com.pwpo.common.model.db.BaseEntity;
 import com.pwpo.common.model.db.BaseHistoryEntity;
-import com.pwpo.common.model.db.Persistable;
 import com.pwpo.common.model.diff.CompareResponseDTO;
-import com.pwpo.common.model.diff.DiffAttribute;
 import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.common.search.SearchQueryOption;
 import com.pwpo.common.search.SearchService;
@@ -28,8 +28,6 @@ import java.util.stream.Collectors;
 public abstract class BaseHistoryService<T extends Persistable, ID extends Serializable> {
     protected final ItemMapper mapper;
     protected final SearchService searchService;
-    protected final DiffService diffService;
-
 
     public APIResponse getHistory(ID id, SearchQueryOption options, Class<? extends ItemDTO> dto) {
         options.setEntityToFind(getEntityToFind());
@@ -54,7 +52,7 @@ public abstract class BaseHistoryService<T extends Persistable, ID extends Seria
     public APIResponse compare(ID entityId, ID historyId) {
         try {
             BaseHistoryEntity history = getHistoryEntity(entityId, historyId);
-            BaseEntity entity = history.getTargetEntity();
+            AbstractBaseEntity<Long> entity = history.getEntity();
 
             List<DiffAttribute> diffAttributes = new ArrayList<>();
             List<Field> historyFields = getHistoryFields(history.getClass());
@@ -62,7 +60,7 @@ public abstract class BaseHistoryService<T extends Persistable, ID extends Seria
                 Field entityField = entity.getClass().getDeclaredField(historyField.getName());
                 HistoryField annotation = historyField.getAnnotation(HistoryField.class);
                 diffAttributes.add(new DiffAttribute(historyField.getName(),
-                        diffService.diff(getHistoryFieldValue(historyField, history), getEntityFieldValue(entityField, entity, annotation))));
+                        DiffService.diff(getHistoryFieldValue(historyField, history), getEntityFieldValue(entityField, entity, annotation))));
             }
 
             CompareResponseDTO dto = CompareResponseDTO.builder().historyId(historyId)
@@ -91,7 +89,7 @@ public abstract class BaseHistoryService<T extends Persistable, ID extends Seria
      * @throws IllegalAccessException when field is not accessible
      * @throws NoSuchFieldException   when path is invalid
      */
-    private String getEntityFieldValue(Field field, BaseEntity entity, HistoryField annotation) throws IllegalAccessException, NoSuchFieldException {
+    private String getEntityFieldValue(Field field, AbstractBaseEntity entity, HistoryField annotation) throws IllegalAccessException, NoSuchFieldException {
         String path = annotation.comparePath();
         if (StringUtils.isNotBlank(path)) {
             return getFieldValueByAnnotationPath(field, entity, path);

@@ -1,5 +1,6 @@
 package com.pwpo.common.model.diff;
 
+import com.bervan.history.diff.model.DiffAttribute;
 import com.pwpo.common.model.dto.ItemDTO;
 import lombok.Builder;
 import lombok.Data;

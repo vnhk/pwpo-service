@@ -1,5 +1,8 @@
 package com.pwpo.task.model;
 
+import com.bervan.history.model.AbstractBaseEntity;
+import com.bervan.history.model.HistoryCollection;
+import com.bervan.history.model.HistorySupported;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -32,6 +35,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@HistorySupported
 public class Task extends AttachmentHandler {
     @NotNull
     @Size(min = 1, max = Constants.NUMBER_MAX)
@@ -92,11 +96,6 @@ public class Task extends AttachmentHandler {
 
     @OneToMany(mappedBy = "task")
     @JsonIgnore
+    @HistoryCollection(historyClass = TaskHistory.class)
     private List<TaskHistory> history;
-
-    @Override
-    @JsonIgnore
-    public List getHistoryEntities() {
-        return history;
-    }
 }

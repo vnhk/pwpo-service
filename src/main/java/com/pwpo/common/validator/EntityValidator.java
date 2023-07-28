@@ -1,6 +1,6 @@
 package com.pwpo.common.validator;
 
-import com.pwpo.common.model.db.BaseEntity;
+import com.bervan.history.model.AbstractBaseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolation;
@@ -18,12 +18,12 @@ public class EntityValidator {
         this.validator = Validation.buildDefaultValidatorFactory().getValidator();
     }
 
-    public void validate(BaseEntity entity, Class<? extends ValidationProcess> process) {
-        Set<ConstraintViolation<BaseEntity>> validateDefault = validator.validate(entity);
-        Set<ConstraintViolation<BaseEntity>> validateByProcess = validator.validate(entity, process);
+    public void validate(AbstractBaseEntity entity, Class<? extends ValidationProcess> process) {
+        Set<ConstraintViolation<AbstractBaseEntity>> validateDefault = validator.validate(entity);
+        Set<ConstraintViolation<AbstractBaseEntity>> validateByProcess = validator.validate(entity, process);
 
 
-        Set<ConstraintViolation<BaseEntity>> result = new HashSet<>();
+        Set<ConstraintViolation<AbstractBaseEntity>> result = new HashSet<>();
         result.addAll(validateDefault);
         result.addAll(validateByProcess);
 
