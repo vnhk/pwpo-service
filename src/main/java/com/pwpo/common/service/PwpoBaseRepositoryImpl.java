@@ -1,16 +1,22 @@
 package com.pwpo.common.service;
 
 import com.bervan.history.model.AbstractBaseEntity;
+import com.bervan.history.model.AbstractBaseHistoryEntity;
 import com.bervan.history.model.BaseRepositoryImpl;
 import com.bervan.history.model.Persistable;
 import com.pwpo.common.exception.ValidationException;
 import com.pwpo.common.model.db.BaseEntity;
+import com.pwpo.common.model.db.BaseHistoryEntity;
 import com.pwpo.common.model.edit.Editable;
 import com.pwpo.common.validator.EditProcess;
 import com.pwpo.common.validator.EntityValidator;
 import com.pwpo.common.validator.SaveProcess;
+import com.pwpo.task.model.TaskHistory;
+import com.pwpo.user.UserAccount;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -69,6 +75,20 @@ public class PwpoBaseRepositoryImpl<T extends AbstractBaseEntity<ID>, ID extends
             log.error("Could not edit entity!", ex);
             throw new RuntimeException("Could not edit entity!");
         }
+    }
+
+    @Override
+    protected void historyPreHistorySave(AbstractBaseHistoryEntity<ID> history) {
+        ((BaseHistoryEntity) history).setEditor(getLoggedUser());
+        super.historyPreHistorySave(history);
+    }
+
+    private UserAccount getLoggedUser() {
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return (UserAccount) entityManager.createQuery("SELECT u FROM UserAccount u where u.nick = :username ")
+                .setParameter("username", principal.getUsername())
+                .getSingleResult();
     }
 
     private void update(BaseEntity entity, Editable<ID> editable) throws NoSuchFieldException, IllegalAccessException {

@@ -31,4 +31,14 @@ public class BaseHistoryEntity implements AbstractBaseHistoryEntity<Long> {
     public Long getId() {
         return id;
     }
+
+    @Override
+    public LocalDateTime getUpdateDate() {
+        return expired;
+    }
+
+    @Override
+    public void setUpdateDate(LocalDateTime updateDate) {
+        this.expired = updateDate;
+    }
 }

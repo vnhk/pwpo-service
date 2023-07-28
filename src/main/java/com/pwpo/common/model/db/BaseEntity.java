@@ -31,6 +31,16 @@ public abstract class BaseEntity implements Serializable, AbstractBaseEntity<Lon
     protected LocalDateTime created;
 
     @Override
+    public LocalDateTime getModificationDate() {
+        return updated;
+    }
+
+    @Override
+    public void setModificationDate(LocalDateTime modificationDate) {
+        this.updated = modificationDate;
+    }
+
+    @Override
     public void setId(Long id) {
         this.id = id;
     }
