@@ -1,8 +1,8 @@
 package com.pwpo.task.service;
 
+import com.bervan.history.model.AbstractBaseHistoryEntity;
 import com.pwpo.common.model.APIResponse;
 import com.pwpo.common.model.QueryFormat;
-import com.pwpo.common.model.db.BaseHistoryEntity;
 import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.common.search.SearchService;
 import com.pwpo.common.service.BaseHistoryService;
@@ -27,14 +27,14 @@ public class TaskHistoryManager extends BaseHistoryService<TaskHistory, Long> {
     }
 
     @Override
-    protected void updateWithAttributesFromBaseEntity(BaseHistoryEntity history, APIResponse<? extends ItemDTO> apiResponse) {
+    protected void updateWithAttributesFromBaseEntity(AbstractBaseHistoryEntity<Long> history, APIResponse<? extends ItemDTO> apiResponse) {
         Task task = (Task) history.getEntity();
         TaskHistoryDetailsResponseDTO taskHistoryDetailsResponse = (TaskHistoryDetailsResponseDTO) apiResponse.getItems().get(0);
         taskHistoryDetailsResponse.setNumber(task.getNumber());
     }
 
     @Override
-    protected Optional<? extends BaseHistoryEntity> getHistory(Long entityId, Long historyId) {
+    protected Optional<? extends AbstractBaseHistoryEntity<Long>> getHistory(Long entityId, Long historyId) {
         return taskHistoryRepository.findByTaskIdAndId(entityId, historyId);
     }
 

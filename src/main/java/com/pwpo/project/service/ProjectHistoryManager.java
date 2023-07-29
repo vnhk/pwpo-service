@@ -1,5 +1,6 @@
 package com.pwpo.project.service;
 
+import com.bervan.history.model.AbstractBaseHistoryEntity;
 import com.pwpo.common.model.APIResponse;
 import com.pwpo.common.model.QueryFormat;
 import com.pwpo.common.model.db.BaseHistoryEntity;
@@ -25,12 +26,12 @@ public class ProjectHistoryManager extends BaseHistoryService<ProjectHistory, Lo
     }
 
     @Override
-    protected void updateWithAttributesFromBaseEntity(BaseHistoryEntity history, APIResponse<? extends ItemDTO> apiResponse) {
+    protected void updateWithAttributesFromBaseEntity(AbstractBaseHistoryEntity<Long> history, APIResponse<? extends ItemDTO> apiResponse) {
 
     }
 
     @Override
-    protected Optional<? extends BaseHistoryEntity> getHistory(Long entityId, Long historyId) {
+    protected Optional<? extends AbstractBaseHistoryEntity<Long>> getHistory(Long entityId, Long historyId) {
         return projectHistoryRepository.findByProjectIdAndId(entityId, historyId);
     }
 
