@@ -1,7 +1,6 @@
 package com.pwpo.project.dto;
 
 import com.pwpo.common.enums.Status;
-import com.pwpo.common.model.Constants;
 import com.pwpo.common.model.db.BaseHistoryEntity;
 import com.pwpo.common.model.dto.ItemDTO;
 import com.pwpo.common.model.edit.Editable;
@@ -10,7 +9,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Setter

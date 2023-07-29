@@ -1,6 +1,7 @@
 package com.pwpo.project.model;
 
 import com.bervan.history.model.HistoryCollection;
+import com.bervan.history.model.HistorySupported;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -27,6 +28,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@HistorySupported
 public class Project extends AttachmentHandler {
     @Size(min = 1, max = Constants.SUMMARY_MAX)
     @NotNull
