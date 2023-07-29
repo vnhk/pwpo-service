@@ -2,6 +2,8 @@ package com.pwpo.project.model;
 
 import com.bervan.history.model.AbstractBaseHistoryEntity;
 import com.bervan.history.model.HistoryField;
+import com.bervan.history.model.HistoryOwnerEntity;
+import com.bervan.history.model.HistorySupported;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.pwpo.common.enums.Status;
@@ -18,6 +20,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@HistorySupported
 public class ProjectHistory extends BaseHistoryEntity implements AbstractBaseHistoryEntity<Long> {
     @HistoryField
     private String summary;
@@ -32,10 +35,10 @@ public class ProjectHistory extends BaseHistoryEntity implements AbstractBaseHis
     private String name;
     @HistoryField
     private String shortForm;
-    @HistoryField(savePath = "nick", comparePath = "nick")
+    @HistoryField(savePath = "owner.nick", comparePath = "nick")
     private String owner;
     @ManyToOne
     @JsonIgnore
-    @HistoryField(comparable = false, isTargetEntity = true)
+    @HistoryOwnerEntity
     private Project project;
 }

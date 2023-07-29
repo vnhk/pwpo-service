@@ -1,14 +1,14 @@
 package com.pwpo.integration.stepsimpl;
 
+import com.bervan.history.diff.model.DiffAttribute;
+import com.bervan.history.diff.model.DiffWord;
+import com.bervan.history.model.Persistable;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pwpo.TestUtils;
 import com.pwpo.common.enums.DataEnum;
 import com.pwpo.common.exception.ApiError;
 import com.pwpo.common.model.APIResponse;
-import com.bervan.history.model.Persistable;
 import com.pwpo.common.model.diff.CompareResponseDTO;
-import com.pwpo.common.model.diff.DiffAttribute;
-import com.pwpo.common.model.diff.DiffWord;
 import com.pwpo.common.model.dto.HistoryReponseDTO;
 import com.pwpo.common.search.model.SortDirection;
 import io.cucumber.datatable.DataTable;
