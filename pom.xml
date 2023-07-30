@@ -42,6 +42,11 @@
             <artifactId>history-tables-core</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.bervan</groupId>
+            <artifactId>ie-entities</artifactId>
+            <version>1.0.0</version>
+        </dependency>
         <!--	Parameter names	-->
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>

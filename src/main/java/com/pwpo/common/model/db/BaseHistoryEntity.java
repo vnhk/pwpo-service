@@ -1,6 +1,7 @@
 package com.pwpo.common.model.db;
 
 import com.bervan.history.model.AbstractBaseHistoryEntity;
+import com.bervan.ieentities.ExcelIEEntity;
 import com.pwpo.common.model.Constants;
 import com.pwpo.user.UserAccount;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 @Setter
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Entity
-public class BaseHistoryEntity implements AbstractBaseHistoryEntity<Long> {
+public class BaseHistoryEntity implements AbstractBaseHistoryEntity<Long>, ExcelIEEntity<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = Constants.DB_SEQUENCE)
     @SequenceGenerator(name = Constants.DB_SEQUENCE, initialValue = Constants.DB_SEQUENCE_INIT)

@@ -1,6 +1,5 @@
 package com.pwpo.task.model;
 
-import com.bervan.history.model.AbstractBaseHistoryEntity;
 import com.bervan.history.model.HistoryField;
 import com.bervan.history.model.HistoryOwnerEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -22,7 +21,7 @@ import java.time.LocalDate;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class TaskHistory extends BaseHistoryEntity implements AbstractBaseHistoryEntity<Long> {
+public class TaskHistory extends BaseHistoryEntity {
     @Enumerated(EnumType.STRING)
     @JsonSerialize(using = ToEnumDisplayNameSerializer.class)
     @HistoryField(comparePath = "displayName")

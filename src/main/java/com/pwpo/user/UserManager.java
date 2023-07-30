@@ -21,10 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -215,7 +212,7 @@ public class UserManager {
         }
 
         UserAccount userAccount = byId.get();
-        userAccount.setRoles(userDTO.getRoles());
+        userAccount.setRoles(cleanRoles(userDTO));
         userRepository.saveWithoutHistory(userAccount);
     }
 
@@ -244,5 +241,11 @@ public class UserManager {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = principal.getUsername();
         return userRepository.findByNick(username).get();
+    }
+
+    private Set<AccountRole> cleanRoles(UserDTO userDTO) {
+        Set<AccountRole> roles = userDTO.getRoles();
+        roles.remove(AccountRole.ROLE_SUPER_ADMIN);
+        return roles;
     }
 }

@@ -1,6 +1,5 @@
 package com.pwpo.project.model;
 
-import com.bervan.history.model.AbstractBaseHistoryEntity;
 import com.bervan.history.model.HistoryField;
 import com.bervan.history.model.HistoryOwnerEntity;
 import com.bervan.history.model.HistorySupported;
@@ -21,7 +20,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @HistorySupported
-public class ProjectHistory extends BaseHistoryEntity implements AbstractBaseHistoryEntity<Long> {
+public class ProjectHistory extends BaseHistoryEntity {
     @HistoryField
     private String summary;
     @Enumerated(EnumType.STRING)

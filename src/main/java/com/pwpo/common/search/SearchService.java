@@ -83,33 +83,38 @@ public class SearchService {
         return new SearchResponse(resultList, resultList.size(), page, allFound);
     }
 
-    public SearchResponse search(SearchRequest searchRequest, SearchQueryOption options) throws NoSuchFieldException {
-        init();
-        validateOptions(options);
-        Class<? extends BaseEntity> entityToFind = getEntityToFind(options);
+    public SearchResponse search(SearchRequest searchRequest, SearchQueryOption options) {
+        try {
+            init();
+            validateOptions(options);
+            Class<? extends BaseEntity> entityToFind = getEntityToFind(options);
 
-        SortDirection sortDirection = options.getSortDirection();
-        String sortField = options.getSortField();
-        Integer page = options.getPage();
-        Integer pageSize = options.getPageSize();
+            SortDirection sortDirection = options.getSortDirection();
+            String sortField = options.getSortField();
+            Integer page = options.getPage();
+            Integer pageSize = options.getPageSize();
 
-        CriteriaQuery<? extends BaseEntity> criteriaQuery = criteriaBuilder.createQuery(entityToFind);
-        Root<? extends BaseEntity> root = criteriaQuery.from(entityToFind);
+            CriteriaQuery<? extends BaseEntity> criteriaQuery = criteriaBuilder.createQuery(entityToFind);
+            Root<? extends BaseEntity> root = criteriaQuery.from(entityToFind);
 
-        if (searchRequest != null && searchRequest.groups != null && searchRequest.groups.size() > 0) {
-            criteriaQuery.where(buildMainPredicate(searchRequest, root, entityToFind));
+            if (searchRequest != null && searchRequest.groups != null && searchRequest.groups.size() > 0) {
+                criteriaQuery.where(buildMainPredicate(searchRequest, root, entityToFind));
+            }
+
+            criteriaQuery.orderBy(new OrderImpl(SearchOperationsHelper.getExpression(root, sortField), isAscendingSortDirection(sortDirection), nullFirst));
+
+            TypedQuery<? extends BaseEntity> resultQuery = entityManager.createQuery(criteriaQuery);
+            Integer allFound = getHowManyItemsExist(criteriaQuery, root);
+
+            resultQuery.setFirstResult(pageSize * (page - 1));
+            resultQuery.setMaxResults(pageSize);
+            List<? extends BaseEntity> resultList = resultQuery.getResultList();
+
+            return new SearchResponse(resultList, resultList.size(), page, allFound);
+        } catch (Exception e) {
+            log.error("Could not perform search!", e);
+            throw new RuntimeException("Could not perform search!");
         }
-
-        criteriaQuery.orderBy(new OrderImpl(SearchOperationsHelper.getExpression(root, sortField), isAscendingSortDirection(sortDirection), nullFirst));
-
-        TypedQuery<? extends BaseEntity> resultQuery = entityManager.createQuery(criteriaQuery);
-        Integer allFound = getHowManyItemsExist(criteriaQuery, root);
-
-        resultQuery.setFirstResult(pageSize * (page - 1));
-        resultQuery.setMaxResults(pageSize);
-        List<? extends BaseEntity> resultList = resultQuery.getResultList();
-
-        return new SearchResponse(resultList, resultList.size(), page, allFound);
     }
 
     private void validateOptions(SearchQueryOption options) {

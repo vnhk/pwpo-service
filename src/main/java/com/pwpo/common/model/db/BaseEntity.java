@@ -1,6 +1,7 @@
 package com.pwpo.common.model.db;
 
 import com.bervan.history.model.AbstractBaseEntity;
+import com.bervan.ieentities.ExcelIEEntity;
 import com.pwpo.common.model.Constants;
 import com.pwpo.common.validator.EditProcess;
 import com.pwpo.common.validator.SaveProcess;
@@ -18,7 +19,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @MappedSuperclass
-public abstract class BaseEntity implements Serializable, AbstractBaseEntity<Long> {
+public abstract class BaseEntity implements Serializable, AbstractBaseEntity<Long>, ExcelIEEntity<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = Constants.DB_SEQUENCE)
     @SequenceGenerator(name = Constants.DB_SEQUENCE, initialValue = Constants.DB_SEQUENCE_INIT)
