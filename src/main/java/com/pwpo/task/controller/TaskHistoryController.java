@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/tasks/{taskId}/history")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 public class TaskHistoryController extends BaseHistoryEntityController<TaskHistory, Long> {
     public TaskHistoryController(TaskHistoryManager historyService) {
         super(historyService);

@@ -19,7 +19,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping(path = "/attachments/{holderId}")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 public class AttachmentController {
     private final AttachmentService attachmentService;
 

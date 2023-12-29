@@ -16,7 +16,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping(path = "/ie-entities")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @PreAuthorize("@permissionEvaluator.activatedAndHasRole('SUPER_ADMIN')")
 public class ImportExportController {
     private final IEDataService ieDataService;

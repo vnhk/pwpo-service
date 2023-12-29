@@ -24,7 +24,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(path = "/projects")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 public class ProjectController extends BaseEntityController<Project, Long> {
     private final ProjectManager projectManager;
     private final UserManager userManager;

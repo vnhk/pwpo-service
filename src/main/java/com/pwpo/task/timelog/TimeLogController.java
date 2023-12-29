@@ -13,7 +13,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping(path = "/tasks/task/{id}/timelogs")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 public class TimeLogController {
     private final TimeLogManager timeLogManager;
 

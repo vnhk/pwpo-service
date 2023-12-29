@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/projects/{projectId}/history")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 public class ProjectHistoryController extends BaseHistoryEntityController<ProjectHistory, Long> {
     public ProjectHistoryController(ProjectHistoryManager historyService) {
         super(historyService);
