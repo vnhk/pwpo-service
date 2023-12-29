@@ -18,7 +18,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/tasks")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT}
+        , exposedHeaders = "*")
 public class TaskController extends BaseEntityController<Task, Long> {
     private final TaskManager taskManager;
 

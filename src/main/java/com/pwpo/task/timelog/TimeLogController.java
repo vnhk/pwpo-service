@@ -13,7 +13,8 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping(path = "/tasks/task/{id}/timelogs")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT}
+        , exposedHeaders = "*")
 public class TimeLogController {
     private final TimeLogManager timeLogManager;
 

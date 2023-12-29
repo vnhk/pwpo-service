@@ -19,7 +19,8 @@ import java.io.IOException;
 @RestController
 @RequestMapping(path = "/attachments/{holderId}")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT}
+        , exposedHeaders = "*")
 public class AttachmentController {
     private final AttachmentService attachmentService;
 

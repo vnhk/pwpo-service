@@ -14,7 +14,8 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(path = "/projects/{projectId}/goals-and-risks")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT}
+        , exposedHeaders = "*")
 public class ProjectGoalRiskController {
     private final ProjectManager projectManager;
 
