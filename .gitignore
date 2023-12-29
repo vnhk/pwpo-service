@@ -33,5 +33,5 @@ build/
 ### VS Code ###
 .vscode/
 /attachments-pwpo/
-/src/main/resources/application-prod.properties
+/src/main/resources/application-production.properties
 /.mvn/wrapper/
