@@ -34,3 +34,4 @@ build/
 .vscode/
 /attachments-pwpo/
 /src/main/resources/application-prod.properties
+/.mvn/wrapper/
