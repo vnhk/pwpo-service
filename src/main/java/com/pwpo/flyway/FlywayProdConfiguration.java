@@ -14,12 +14,6 @@ public class FlywayProdConfiguration {
 
     @Autowired
     public FlywayProdConfiguration(DataSource dataSource) throws SQLException {
-        try {
-            dataSource.getConnection().prepareStatement("DELETE FROM flyway_schema_history").execute();
-        } catch (Exception ignored) {
-
-        }
-
         Flyway.configure().locations("db/dev")
                 .baselineOnMigrate(true)
                 .dataSource(dataSource)
