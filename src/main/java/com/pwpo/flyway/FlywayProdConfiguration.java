@@ -14,7 +14,7 @@ public class FlywayProdConfiguration {
 
     @Autowired
     public FlywayProdConfiguration(DataSource dataSource) throws SQLException {
-        Flyway.configure().locations("db/dev")
+        Flyway.configure().locations("db/prod")
                 .baselineOnMigrate(true)
                 .dataSource(dataSource)
                 .load()
