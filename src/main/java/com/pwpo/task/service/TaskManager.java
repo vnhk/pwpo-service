@@ -15,10 +15,15 @@ import com.pwpo.common.service.ItemMapper;
 import com.pwpo.common.validator.EntitySaveIntegrityValidation;
 import com.pwpo.project.model.Project;
 import com.pwpo.project.repository.ProjectRepository;
+import com.pwpo.task.TaskRelationshipRepository;
 import com.pwpo.task.TaskRepository;
 import com.pwpo.task.dto.EditTaskRequestDTO;
+import com.pwpo.task.dto.TaskChildResponseDTO;
+import com.pwpo.task.dto.TaskPrimaryResponseDTO;
+import com.pwpo.task.enums.TaskRelationshipType;
 import com.pwpo.task.model.EstimableDTO;
 import com.pwpo.task.model.Task;
+import com.pwpo.task.model.TaskRelationship;
 import com.pwpo.user.UserAccount;
 import com.pwpo.user.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -27,9 +32,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -40,16 +43,18 @@ public class TaskManager extends BaseService<Task, Long> {
     private final ProjectRepository projectRepository;
     private final SearchService searchService;
     private final UserRepository userRepository;
+    private final TaskRelationshipRepository taskRelationshipRepository;
 
     public TaskManager(ItemMapper mapper, TaskRepository taskRepository, ProjectRepository projectRepository,
                        SearchService searchService, List<? extends EntitySaveIntegrityValidation<Task>> validations,
-                       UserRepository userRepository) {
+                       UserRepository userRepository, TaskRelationshipRepository taskRelationshipRepository) {
         super(taskRepository, mapper, validations);
         this.mapper = mapper;
         this.taskRepository = taskRepository;
         this.projectRepository = projectRepository;
         this.searchService = searchService;
         this.userRepository = userRepository;
+        this.taskRelationshipRepository = taskRelationshipRepository;
     }
 
     public APIResponse getTasksByProjectId(String id, SearchQueryOption options, Class<? extends ItemDTO> dtoClass) {
@@ -158,12 +163,7 @@ public class TaskManager extends BaseService<Task, Long> {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserAccount userAccount = userRepository.findByNick(principal.getUsername()).get();
 
-        Optional<Task> taskOptional = taskRepository.findById(id);
-        if (taskOptional.isEmpty()) {
-            throw new NotFoundException("Could not find task!");
-        }
-
-        Task task = taskOptional.get();
+        Task task = getTask(id);
         task.setAssignee(userAccount);
 
         taskRepository.edit(adaptTaskToEditable(task));
@@ -187,13 +187,7 @@ public class TaskManager extends BaseService<Task, Long> {
     }
 
     public void changeStatus(EditTaskRequestDTO<Long> editTaskRequestDTO) {
-
-        Optional<Task> taskOptional = taskRepository.findById(editTaskRequestDTO.getId());
-        if (taskOptional.isEmpty()) {
-            throw new NotFoundException("Could not find task!");
-        }
-
-        Task task = taskOptional.get();
+        Task task = getTask(editTaskRequestDTO.getId());
 
         if (editTaskRequestDTO.getStatus().equals(task.getStatus())) {
             return;
@@ -202,5 +196,56 @@ public class TaskManager extends BaseService<Task, Long> {
         task.setStatus(editTaskRequestDTO.getStatus());
 
         taskRepository.edit(adaptTaskToEditable(task));
+    }
+
+    public void appendSubTask(Long taskId, Long subTaskId, TaskRelationshipType type) {
+        if (Objects.equals(taskId, subTaskId)) {
+            throw new ValidationException("Task cannot be subtask: Task = Sub Task");
+        }
+        Task task = getTask(taskId);
+        Task subTask = getTask(subTaskId);
+        Optional<TaskRelationship> existingRelationShip = task.getRelationships().stream()
+                .filter(e -> e.getParent().getId().equals(task.getId()))
+                .filter(e -> e.getType() == type)
+                .filter(e -> e.getChild().getId().equals(subTask.getId())).findAny();
+        if (existingRelationShip.isPresent()) {
+            throw new ValidationException("Task cannot be subtask: Task = Sub Task");
+        }
+
+        TaskRelationship taskRelationship = new TaskRelationship();
+        taskRelationship.setParent(task);
+        taskRelationship.setChild(subTask);
+        taskRelationship.setType(type);
+        taskRelationship = taskRelationshipRepository.save(taskRelationship);
+        task.getRelationships().add(taskRelationship);
+        subTask.getRelationships().add(taskRelationship);
+
+        taskRepository.save(task);
+        taskRepository.save(subTask);
+    }
+
+    private Task getTask(Long id) {
+        Optional<Task> subTaskOptional = taskRepository.findById(id);
+        if (subTaskOptional.isEmpty()) {
+            throw new NotFoundException("Could not find task!");
+        }
+
+        return subTaskOptional.get();
+    }
+
+    public APIResponse getTaskChildrenStructure(Long id) {
+        List<TaskChildResponseDTO> response = new ArrayList<>();
+        Task task = getTask(id);
+        List<TaskRelationship> children = taskRelationshipRepository.findAllByParentAndType(task, TaskRelationshipType.CHILD_IS_PART_OF);
+
+        for (TaskRelationship child : children) {
+            ItemDTO itemDTO = mapper.mapToDTO(child.getChild(), TaskPrimaryResponseDTO.class);
+            TaskChildResponseDTO r = TaskChildResponseDTO.builder()
+                    .taskId(id)
+                    .type(child.getType())
+                    .subTask((TaskPrimaryResponseDTO) itemDTO).build();
+            response.add(r);
+        }
+        return new APIResponse(response, response.size(), 0, response.size());
     }
 }

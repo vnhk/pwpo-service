@@ -106,3 +106,7 @@ VALUES (311, '2023-05-15',
         'This task involves implementing an in-game store where players can purchase virtual items, upgrades, or other content using real money or in-game currency. The implementation must follow industry standards and best practices for security and user data privacy. The developer must also ensure that the store is balanced and does not give players who spend money an unfair advantage over those who do not. The transactions must be seamless and user-friendly, and the store interface must match the game''s visual style.',
         '2023-11-15', 1440, 'TF-3098', 'HIGH', 'NEW',
         'In-game store', 'FEATURE', '2', '2', '6', '3', '2023-05-15');
+
+
+INSERT INTO TASK_RELATIONSHIP (ID, TYPE, PARENT_ID, CHILD_ID) VALUES(1, 'CHILD_IS_PART_OF', 320, 319);
+INSERT INTO TASK_RELATIONSHIP (ID, TYPE, PARENT_ID, CHILD_ID) VALUES(2, 'CHILD_IS_PART_OF', 320, 318);

@@ -1,6 +1,5 @@
 package com.pwpo.task.model;
 
-import com.bervan.history.model.AbstractBaseEntity;
 import com.bervan.history.model.HistoryCollection;
 import com.bervan.history.model.HistorySupported;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -25,6 +24,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -93,6 +93,9 @@ public class Task extends AttachmentHandler {
     @OneToMany(mappedBy = "task")
     @JsonIgnore
     private List<TimeLog> timeLogs;
+
+    @OneToMany
+    private List<TaskRelationship> relationships = new ArrayList<>();
 
     @OneToMany(mappedBy = "task")
     @JsonIgnore
