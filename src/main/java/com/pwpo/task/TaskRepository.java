@@ -4,6 +4,8 @@ import com.pwpo.common.service.PwpoBaseRepository;
 import com.pwpo.task.model.Task;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Optional;
+
 
 public interface TaskRepository extends PwpoBaseRepository<Task, Long> {
     @Query("SELECT type, count(project.id) from Task WHERE project.id = ?1 group by type")
@@ -18,4 +20,6 @@ public interface TaskRepository extends PwpoBaseRepository<Task, Long> {
     @Query("SELECT sum(log.loggedTimeInMinutes) from Task task, TimeLog log " +
             "WHERE task.project.id = ?1 AND log.task.id = task.id")
     Long getProjectSumLoggedTimeChartData(Long projectId);
+
+    Optional<Task> findByNumber(String number);
 }

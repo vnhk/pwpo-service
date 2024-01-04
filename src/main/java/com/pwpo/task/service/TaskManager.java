@@ -198,12 +198,19 @@ public class TaskManager extends BaseService<Task, Long> {
         taskRepository.edit(adaptTaskToEditable(task));
     }
 
-    public void appendSubTask(Long taskId, Long subTaskId, TaskRelationshipType type) {
-        if (Objects.equals(taskId, subTaskId)) {
-            throw new ValidationException("Task cannot be subtask: Task = Sub Task");
+    public void appendSubTask(Long taskId, String subTaskNumber, TaskRelationshipType type) {
+        Task subTask = getTask(subTaskNumber);
+
+        if (Objects.equals(taskId, subTask.getId())) {
+            throw new ValidationException("Task cannot be subtask: Task cannot be connected to itself!");
         }
+
         Task task = getTask(taskId);
-        Task subTask = getTask(subTaskId);
+
+        if (!Objects.equals(task.getProject().getId(), subTask.getProject().getId())) {
+            throw new ValidationException("Task cannot be subtask: Tasks are from different projects!");
+        }
+
         Optional<TaskRelationship> existingRelationShip = task.getRelationships().stream()
                 .filter(e -> e.getParent().getId().equals(task.getId()))
                 .filter(e -> e.getType() == type)
@@ -219,9 +226,15 @@ public class TaskManager extends BaseService<Task, Long> {
         taskRelationship = taskRelationshipRepository.save(taskRelationship);
         task.getRelationships().add(taskRelationship);
         subTask.getRelationships().add(taskRelationship);
+    }
 
-        taskRepository.save(task);
-        taskRepository.save(subTask);
+    private Task getTask(String subTaskNumber) {
+        Optional<Task> subTaskOptional = taskRepository.findByNumber(subTaskNumber);
+        if (subTaskOptional.isEmpty()) {
+            throw new NotFoundException("Could not find task!");
+        }
+
+        return subTaskOptional.get();
     }
 
     private Task getTask(Long id) {
