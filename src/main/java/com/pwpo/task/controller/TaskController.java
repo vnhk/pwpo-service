@@ -34,10 +34,10 @@ public class TaskController extends BaseEntityController<Task, Long> {
         return new ResponseEntity<>(taskManager.getTaskById(id, (Class<? extends ItemDTO>) Class.forName(dto)), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/task/{id}/children")
+    @GetMapping(path = "/task/{id}/one-lvl-structure")
     @PreAuthorize("(@permissionEvaluator.activatedAndHasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#id)) or @permissionEvaluator.activatedAndHasRole('MANAGER')")
-    public ResponseEntity<APIResponse> getTaskChildrenStructure(@PathVariable Long id) {
-        return new ResponseEntity<>(taskManager.getTaskChildrenStructure(id), HttpStatus.OK);
+    public ResponseEntity<APIResponse> getOneLvlStructure(@PathVariable Long id) {
+        return new ResponseEntity<>(taskManager.getTaskOneLevelStructure(id), HttpStatus.OK);
     }
 
     @PostMapping

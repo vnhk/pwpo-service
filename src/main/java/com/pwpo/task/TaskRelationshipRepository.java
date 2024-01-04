@@ -12,4 +12,5 @@ import java.util.Optional;
 
 public interface TaskRelationshipRepository extends PwpoBaseRepository<TaskRelationship, Long> {
     List<TaskRelationship> findAllByParentAndType(Task parent, TaskRelationshipType type);
+    List<TaskRelationship> findAllByChildAndType(Task child, TaskRelationshipType type);
 }

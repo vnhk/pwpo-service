@@ -7,8 +7,8 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class TaskChildResponseDTO implements ItemDTO {
-    private final Long taskId;
+public class TaskStructureResponseDTO implements ItemDTO {
     private final TaskRelationshipType type;
-    private final TaskPrimaryResponseDTO subTask;
+    private final TaskPrimaryResponseDTO parent;
+    private final TaskPrimaryResponseDTO child;
 }

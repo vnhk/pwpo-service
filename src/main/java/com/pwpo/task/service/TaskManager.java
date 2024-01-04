@@ -18,8 +18,8 @@ import com.pwpo.project.repository.ProjectRepository;
 import com.pwpo.task.TaskRelationshipRepository;
 import com.pwpo.task.TaskRepository;
 import com.pwpo.task.dto.EditTaskRequestDTO;
-import com.pwpo.task.dto.TaskChildResponseDTO;
 import com.pwpo.task.dto.TaskPrimaryResponseDTO;
+import com.pwpo.task.dto.TaskStructureResponseDTO;
 import com.pwpo.task.enums.TaskRelationshipType;
 import com.pwpo.task.model.EstimableDTO;
 import com.pwpo.task.model.Task;
@@ -233,17 +233,30 @@ public class TaskManager extends BaseService<Task, Long> {
         return subTaskOptional.get();
     }
 
-    public APIResponse getTaskChildrenStructure(Long id) {
-        List<TaskChildResponseDTO> response = new ArrayList<>();
+    public APIResponse getTaskOneLevelStructure(Long id) {
+        List<TaskStructureResponseDTO> response = new ArrayList<>();
         Task task = getTask(id);
         List<TaskRelationship> children = taskRelationshipRepository.findAllByParentAndType(task, TaskRelationshipType.CHILD_IS_PART_OF);
+        List<TaskRelationship> parents = taskRelationshipRepository.findAllByChildAndType(task, TaskRelationshipType.CHILD_IS_PART_OF);
+        ItemDTO paramTask = mapper.mapToDTO(task, TaskPrimaryResponseDTO.class);
+
+        if (parents.size() > 1) {
+            throw new ValidationException("Task structure is incorrect! More than one parent found!");
+        } else if (parents.size() == 1) {
+            ItemDTO itemDTO = mapper.mapToDTO(parents.get(0).getParent(), TaskPrimaryResponseDTO.class);
+            TaskStructureResponseDTO r = TaskStructureResponseDTO.builder()
+                    .type(TaskRelationshipType.CHILD_IS_PART_OF)
+                    .parent((TaskPrimaryResponseDTO) itemDTO)
+                    .child((TaskPrimaryResponseDTO) paramTask).build();
+            response.add(r);
+        }
 
         for (TaskRelationship child : children) {
             ItemDTO itemDTO = mapper.mapToDTO(child.getChild(), TaskPrimaryResponseDTO.class);
-            TaskChildResponseDTO r = TaskChildResponseDTO.builder()
-                    .taskId(id)
+            TaskStructureResponseDTO r = TaskStructureResponseDTO.builder()
                     .type(child.getType())
-                    .subTask((TaskPrimaryResponseDTO) itemDTO).build();
+                    .parent((TaskPrimaryResponseDTO) paramTask)
+                    .child((TaskPrimaryResponseDTO) itemDTO).build();
             response.add(r);
         }
         return new APIResponse(response, response.size(), 0, response.size());
