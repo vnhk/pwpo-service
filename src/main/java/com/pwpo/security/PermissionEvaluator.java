@@ -78,6 +78,10 @@ public class PermissionEvaluator {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<Task> task = taskRepository.findById(taskId);
 
+        return hasAccessToProjectTask(principal, task);
+    }
+
+    private boolean hasAccessToProjectTask(User principal, Optional<Task> task) {
         if (task.isPresent()) {
             List<UserProject> usersAddedToTheProject = task.get().getProject().getAddedToProjects();
 
@@ -87,6 +91,13 @@ public class PermissionEvaluator {
         }
 
         return false;
+    }
+
+    public boolean hasAccessToProjectTask(String taskNumber) {
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<Task> task = taskRepository.findByNumber(taskNumber);
+
+        return hasAccessToProjectTask(principal, task);
     }
 
     public boolean hasAccessToProject(Project project) {

@@ -46,11 +46,11 @@ public class TaskController extends BaseEntityController<Task, Long> {
         return new ResponseEntity<>(taskManager.create(body, TaskPrimaryResponseDTO.class), HttpStatus.OK);
     }
 
-    @PostMapping("/task/{taskId}/append-subtask/{subTaskNumber}")
-    @PreAuthorize("(@permissionEvaluator.activatedAndHasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#taskId)) or @permissionEvaluator.activatedAndHasRole('MANAGER')")
-    public ResponseEntity appendSubTask(@RequestParam TaskRelationshipType type, @PathVariable String subTaskNumber, @PathVariable Long taskId) {
+    @PostMapping("/task/{taskNumber}/append-subtask/{subTaskNumber}")
+    @PreAuthorize("(@permissionEvaluator.activatedAndHasRole('USER') && @permissionEvaluator.hasAccessToProjectTask(#taskNumber)) or @permissionEvaluator.activatedAndHasRole('MANAGER')")
+    public ResponseEntity appendSubTask(@RequestParam TaskRelationshipType type, @PathVariable String subTaskNumber, @PathVariable String taskNumber) {
         // TODO: 03/01/2024 improve it by adding transaction between endpoints (create+append in one transaction)
-        taskManager.appendSubTask(taskId, subTaskNumber, type);
+        taskManager.createRelationship(taskNumber, subTaskNumber, type);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

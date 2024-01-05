@@ -94,11 +94,24 @@ public class Task extends AttachmentHandler {
     @JsonIgnore
     private List<TimeLog> timeLogs;
 
-    @OneToMany
-    private List<TaskRelationship> relationships = new ArrayList<>();
+    @OneToMany(mappedBy = "child", fetch = FetchType.EAGER)
+    @JsonIgnore
+    private List<TaskRelationship> childRelationships = new ArrayList<>();
+
+    @OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)
+    @JsonIgnore
+    private List<TaskRelationship> parentRelationships = new ArrayList<>();
 
     @OneToMany(mappedBy = "task")
     @JsonIgnore
     @HistoryCollection(historyClass = TaskHistory.class)
     private List<TaskHistory> history;
+
+    @JsonIgnore
+    public List<TaskRelationship> getRelationships() {
+        List<TaskRelationship> r = new ArrayList<>();
+        r.addAll(childRelationships != null ? childRelationships : new ArrayList<>());
+        r.addAll(parentRelationships != null ? parentRelationships : new ArrayList<>());
+        return r;
+    }
 }

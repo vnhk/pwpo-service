@@ -21,6 +21,7 @@ import com.pwpo.task.dto.EditTaskRequestDTO;
 import com.pwpo.task.dto.TaskPrimaryResponseDTO;
 import com.pwpo.task.dto.TaskStructureResponseDTO;
 import com.pwpo.task.enums.TaskRelationshipType;
+import com.pwpo.task.enums.TaskType;
 import com.pwpo.task.model.EstimableDTO;
 import com.pwpo.task.model.Task;
 import com.pwpo.task.model.TaskRelationship;
@@ -198,34 +199,77 @@ public class TaskManager extends BaseService<Task, Long> {
         taskRepository.edit(adaptTaskToEditable(task));
     }
 
-    public void appendSubTask(Long taskId, String subTaskNumber, TaskRelationshipType type) {
-        Task subTask = getTask(subTaskNumber);
+    public void createRelationship(String parentTaskNumber, String childTaskNumber, TaskRelationshipType type) {
+        Task child = getTask(childTaskNumber);
+        Task parent = getTask(parentTaskNumber);
 
-        if (Objects.equals(taskId, subTask.getId())) {
-            throw new ValidationException("Task cannot be subtask: Task cannot be connected to itself!");
+        if (Objects.equals(parent.getId(), child.getId())) {
+            throw new ValidationException("Task cannot be connected to itself!");
         }
 
-        Task task = getTask(taskId);
-
-        if (!Objects.equals(task.getProject().getId(), subTask.getProject().getId())) {
-            throw new ValidationException("Task cannot be subtask: Tasks are from different projects!");
+        if (!Objects.equals(parent.getProject().getId(), child.getProject().getId())) {
+            throw new ValidationException("Tasks are from different projects!");
         }
 
-        Optional<TaskRelationship> existingRelationShip = task.getRelationships().stream()
-                .filter(e -> e.getParent().getId().equals(task.getId()))
+        Optional<TaskRelationship> existingRelationShip = parent.getRelationships().stream()
+                .filter(e -> e.getParent().getId().equals(parent.getId()))
                 .filter(e -> e.getType() == type)
-                .filter(e -> e.getChild().getId().equals(subTask.getId())).findAny();
+                .filter(e -> e.getChild().getId().equals(child.getId())).findAny();
+
         if (existingRelationShip.isPresent()) {
-            throw new ValidationException("Task cannot be subtask: Task = Sub Task");
+            throw new ValidationException("The structure already exists!");
         }
+
+        existingRelationShip = parent.getRelationships().stream()
+                .filter(e -> e.getParent().getId().equals(child.getId()))
+                .filter(e -> e.getType() == type)
+                .filter(e -> e.getChild().getId().equals(parent.getId())).findAny();
+
+        if (existingRelationShip.isPresent()) {
+            throw new ValidationException("Task cannot be parent and child of the same task!");
+        }
+
+        taskTypeStructureValidations(parent, child, type);
 
         TaskRelationship taskRelationship = new TaskRelationship();
-        taskRelationship.setParent(task);
-        taskRelationship.setChild(subTask);
+        taskRelationship.setParent(parent);
+        taskRelationship.setChild(child);
         taskRelationship.setType(type);
         taskRelationship = taskRelationshipRepository.save(taskRelationship);
-        task.getRelationships().add(taskRelationship);
-        subTask.getRelationships().add(taskRelationship);
+        parent.getRelationships().add(taskRelationship);
+        child.getRelationships().add(taskRelationship);
+    }
+
+    private void taskTypeStructureValidations(Task parent, Task child, TaskRelationshipType type) {
+        if (type.equals(TaskRelationshipType.CHILD_IS_PART_OF)) {
+            if (TaskType.FEATURE.equals(parent.getType())) {
+                if (TaskType.OBJECTIVE.equals(child.getType())) {
+                    throw new ValidationException("Objective cannot be subtask of feature!");
+                }
+            } else if (TaskType.STORY.equals(parent.getType())) {
+                if (TaskType.OBJECTIVE.equals(child.getType())) {
+                    throw new ValidationException("Objective cannot be subtask of story!");
+                } else if (TaskType.FEATURE.equals(child.getType())) {
+                    throw new ValidationException("Feature cannot be subtask of story!");
+                }
+            } else if (TaskType.TASK.equals(parent.getType())) {
+                if (TaskType.OBJECTIVE.equals(child.getType())) {
+                    throw new ValidationException("Objective cannot be subtask of task!");
+                } else if (TaskType.FEATURE.equals(child.getType())) {
+                    throw new ValidationException("Feature cannot be subtask of task!");
+                } else if (TaskType.STORY.equals(child.getType())) {
+                    throw new ValidationException("Story cannot be subtask of task!");
+                }
+            } else if (TaskType.BUG.equals(parent.getType())) {
+                if (TaskType.OBJECTIVE.equals(child.getType())) {
+                    throw new ValidationException("Objective cannot be subtask of bug!");
+                } else if (TaskType.FEATURE.equals(child.getType())) {
+                    throw new ValidationException("Feature cannot be subtask of bug!");
+                } else if (TaskType.STORY.equals(child.getType())) {
+                    throw new ValidationException("Story cannot be subtask of bug!");
+                }
+            }
+        }
     }
 
     private Task getTask(String subTaskNumber) {
