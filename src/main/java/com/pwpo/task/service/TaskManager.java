@@ -176,7 +176,7 @@ public class TaskManager extends BaseService<Task, Long> {
         editTaskRequestDTO.setAssignee(task.getAssignee() == null ? null : task.getAssignee().getId());
         editTaskRequestDTO.setEstimation(task.getEstimation());
         editTaskRequestDTO.setStatus(task.getStatus());
-        editTaskRequestDTO.setDescriptionHtml(task.getDescription());
+        editTaskRequestDTO.setDescription(task.getDescription());
         editTaskRequestDTO.setDueDate(task.getDueDate());
         editTaskRequestDTO.setOwner(task.getOwner().getId());
         editTaskRequestDTO.setPriority(task.getPriority());
