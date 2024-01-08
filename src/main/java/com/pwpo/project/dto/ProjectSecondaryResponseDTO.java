@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Data
 public class ProjectSecondaryResponseDTO implements ItemDTO {
     private final Long id;
-    private final String description;
+    private final String descriptionHtml;;
     private final UserDTO createdBy;
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")

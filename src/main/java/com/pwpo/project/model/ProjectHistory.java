@@ -12,6 +12,7 @@ import com.pwpo.common.serializer.ToEnumDisplayNameSerializer;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 @Getter
 @Setter
@@ -30,6 +31,9 @@ public class ProjectHistory extends BaseHistoryEntity {
     @Column(length = Constants.DESCRIPTION_MAX)
     @HistoryField
     @Lob
+    private String descriptionHtml;;
+    @HistoryField
+    @Column(length = Constants.DESCRIPTION_MAX)
     private String description;
     @HistoryField
     private String name;

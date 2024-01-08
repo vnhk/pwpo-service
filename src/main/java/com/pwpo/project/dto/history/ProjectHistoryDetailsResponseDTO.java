@@ -16,7 +16,7 @@ public class ProjectHistoryDetailsResponseDTO implements ItemDTO {
     private final String shortForm;
     private final String summary;
     private final String status;
-    private final String description;
+    private final String descriptionHtml;;
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private final LocalDateTime expired;
     private final String owner;

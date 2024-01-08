@@ -72,6 +72,10 @@ public class Task extends AttachmentHandler {
     @Size(max = Constants.DESCRIPTION_MAX)
     @Column(length = Constants.DESCRIPTION_MAX)
     @Lob
+    private String descriptionHtml;
+
+    @Size(max = Constants.DESCRIPTION_MAX)
+    @Column(length = Constants.DESCRIPTION_MAX)
     private String description;
 
     @ManyToOne

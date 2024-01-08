@@ -22,7 +22,7 @@ public class EditProjectRequestDTO<ID extends Serializable> implements Editable<
     private String shortForm;
     @NotNull
     private Long owner;
-    private String description;
+    private String descriptionHtml;;
 
     @Override
     public ID getEntityId() {
