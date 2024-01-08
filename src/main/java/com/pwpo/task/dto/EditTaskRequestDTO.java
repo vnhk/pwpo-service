@@ -31,7 +31,7 @@ public class EditTaskRequestDTO<ID extends Serializable> implements Editable<ID>
     private Long owner;
     private LocalDate dueDate;
     private Priority priority;
-    private String descriptionHtml;;
+    private String description;
     private Integer estimation;
 
     @Override

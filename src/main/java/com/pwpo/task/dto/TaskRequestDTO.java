@@ -19,7 +19,7 @@ public class TaskRequestDTO implements ItemDTO, EstimableDTO {
     private Long owner;
     private LocalDate dueDate;
     private Priority priority;
-    private String descriptionHtml;;
+    private String description;
     @NotNull
     private Long project;
     @NotNull

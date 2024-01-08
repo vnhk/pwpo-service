@@ -12,7 +12,7 @@ public class ProjectRequestDTO implements ItemDTO {
     protected String summary;
     protected String name;
     protected String shortForm;
-    protected String descriptionHtml;;
+    protected String description;
     @NotNull
     protected Long owner;
 }

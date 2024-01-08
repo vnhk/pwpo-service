@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 public class TaskSecondaryResponseDTO implements ItemDTO {
     private final Long id;
-    private final String descriptionHtml;;
+    private final String description;
     private final String estimation;
     private final UserDTO createdBy;
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
