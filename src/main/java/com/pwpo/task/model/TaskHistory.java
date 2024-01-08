@@ -44,7 +44,6 @@ public class TaskHistory extends BaseHistoryEntity {
     private String summary;
     @Column(length = Constants.DESCRIPTION_MAX)
     @HistoryField
-    @Lob
     @Type(type = "org.hibernate.type.TextType")
     private String descriptionHtml;
     @HistoryField

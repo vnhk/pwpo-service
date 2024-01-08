@@ -31,7 +31,6 @@ public class ProjectHistory extends BaseHistoryEntity {
     private Status status;
     @Column(length = Constants.DESCRIPTION_MAX)
     @HistoryField
-    @Lob
     @Type(type = "org.hibernate.type.TextType")
     private String descriptionHtml;;
     @HistoryField

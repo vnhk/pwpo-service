@@ -43,7 +43,6 @@ public class Project extends AttachmentHandler {
 
     @Size(max = Constants.DESCRIPTION_MAX)
     @Column(length = Constants.DESCRIPTION_MAX)
-    @Lob
     @Type(type = "org.hibernate.type.TextType")
     private String descriptionHtml;
 
