@@ -17,7 +17,6 @@ import com.pwpo.task.enums.TaskType;
 import com.pwpo.task.timelog.TimeLog;
 import com.pwpo.user.UserAccount;
 import lombok.*;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -70,12 +69,6 @@ public class Task extends AttachmentHandler {
     @Column(length = Constants.SUMMARY_MAX)
     private String summary;
 
-    @Size(max = Constants.DESCRIPTION_MAX)
-    @Column(length = Constants.DESCRIPTION_MAX)
-    @Type(type = "org.hibernate.type.TextType")
-    private String descriptionHtml;
-
-    @Size(max = Constants.DESCRIPTION_MAX)
     @Column(length = Constants.DESCRIPTION_MAX)
     private String description;
 

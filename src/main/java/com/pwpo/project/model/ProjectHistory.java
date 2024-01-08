@@ -10,10 +10,8 @@ import com.pwpo.common.model.Constants;
 import com.pwpo.common.model.db.BaseHistoryEntity;
 import com.pwpo.common.serializer.ToEnumDisplayNameSerializer;
 import lombok.*;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @Getter
 @Setter
@@ -29,10 +27,6 @@ public class ProjectHistory extends BaseHistoryEntity {
     @JsonSerialize(using = ToEnumDisplayNameSerializer.class)
     @HistoryField(comparePath = "displayName")
     private Status status;
-    @Column(length = Constants.DESCRIPTION_MAX)
-    @HistoryField
-    @Type(type = "org.hibernate.type.TextType")
-    private String descriptionHtml;;
     @HistoryField
     @Column(length = Constants.DESCRIPTION_MAX)
     private String description;

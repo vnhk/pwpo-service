@@ -42,10 +42,6 @@ public class TaskHistory extends BaseHistoryEntity {
     private Priority priority;
     @HistoryField
     private String summary;
-    @Column(length = Constants.DESCRIPTION_MAX)
-    @HistoryField
-    @Type(type = "org.hibernate.type.TextType")
-    private String descriptionHtml;
     @HistoryField
     @Column(length = Constants.DESCRIPTION_MAX)
     private String description;

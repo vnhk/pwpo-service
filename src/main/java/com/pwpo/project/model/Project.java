@@ -14,7 +14,6 @@ import com.pwpo.task.model.Task;
 import com.pwpo.user.UserAccount;
 import com.pwpo.user.model.UserProject;
 import lombok.*;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -41,12 +40,6 @@ public class Project extends AttachmentHandler {
     @JsonSerialize(using = ToEnumDisplayNameSerializer.class)
     private Status status;
 
-    @Size(max = Constants.DESCRIPTION_MAX)
-    @Column(length = Constants.DESCRIPTION_MAX)
-    @Type(type = "org.hibernate.type.TextType")
-    private String descriptionHtml;
-
-    @Size(max = Constants.DESCRIPTION_MAX)
     @Column(length = Constants.DESCRIPTION_MAX)
     private String description;
 
