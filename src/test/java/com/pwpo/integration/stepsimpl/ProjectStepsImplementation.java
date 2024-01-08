@@ -117,7 +117,7 @@ public class ProjectStepsImplementation extends CommonStepsImplementation {
         assertThat(data.get("status")).isEqualTo(details.getStatus());
         assertThat(data.get("summary")).isEqualTo(details.getSummary());
         assertThat(data.get("shortForm")).isEqualTo(details.getShortForm());
-        assertThat(data.get("description")).isEqualTo(details.getDescription());
+        assertThat(data.get("description")).isEqualTo(details.getDescriptionHtml());
         assertThat(data.get("editor")).isEqualTo(details.getEditor().getNick());
     }
 
