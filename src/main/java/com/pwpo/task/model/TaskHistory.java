@@ -11,6 +11,7 @@ import com.pwpo.common.model.db.BaseHistoryEntity;
 import com.pwpo.common.serializer.ToEnumDisplayNameSerializer;
 import com.pwpo.task.enums.TaskType;
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -44,6 +45,7 @@ public class TaskHistory extends BaseHistoryEntity {
     @Column(length = Constants.DESCRIPTION_MAX)
     @HistoryField
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     private String descriptionHtml;
     @HistoryField
     @Column(length = Constants.DESCRIPTION_MAX)
