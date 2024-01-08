@@ -29,6 +29,7 @@ public class ProjectHistory extends BaseHistoryEntity {
     private Status status;
     @Column(length = Constants.DESCRIPTION_MAX)
     @HistoryField
+    @Lob
     private String description;
     @HistoryField
     private String name;

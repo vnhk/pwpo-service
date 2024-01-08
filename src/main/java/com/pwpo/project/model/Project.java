@@ -42,6 +42,7 @@ public class Project extends AttachmentHandler {
 
     @Size(max = Constants.DESCRIPTION_MAX)
     @Column(length = Constants.DESCRIPTION_MAX)
+    @Lob
     private String description;
 
     @Size(min = 1, max = Constants.NAME_MAX)
