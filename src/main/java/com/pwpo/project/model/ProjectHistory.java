@@ -28,7 +28,7 @@ public class ProjectHistory extends BaseHistoryEntity {
     @HistoryField(comparePath = "displayName")
     private Status status;
     @HistoryField
-    @Column(length = Constants.DESCRIPTION_MAX)
+    @Column(length = Constants.DESCRIPTION_MAX, columnDefinition="TEXT")
     private String description;
     @HistoryField
     private String name;

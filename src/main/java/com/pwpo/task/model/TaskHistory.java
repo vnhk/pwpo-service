@@ -43,7 +43,7 @@ public class TaskHistory extends BaseHistoryEntity {
     @HistoryField
     private String summary;
     @HistoryField
-    @Column(length = Constants.DESCRIPTION_MAX)
+    @Column(length = Constants.DESCRIPTION_MAX, columnDefinition="TEXT")
     private String description;
     @HistoryField(savePath = "owner.nick", comparePath = "nick")
     private String owner;

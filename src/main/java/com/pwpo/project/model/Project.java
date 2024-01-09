@@ -40,7 +40,7 @@ public class Project extends AttachmentHandler {
     @JsonSerialize(using = ToEnumDisplayNameSerializer.class)
     private Status status;
 
-    @Column(length = Constants.DESCRIPTION_MAX)
+    @Column(length = Constants.DESCRIPTION_MAX, columnDefinition="TEXT")
     private String description;
 
     @Size(min = 1, max = Constants.NAME_MAX)

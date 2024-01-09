@@ -69,7 +69,7 @@ public class Task extends AttachmentHandler {
     @Column(length = Constants.SUMMARY_MAX)
     private String summary;
 
-    @Column(length = Constants.DESCRIPTION_MAX)
+    @Column(length = Constants.DESCRIPTION_MAX, columnDefinition="TEXT")
     private String description;
 
     @ManyToOne
