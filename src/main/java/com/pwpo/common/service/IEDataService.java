@@ -4,10 +4,21 @@ import com.bervan.ieentities.BaseExcelExport;
 import com.bervan.ieentities.BaseExcelImport;
 import com.bervan.ieentities.ExcelIEEntity;
 import com.bervan.ieentities.LoadIEAvailableEntities;
+import com.pwpo.common.model.AttachmentHandler;
+import com.pwpo.common.model.db.Attachment;
 import com.pwpo.common.search.SearchQueryOption;
 import com.pwpo.common.search.SearchRequest;
 import com.pwpo.common.search.SearchService;
 import com.pwpo.common.search.model.SortDirection;
+import com.pwpo.project.model.GoalRisk;
+import com.pwpo.project.model.Project;
+import com.pwpo.project.model.ProjectHistory;
+import com.pwpo.task.model.Task;
+import com.pwpo.task.model.TaskHistory;
+import com.pwpo.task.model.TaskRelationship;
+import com.pwpo.task.timelog.TimeLog;
+import com.pwpo.user.UserAccount;
+import com.pwpo.user.model.UserProject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -47,6 +58,19 @@ public class IEDataService {
 
     private List<? extends ExcelIEEntity<?>> getAll() {
         List<Class<?>> allClassesAvailable = new LoadIEAvailableEntities().getSubclassesOfExcelEntity("com.pwpo");
+        if(allClassesAvailable.isEmpty()) {
+            allClassesAvailable.add(Task.class);
+            allClassesAvailable.add(TimeLog.class);
+            allClassesAvailable.add(Attachment.class);
+            allClassesAvailable.add(AttachmentHandler.class);
+            allClassesAvailable.add(TaskHistory.class);
+            allClassesAvailable.add(TaskRelationship.class);
+            allClassesAvailable.add(Project.class);
+            allClassesAvailable.add(ProjectHistory.class);
+            allClassesAvailable.add(UserAccount.class);
+            allClassesAvailable.add(GoalRisk.class);
+            allClassesAvailable.add(UserProject.class);
+        }
         log.info("Classes available to export:" + allClassesAvailable.size());
         log.debug("Classes available to export:" + allClassesAvailable);
         List result = new ArrayList<>();
