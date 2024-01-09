@@ -1,0 +1,11 @@
+ALTER TABLE Project
+ALTER COLUMN description TYPE TEXT;
+
+ALTER TABLE Project_History
+ALTER COLUMN description TYPE TEXT;
+
+ALTER TABLE Task
+ALTER COLUMN description TYPE TEXT;
+
+ALTER TABLE Task_History
+ALTER COLUMN description TYPE TEXT;
