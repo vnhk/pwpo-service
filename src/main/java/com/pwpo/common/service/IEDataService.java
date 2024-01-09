@@ -36,6 +36,8 @@ public class IEDataService {
     public UrlResource export() throws IOException {
         BaseExcelExport baseExcelExport = new BaseExcelExport();
         List<? extends ExcelIEEntity<?>> entities = getAll();
+        log.info("Entities available to export:" + entities.size());
+
         Workbook workbook = baseExcelExport.exportExcel(entities, null);
         String fileName = LocalDate.now().toString();
         File stored = baseExcelExport.save(workbook, FOLDER, fileName);
@@ -45,6 +47,8 @@ public class IEDataService {
 
     private List<? extends ExcelIEEntity<?>> getAll() {
         List<Class<?>> allClassesAvailable = new LoadIEAvailableEntities().getSubclassesOfExcelEntity("com.pwpo");
+        log.info("Classes available to export:" + allClassesAvailable.size());
+        log.debug("Classes available to export:" + allClassesAvailable);
         List result = new ArrayList<>();
         for (Class<?> aClass : allClassesAvailable) {
             result.addAll(getExcelIEEntities((Class<? extends ExcelIEEntity<?>>) aClass));
